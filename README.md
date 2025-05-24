@@ -48,6 +48,7 @@ cd playwright-may-2025
 
 ```bash
 npm install
+npx playwright install chromium
 ```
 
 3. **Start the Dockerized Environment**

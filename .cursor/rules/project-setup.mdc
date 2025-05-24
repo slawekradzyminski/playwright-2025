@@ -26,15 +26,8 @@ alwaysApply: false
 
 ## Authentication
 
-### Test Credentials
-- **Username**: `admin`
-- **Password**: `admin`
-
 ### TypeScript Types
-Authentication types are defined in [types/auth.ts](mdc:types/auth.ts):
-- `LoginDto`: Login request interface
-- `LoginResponseDto`: Login response interface
-- `ErrorResponse`: Error response interface
+When dealing with objects create custom types in types folder.
 
 ## Playwright Configuration
 
@@ -48,7 +41,6 @@ Authentication types are defined in [types/auth.ts](mdc:types/auth.ts):
 - Use given/when/then comments structure
 - API tests ordered by response code (200 → 400 → 401 → 403 → 404)
 - Modern syntax with import/export
-- TypeScript types in `/types` folder
 
 ## Development Guidelines
 
