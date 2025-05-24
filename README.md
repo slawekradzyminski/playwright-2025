@@ -32,7 +32,7 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 
 ### Prerequisites
 
-- Node.js (v14 or later)
+- Node.js LTS, Recommended `v22.16.0`
 - Docker
 
 ### Setup
@@ -40,8 +40,8 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 1. **Clone the Repository**
 
 ```bash
-git clone https://github.com/yourusername/atwwpraktyce.git
-cd atwwpraktyce
+git clone https://github.com/slawekradzyminski/playwright-may-2025
+cd playwright-may-2025
 ```
 
 2. **Install Dependencies**
@@ -114,6 +114,10 @@ These tests validate the login page's functionality and user experience:
 - **TypeScript**: Typed superset of JavaScript
 - **Docker**: Containerization platform
 - **awesome-localstack**: Dockerized local AWS environment for development and testing
+
+## Playwright MCP
+
+Read more about Playwright MCP here: https://github.com/microsoft/playwright-mcp
 
 ## 📝 License
 
