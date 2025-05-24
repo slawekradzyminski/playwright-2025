@@ -1,0 +1,65 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Setup and Configuration
+
+## Server Configuration
+
+### Frontend Application
+- **URL**: http://localhost:8081
+
+### Backend API
+- **Base URL**: http://localhost:4001
+- **API Documentation**: http://localhost:4001/v3/api-docs
+
+## Testing Structure
+
+### API Tests
+- Located in tests/api directory
+- Example [login.api.spec.ts](mdc:tests/api/login.api.spec.ts)
+
+### UI Tests
+- Located in tests/ui directory
+- Example [login.ui.spec.ts](mdc:tests/ui/login.ui.spec.ts)
+
+## Authentication
+
+### Test Credentials
+- **Username**: `admin`
+- **Password**: `admin`
+
+### TypeScript Types
+Authentication types are defined in [types/auth.ts](mdc:types/auth.ts):
+- `LoginDto`: Login request interface
+- `LoginResponseDto`: Login response interface
+- `ErrorResponse`: Error response interface
+
+## Playwright Configuration
+
+### Test Configuration
+- Configuration file: [playwright.config.ts](mdc:playwright.config.ts)
+- Test directory: `./tests`
+- Browser: Chromium (Desktop Chrome)
+- Parallel execution enabled
+
+### Test Patterns
+- Use given/when/then comments structure
+- API tests ordered by response code (200 → 400 → 401 → 403 → 404)
+- Modern syntax with import/export
+- TypeScript types in `/types` folder
+
+## Development Guidelines
+
+### JavaScript/TypeScript
+- Use npm for package management
+- Modern ES6+ syntax with import/export
+- No code comments explaining functionality
+- TypeScript types stored in `/types` folder
+
+### Testing Best Practices
+- UI tests use accessibility-focused selectors (`getByRole`)
+- API tests use request context for backend testing
+- Comprehensive test coverage for both positive and negative scenarios
+- Keyboard navigation and accessibility testing included

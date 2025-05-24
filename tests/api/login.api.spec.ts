@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import type { LoginDto, LoginResponseDto, ErrorResponse } from '../types/auth';
+import type { LoginDto, LoginResponseDto, ErrorResponse } from '../../types/auth';
 
 const API_BASE_URL = 'http://localhost:4001';
 const SIGNIN_ENDPOINT = '/users/signin';
