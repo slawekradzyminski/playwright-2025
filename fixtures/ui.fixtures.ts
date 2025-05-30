@@ -1,9 +1,7 @@
-import { test as base, expect, type Page } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import type { LoginDto, LoginResponseDto, RegisterDto } from '../types/auth';
-import { attemptLogin } from '../http/postSignIn';
-import { attemptRegister } from '../http/postSignUp';
-import { getRandomUser } from '../generators/userGenerator';
+import { FRONTEND_BASE_URL } from '../constants/config';
+import { RegisterDto } from '../types/auth';
+import { test as authTest, expect } from './auth.fixtures';
+import type { Page } from '@playwright/test';
 
 type UIFixtures = {
   loggedInPage: Page;
@@ -11,40 +9,15 @@ type UIFixtures = {
   user: RegisterDto;
 };
 
-export const test = base.extend<UIFixtures>({
-  user: async ({ request }, use) => {
-    const registerData: RegisterDto = getRandomUser();
+export const test = authTest.extend<UIFixtures>({
+  loggedInPage: async ({ page, authToken }, use) => {
+    await page.goto(FRONTEND_BASE_URL);
     
-    const registerResponse = await attemptRegister(request, registerData);
-    if (registerResponse.status() !== 201) {
-      throw new Error(`User registration failed with status ${registerResponse.status()}`);
-    }
+    await page.evaluate((token) => {
+      localStorage.setItem('token', token);
+    }, authToken);
     
-    await use(registerData);
-  },
-
-  authToken: async ({ request, user }, use) => {
-    const loginData: LoginDto = {
-      username: user.username,
-      password: user.password
-    };
-    
-    const loginResponse = await attemptLogin(request, loginData);
-    const loginBody: LoginResponseDto = await loginResponse.json();
-    
-    await use(loginBody.token);
-  },
-
-  loggedInPage: async ({ page, user }, use) => {
-    const loginPage = new LoginPage(page);
-    const credentials: LoginDto = {
-      username: user.username,
-      password: user.password
-    };
-    
-    await loginPage.goto();
-    await loginPage.login(credentials);
-    await loginPage.expectToNotBeOnLoginPage();
+    await page.goto(FRONTEND_BASE_URL);
     
     await use(page);
   },
