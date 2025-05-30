@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { RegisterDto, Role } from '../../types/auth';
+import { RegisterDto, ErrorResponse } from '../../types/auth';
 import { API_BASE_URL } from '../../constants/config';
 import { getRandomUser } from '../../generators/userGenerator';
 
@@ -24,8 +24,50 @@ test.describe('/users/signup API tests', () => {
     expect(responseText).toBe('');
   });
 
-  // TODO: add test for http 400 invalid username
-  
+  test('should return 400 for too short password - 400', async ({ request }) => {
+    // given
+    const registerData: RegisterDto = {
+      ...getRandomUser(),
+      password: 'short'
+    };
+
+    // when
+    const response = await request.post(`${API_BASE_URL}${SIGNUP_ENDPOINT}`, {
+      data: registerData,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    // then
+    expect(response.status()).toBe(400);
+    const errorResponse: ErrorResponse = await response.json();
+    expect(errorResponse.password).toBeDefined();
+    expect(errorResponse.password).toBe('Minimum password length: 8 characters');
+  });
+
+  test('should return 400 for existing user - 400', async ({ request }) => {
+    // given
+    const registerData: RegisterDto = {
+      ...getRandomUser(),
+      username: 'admin'
+    };
+
+    // when
+    const response = await request.post(`${API_BASE_URL}${SIGNUP_ENDPOINT}`, {
+      data: registerData,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    // then
+    expect(response.status()).toBe(400);
+    const errorResponse: ErrorResponse = await response.json();
+    expect(errorResponse.message).toBeDefined();
+    expect(errorResponse.message).toBe('Username is already in use');
+  });
+
 });
 
 

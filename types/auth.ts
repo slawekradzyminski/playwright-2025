@@ -29,4 +29,9 @@ export enum Role {
 export interface ErrorResponse {
   message?: string;
   errors?: Record<string, string[]>;
+  password?: string;
+  username?: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
 } 
