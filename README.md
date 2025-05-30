@@ -9,10 +9,11 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 ## 🔧 Features
 
 - **API Testing**: Validates authentication endpoints with various scenarios, including successful logins and error handling.
-- **UI Testing**: Ensures the login interface, registration flow, and homepage behave correctly, covering form validations, navigation, and accessibility.
-- **TypeScript Support**: Utilizes TypeScript for type safety and better developer experience.
-- **Page Object Model**: Implements the Page Object Model pattern for maintainable and reusable UI test code.
-- **Dockerized Environment**: Tests are designed to run against services provided by the awesome-localstack Docker setup.
+- **UI Testing**: Ensures the login interface, registration flow, homepage, and products page behave correctly, covering form validations, navigation, filtering, sorting, and e-commerce functionality.
+- **TypeScript Support**: Utilizes TypeScript for type safety and better development experience.
+- **Page Object Model**: Implements the Page Object Model pattern for maintainable and reusable test code.
+- **Fixtures**: Uses custom fixtures for test setup, including authentication and user management.
+- **Cross-Browser Testing**: Supports testing across different browsers using Playwright.
 
 ## 🗂️ Project Structure
 
@@ -156,6 +157,16 @@ These tests validate the logged-in homepage functionality:
   - Admin
   - (user profile link)
 
+#### Products Page Tests (`products.ui.spec.ts`)
+These tests validate the products page functionality:
+
+- **Category Filtering**: Tests for filtering products by categories (Electronics, Books, etc.)
+- **Search Functionality**: Product search with live filtering and clear search capability
+- **Sorting**: Multiple sorting options (Name A-Z/Z-A, Price Low-to-High/High-to-Low)
+- **Shopping Cart**: Quantity management, add to cart, and cart status tracking
+- **Notifications**: Toast messages for cart operations
+- **Combined Features**: Tests for interactions between filtering, search, and sorting
+
 ## 🏗️ Page Object Model
 
 The project implements the Page Object Model pattern with dedicated page classes:
@@ -163,9 +174,10 @@ The project implements the Page Object Model pattern with dedicated page classes
 - **LoginPage**: Handles login form interactions and validations
 - **RegisterPage**: Manages registration form operations and navigation
 - **HomePage**: Provides methods for interacting with the logged-in homepage
+- **ProductsPage**: Manages products page functionality including category filtering, search, sorting, and cart operations
 
 Each page object encapsulates:
-- Element locators using Playwright's role-based selectors
+- Element locators using Playwright's role-based selectors and test IDs
 - Action methods for user interactions
 - Assertion methods for validations
 - Navigation utilities
@@ -177,7 +189,7 @@ The project includes custom fixtures to streamline test setup:
 - **auth.fixtures.ts**: Provides API-level authentication fixtures for backend testing
 - **ui.fixtures.ts**: Provides UI-level fixtures including `loggedInPage` for tests requiring authenticated state
 
-The `loggedInPage` fixture automatically handles the login process, allowing tests to focus on their specific functionality rather than authentication setup.
+The `loggedInPage` fixture automatically registers a new user via API, performs login via API, sets the authentication token in localStorage, and provides a logged-in browser context for UI tests.
 
 ## 🧰 Technologies Used
 
