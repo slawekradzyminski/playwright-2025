@@ -4,7 +4,7 @@ import { HomePage } from '../../pages/HomePage';
 test.describe('Homepage UI tests', () => {
   let homePage: HomePage;
 
-  test('should display logged in header with all navigation links', async ({ loggedInPage }) => {
+  test('should display logged in header with all navigation links', async ({ loggedInPage, user }) => {
     // given
     homePage = new HomePage(loggedInPage);
 
@@ -12,7 +12,8 @@ test.describe('Homepage UI tests', () => {
     await homePage.expectToBeOnHomePage();
 
     // then
+    await homePage.expectWelcomeMessage(user.firstName);
     await homePage.expectLoggedInHeaderToBeVisible();
-    await homePage.expectUserProfileLinkToHaveText('Slawomir Radzyminski');
+    await homePage.expectUserProfileLinkToHaveText(`${user.firstName} ${user.lastName}`);
   });
 }); 

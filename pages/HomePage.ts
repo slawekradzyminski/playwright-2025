@@ -11,7 +11,6 @@ export class HomePage {
   readonly adminLink: Locator;
   readonly userProfileLink: Locator;
   readonly logoutButton: Locator;
-  readonly welcomeHeading: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -22,9 +21,8 @@ export class HomePage {
     this.llmLink = page.getByRole('link', { name: 'LLM' });
     this.trafficMonitorLink = page.getByRole('link', { name: 'Traffic Monitor' });
     this.adminLink = page.getByRole('link', { name: 'Admin' });
-    this.userProfileLink = page.getByRole('link', { name: 'Slawomir Radzyminski' });
+    this.userProfileLink = page.locator('nav a[href="/profile"]');
     this.logoutButton = page.getByRole('button', { name: 'Logout' });
-    this.welcomeHeading = page.getByRole('heading', { name: 'Welcome, Slawomir!' });
   }
 
   async goto() {
@@ -33,7 +31,11 @@ export class HomePage {
 
   async expectToBeOnHomePage() {
     await expect(this.page).toHaveURL('http://localhost:8081/');
-    await expect(this.welcomeHeading).toBeVisible();
+  }
+
+  async expectWelcomeMessage(firstName: string) {
+    const welcomeHeading = this.page.getByRole('heading', { name: `Welcome, ${firstName}!` });
+    await expect(welcomeHeading).toBeVisible();
   }
 
   async expectLoggedInHeaderToBeVisible() {
@@ -43,8 +45,11 @@ export class HomePage {
     await expect(this.qrCodeLink).toBeVisible();
     await expect(this.llmLink).toBeVisible();
     await expect(this.trafficMonitorLink).toBeVisible();
-    await expect(this.adminLink).toBeVisible();
     await expect(this.userProfileLink).toBeVisible();
+  }
+
+  async expectAdminLinkToBeVisible() {
+    await expect(this.adminLink).toBeVisible();
   }
 
   async expectUserProfileLinkToHaveText(expectedText: string) {
