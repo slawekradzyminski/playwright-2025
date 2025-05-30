@@ -9,8 +9,9 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 ## 🔧 Features
 
 - **API Testing**: Validates authentication endpoints with various scenarios, including successful logins and error handling.
-- **UI Testing**: Ensures the login interface behaves correctly, covering form validations, navigation, and accessibility.
+- **UI Testing**: Ensures the login interface, registration flow, and homepage behave correctly, covering form validations, navigation, and accessibility.
 - **TypeScript Support**: Utilizes TypeScript for type safety and better developer experience.
+- **Page Object Model**: Implements the Page Object Model pattern for maintainable and reusable UI test code.
 - **Dockerized Environment**: Tests are designed to run against services provided by the awesome-localstack Docker setup.
 
 ## 🗂️ Project Structure
@@ -18,13 +19,30 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 ```
 .
 ├── tests/
-│   ├── auth.spec.ts                # API tests for /users/signin endpoint
+│   ├── api/                        # API tests
 │   └── ui/
-│       └── login.spec.ts           # UI tests for the login page
+│       ├── login.ui.spec.ts        # UI tests for the login page
+│       ├── register.ui.spec.ts     # UI tests for the registration page
+│       └── homepage.ui.spec.ts     # UI tests for the homepage
+├── pages/
+│   ├── LoginPage.ts                # Page object for login functionality
+│   ├── RegisterPage.ts             # Page object for registration functionality
+│   └── HomePage.ts                 # Page object for homepage functionality
 ├── types/
-│   └── auth.ts                     # TypeScript interfaces for authentication
-├── playwright.config.ts            # Playwright configuration
-├── package.json                    # Project metadata and dependencies
+│   ├── auth.ts                     # TypeScript interfaces for authentication
+│   ├── users.ts                    # User-related type definitions
+│   ├── products.ts                 # Product-related type definitions
+│   ├── orders.ts                   # Order-related type definitions
+│   ├── cart.ts                     # Cart-related type definitions
+│   └── qr.ts                       # QR code-related type definitions
+├── generators/
+│   └── userGenerator.ts            # Test data generators for user creation
+├── fixtures/                       # Test fixtures and setup utilities
+├── validators/                     # Data validation utilities
+├── constants/                      # Application constants
+├── http/                          # HTTP client utilities
+├── playwright.config.ts           # Playwright configuration
+├── package.json                   # Project metadata and dependencies
 └── ...
 ```
 
@@ -63,13 +81,21 @@ Follow the instructions in the awesome-localstack repository to set up and start
 **API Tests**
 
 ```bash
-npx playwright test tests/auth.spec.ts
+npx playwright test tests/api/
 ```
 
 **UI Tests**
 
 ```bash
-npx playwright test tests/ui/login.spec.ts
+npx playwright test tests/ui/
+```
+
+**Specific UI Test Files**
+
+```bash
+npx playwright test tests/ui/login.ui.spec.ts
+npx playwright test tests/ui/register.ui.spec.ts
+npx playwright test tests/ui/homepage.ui.spec.ts
 ```
 
 **All Tests**
@@ -89,17 +115,18 @@ The `playwright.config.ts` file is configured to:
 
 ## 🧪 Test Details
 
-### API Tests (`tests/auth.spec.ts`)
+### API Tests (`tests/api/`)
 
-These tests cover various scenarios for the `/users/signin` endpoint:
+These tests cover various scenarios for authentication and other API endpoints:
 
 - **Successful Authentication**: Valid credentials return a 200 status with a valid token and user information
 - **Validation Errors**: Tests for empty or short usernames/passwords, expecting 400 status codes with appropriate error messages
 - **Authentication Errors**: Invalid credentials or missing fields result in 422 status codes with error messages
 - **Invalid JSON**: Malformed JSON payloads return a 400 status with an error message indicating invalid format
 
-### UI Tests (`tests/ui/login.spec.ts`)
+### UI Tests (`tests/ui/`)
 
+#### Login Tests (`login.ui.spec.ts`)
 These tests validate the login page's functionality and user experience:
 
 - **Form Elements**: Ensures all necessary form elements are visible
@@ -108,6 +135,49 @@ These tests validate the login page's functionality and user experience:
 - **Navigation**: Clicking on "Register" buttons or links navigates to the registration page
 - **Form Reset**: Navigating away and back to the login page clears form fields
 - **Keyboard Navigation**: Supports tabbing through fields and submitting the form with the Enter key
+
+#### Registration Tests (`register.ui.spec.ts`)
+These tests validate the registration page's functionality:
+
+- **Successful Registration**: Valid user data creates a new account and redirects appropriately
+- **Form Validations**: Tests for existing usernames, empty required fields, and invalid email formats
+- **Navigation**: Clicking on "Sign in" button navigates to the login page
+
+#### Homepage Tests (`homepage.ui.spec.ts`)
+These tests validate the logged-in homepage functionality:
+
+- **Logged-in Header**: Verifies that all navigation links are displayed correctly after login:
+  - Home
+  - Products
+  - Send Email
+  - QR Code
+  - LLM
+  - Traffic Monitor
+  - Admin
+  - (user profile link)
+
+## 🏗️ Page Object Model
+
+The project implements the Page Object Model pattern with dedicated page classes:
+
+- **LoginPage**: Handles login form interactions and validations
+- **RegisterPage**: Manages registration form operations and navigation
+- **HomePage**: Provides methods for interacting with the logged-in homepage
+
+Each page object encapsulates:
+- Element locators using Playwright's role-based selectors
+- Action methods for user interactions
+- Assertion methods for validations
+- Navigation utilities
+
+## 🔧 Test Fixtures
+
+The project includes custom fixtures to streamline test setup:
+
+- **auth.fixtures.ts**: Provides API-level authentication fixtures for backend testing
+- **ui.fixtures.ts**: Provides UI-level fixtures including `loggedInPage` for tests requiring authenticated state
+
+The `loggedInPage` fixture automatically handles the login process, allowing tests to focus on their specific functionality rather than authentication setup.
 
 ## 🧰 Technologies Used
 
