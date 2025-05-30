@@ -1,18 +1,18 @@
 import { test, expect } from '../../fixtures/auth.fixtures';
-import type { ProductDto } from '../../types/products';
-import { getProducts } from '../../http/getProducts';
+import type { CartDto } from '../../types/cart';
+import { getCart } from '../../http/getCart';
 import { API_BASE_URL } from '../../constants/config';
-import { validateProductsArray } from '../../validators/productValidator';
+import { validateCart } from '../../validators/cartValidator';
 
-test.describe('/api/products API tests', () => {
-  test('should successfully get all products - 200', async ({ request, authToken }) => {
+test.describe('/api/cart API tests', () => {
+  test('should successfully get user cart - 200', async ({ request, authToken }) => {
     // when
-    const response = await getProducts(request, authToken);
+    const response = await getCart(request, authToken);
 
     // then
     expect(response.status()).toBe(200);
-    const products: ProductDto[] = await response.json();
-    validateProductsArray(products);
+    const cart: CartDto = await response.json();
+    validateCart(cart);
   });
 
   test('should return 401 for invalid token - 401', async ({ request }) => {
@@ -20,7 +20,7 @@ test.describe('/api/products API tests', () => {
     const invalidToken = 'invalid.jwt.token';
 
     // when
-    const response = await getProducts(request, invalidToken);
+    const response = await getCart(request, invalidToken);
 
     // then
     expect(response.status()).toBe(401);
@@ -28,7 +28,7 @@ test.describe('/api/products API tests', () => {
 
   test('should return 401 for missing token - 401', async ({ request }) => {
     // when
-    const response = await request.get(`${API_BASE_URL}/api/products`, {
+    const response = await request.get(`${API_BASE_URL}/api/cart`, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -37,4 +37,4 @@ test.describe('/api/products API tests', () => {
     // then
     expect(response.status()).toBe(401);
   });
-});
+}); 
