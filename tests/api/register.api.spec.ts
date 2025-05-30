@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { RegisterDto, ErrorResponse } from '../../types/auth';
 import { API_BASE_URL } from '../../constants/config';
 import { getRandomUser } from '../../generators/userGenerator';
+import { attemptRegister } from '../../http/postSignUp';
 
 const SIGNUP_ENDPOINT = '/users/signup';
 
@@ -11,12 +12,7 @@ test.describe('/users/signup API tests', () => {
     const registerData: RegisterDto = getRandomUser();
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNUP_ENDPOINT}`, {
-      data: registerData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptRegister(request, registerData);
 
     // then
     expect(response.status()).toBe(201);
@@ -32,12 +28,7 @@ test.describe('/users/signup API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNUP_ENDPOINT}`, {
-      data: registerData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptRegister(request, registerData);
 
     // then
     expect(response.status()).toBe(400);
@@ -54,12 +45,7 @@ test.describe('/users/signup API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNUP_ENDPOINT}`, {
-      data: registerData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptRegister(request, registerData);
 
     // then
     expect(response.status()).toBe(400);

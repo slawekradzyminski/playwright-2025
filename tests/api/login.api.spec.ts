@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto, LoginResponseDto } from '../../types/auth';
 import { API_BASE_URL } from '../../constants/config';
+import { attemptLogin } from '../../http/postSignIn';
 
 const SIGNIN_ENDPOINT = '/users/signin';
 
@@ -13,12 +14,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptLogin(request, loginData);
 
     // then
     expect(response.status()).toBe(200);
@@ -42,12 +38,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptLogin(request, loginData);
 
     // then
     expect(response.status()).toBe(400);
@@ -81,14 +72,8 @@ test.describe('/users/signin API tests', () => {
     const loginData = {
       password: 'admin'
     };
-
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptLogin(request, loginData as LoginDto);
 
     // then
     expect(response.status()).toBe(422);
