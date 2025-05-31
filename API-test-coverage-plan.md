@@ -6,23 +6,23 @@ This document tracks the comprehensive test coverage for all API endpoints in th
 ## Current Coverage Statistics
 - **Total Endpoints**: 21 unique paths
 - **Total HTTP Methods**: 35 endpoint-method combinations
-- **Currently Tested**: 7 endpoint-method combinations
-- **Total Test Cases**: 19 tests
-- **Coverage Percentage**: 20% (7/35)
+- **Currently Tested**: 11 endpoint-method combinations
+- **Total Test Cases**: 34 tests
+- **Coverage Percentage**: 31% (11/35)
 
 ## Quick Reference Summary
 
 | Priority | Category | Endpoints | Status | Tests |
 |----------|----------|-----------|---------|-------|
-| ✅ | **Completed** | 7 endpoints | Done | 19 tests |
-| 🔄 | **High Priority** | 12 endpoints | Pending | ~48 tests |
+| ✅ | **Completed** | 11 endpoints | Done | 34 tests |
+| 🔄 | **High Priority** | 8 endpoints | Pending | ~32 tests |
 | 🔄 | **Medium Priority** | 8 endpoints | Pending | ~24 tests |
 | 🔄 | **Low Priority** | 8 endpoints | Pending | ~16 tests |
-| **TOTAL** | | **35 endpoints** | | **~107 tests** |
+| **TOTAL** | | **35 endpoints** | | **~106 tests** |
 
 ## Endpoint Coverage Status
 
-### ✅ **COMPLETED** (7/35)
+### ✅ **COMPLETED** (11/35)
 
 #### Authentication & User Management
 - [x] **POST /users/signin** - Login API (4 tests: 200, 400×2, 422)
@@ -33,25 +33,19 @@ This document tracks the comprehensive test coverage for all API endpoints in th
 #### Products
 - [x] **GET /api/products** - Get all products (2 tests: 200, 401)
 
-#### Cart
+#### Cart Management (CRUD operations) - ✅ **COMPLETED**
 - [x] **GET /api/cart** - Get user's cart (2 tests: 200, 401)
+- [x] **POST /api/cart/items** - Add item to cart (4 tests: 200, 400, 401, 404)
+- [x] **PUT /api/cart/items/{productId}** - Update cart item quantity (4 tests: 200, 400, 401, 404)
+- [x] **DELETE /api/cart/items/{productId}** - Remove item from cart (3 tests: 200, 401, 404)
+- [x] **DELETE /api/cart** - Clear cart (2 tests: 200, 401)
 
 #### Orders
 - [x] **GET /api/orders** - Get user's orders (4 tests: 200×3 with different params, 401)
 
 ---
 
-### 🔄 **HIGH PRIORITY** - Core Business Logic (12/35)
-
-#### Cart Management (CRUD operations)
-- [ ] **POST /api/cart/items** - Add item to cart
-  - Tests needed: 201, 400 (invalid product), 401, 404 (product not found)
-- [ ] **PUT /api/cart/items/{productId}** - Update cart item quantity
-  - Tests needed: 200, 400 (invalid quantity), 401, 404 (item not in cart)
-- [ ] **DELETE /api/cart/items/{productId}** - Remove item from cart
-  - Tests needed: 200, 401, 404 (item not in cart)
-- [ ] **DELETE /api/cart** - Clear cart
-  - Tests needed: 200, 401
+### 🔄 **HIGH PRIORITY** - Core Business Logic (8/35)
 
 #### Product Management (Admin operations)
 - [ ] **POST /api/products** - Create product (Admin)
@@ -122,7 +116,7 @@ This document tracks the comprehensive test coverage for all API endpoints in th
 ## Implementation Priority Order
 
 ### Phase 1: Core Business Logic (Weeks 1-2)
-1. **Cart Management** - Complete CRUD operations for cart items
+1. ✅ **Cart Management** - Complete CRUD operations for cart items (**COMPLETED**)
 2. **Product Management** - Admin product operations
 3. **Order Management** - Order lifecycle operations
 
@@ -166,16 +160,21 @@ This document tracks the comprehensive test coverage for all API endpoints in th
 
 ### Completed This Sprint
 - ✅ GET /api/cart (2 tests)
+- ✅ POST /api/cart/items (4 tests)
+- ✅ PUT /api/cart/items/{productId} (4 tests)
+- ✅ DELETE /api/cart/items/{productId} (3 tests)
+- ✅ DELETE /api/cart (2 tests)
 - ✅ GET /api/orders (4 tests)
 - ✅ GET /users (2 tests)
 - ✅ GET /users/{username} (3 tests)
 
 ### Next Sprint Goals
-- [ ] Complete Cart Management CRUD (4 endpoints)
 - [ ] Implement Product Management (4 endpoints)
 - [ ] Add Order Management (4 endpoints)
+- [ ] Start Admin Operations (1 endpoint)
 
 ### Success Metrics
+- **Current Coverage**: 31% (11/35 endpoints)
 - **Target Coverage**: 80% by end of Phase 2
 - **Quality Gate**: All tests must pass with proper validation
 - **Performance**: Test suite execution under 30 seconds
@@ -183,6 +182,7 @@ This document tracks the comprehensive test coverage for all API endpoints in th
 ---
 
 ## Notes
+- ✅ **Cart Management Complete**: All CRUD operations for cart items are now fully tested with comprehensive error scenarios
 - Admin endpoints require special fixture with admin role
 - Some endpoints may require specific test data setup (products, orders)
 - External service endpoints (Ollama, Email) may need mocking or test environment setup

@@ -3,6 +3,10 @@ export interface CartItemDto {
   quantity: number;
 }
 
+export interface UpdateCartItemDto {
+  quantity: number;
+}
+
 export interface CartDto {
   username: string;
   items: CartItemDto[];

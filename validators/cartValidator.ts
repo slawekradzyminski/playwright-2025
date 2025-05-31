@@ -1,9 +1,14 @@
 import { expect } from '@playwright/test';
-import type { CartDto, CartItemDto } from '../types/cart';
+import type { CartDto, CartItemDto, UpdateCartItemDto } from '../types/cart';
 
 export function validateCartItemDto(item: any): asserts item is CartItemDto {
   expect(typeof item.productId).toBe('number');
   expect(typeof item.quantity).toBe('number');
+}
+
+export function validateUpdateCartItemDto(item: any): asserts item is UpdateCartItemDto {
+  expect(typeof item.quantity).toBe('number');
+  expect(item.quantity).toBeGreaterThan(0);
 }
 
 export function validateCartDto(cart: any): asserts cart is CartDto {
