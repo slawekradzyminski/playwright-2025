@@ -1,9 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { API_URL } from '../../config/constants';
 import { RegisterDto } from '../../types/auth';
 import { generateRandomUser } from '../../generators/userGenerator';
-
-const USERS_SIGNUP = '/users/signup';
+import { postSignUp } from '../../http/postSignUp';
 
 test.describe('/users/signup API tests', () => {
   test('should successfully register a new user - 201', async ({ request }) => {
@@ -11,12 +9,7 @@ test.describe('/users/signup API tests', () => {
     const registerData: RegisterDto = generateRandomUser();
 
     // when
-    const response = await request.post(`${API_URL}${USERS_SIGNUP}`, {
-      data: registerData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await postSignUp(request, registerData);
 
     // then
     expect(response.status()).toBe(201);
@@ -30,13 +23,7 @@ test.describe('/users/signup API tests', () => {
     registerData.username = 'abc';
 
     // when
-    const response = await request.post(`${API_URL}${USERS_SIGNUP}`, {
-      data: registerData,
-      headers: {
-        'Content-Type': 'application/json'
-
-      }
-    });
+    const response = await postSignUp(request, registerData);
 
     // then
     expect(response.status()).toBe(400);
