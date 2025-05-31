@@ -1,11 +1,13 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto } from '../../types/auth';
-
-const LOGIN_URL = 'http://localhost:8081/login';
+import { LoginPage } from '../../pages/LoginPage';
 
 test.describe('Login UI tests', () => {
+  let loginPage: LoginPage;
+
   test.beforeEach(async ({ page }) => {
-    await page.goto(LOGIN_URL);
+    loginPage = new LoginPage(page);
+    await loginPage.goto();
   });
 
   test('should successfully login with valid credentials', async ({ page }) => {
@@ -16,12 +18,10 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByTestId('login-username-input').fill(credentials.username);
-    await page.getByTestId('login-password-input').fill(credentials.password);
-    await page.getByTestId('login-submit-button').click();
+    await loginPage.login(credentials);
 
     // then
-    await expect(page).not.toHaveURL(LOGIN_URL);
+    await loginPage.expectToBeRedirectedFromLogin();
   });
 
   test('should show error for invalid credentials', async ({ page }) => {
@@ -32,30 +32,27 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByTestId('login-username-input').fill(credentials.username);
-    await page.getByTestId('login-password-input').fill(credentials.password);
-    await page.getByTestId('login-submit-button').click();
+    await loginPage.login(credentials);
 
     // then
-    await expect(page).toHaveURL(LOGIN_URL);
-    await expect(page.getByTestId('toast-description')).toBeVisible();
-    await expect(page.getByTestId('toast-description')).toHaveText('Invalid username/password');
+    await loginPage.expectToBeOnLoginPage();
+    await loginPage.expectErrorMessage('Invalid username/password');
   });
 
   test('should navigate to register page when register button is clicked', async ({ page }) => {
     // when
-    await page.getByTestId('login-register-link').click();
+    await loginPage.clickRegisterButton();
 
     // then
-    await expect(page).toHaveURL('http://localhost:8081/register');
+    await loginPage.expectToBeOnRegisterPage();
   });
 
   test('should navigate to register page when register link is clicked', async ({ page }) => {
     // when
-    await page.getByTestId('register-link').click();
+    await loginPage.clickRegisterLink();
 
     // then
-    await expect(page).toHaveURL('http://localhost:8081/register');
+    await loginPage.expectToBeOnRegisterPage();
   });
 
   test('should have proper form validation for short username', async ({ page }) => {
@@ -66,12 +63,10 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByTestId('login-username-input').fill(credentials.username);
-    await page.getByTestId('login-password-input').fill(credentials.password);
-    await page.getByTestId('login-submit-button').click();
+    await loginPage.login(credentials);
 
     // then
-    await expect(page.getByText('Username must be at least 4 characters')).toBeVisible();
-    await expect(page).toHaveURL(LOGIN_URL);
+    await loginPage.expectUsernameValidationError();
+    await loginPage.expectToBeOnLoginPage();
   });
 });
