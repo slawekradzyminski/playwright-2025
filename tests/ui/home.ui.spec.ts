@@ -1,20 +1,10 @@
-import { expect } from '@playwright/test';
-import { test } from '../../fixtures/auth.fixture';
+import { test } from '../../fixtures/ui.auth.fixture';
 import { HomePage } from '../../pages/HomePage';
 
 test.describe('Home UI tests', () => {
-  let homePage: HomePage;
-
-  test.beforeEach(async ({ page }) => {
-    homePage = new HomePage(page);
-  });
-
-  test('should display all header navigation elements after login', async ({ page, authToken, userDetails }) => {
+  test('should display all header navigation elements after login', async ({ loggedInPage, authToken, userDetails }) => {
     // given
-    await homePage.goto();
-    await page.evaluate((token) => {
-      localStorage.setItem('token', token);
-    }, authToken);
+    const homePage = new HomePage(loggedInPage);
     
     // when
     await homePage.goto();
