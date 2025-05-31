@@ -51,7 +51,7 @@ When dealing with objects create custom types in types folder.
 - TypeScript types stored in `/types` folder
 
 ### Testing Best Practices
-- UI tests use accessibility-focused selectors (`getByRole`)
+- UI tests should use data-test-id as selectors (they're unique on frontend side) 
 - API tests use request context for backend testing
 - Comprehensive test coverage for both positive and negative scenarios
 - Keyboard navigation and accessibility testing included
