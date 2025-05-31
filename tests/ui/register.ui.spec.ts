@@ -19,7 +19,7 @@ test.describe('Register UI tests', () => {
     await registerPage.register(userData);
 
     // then
-    await registerPage.expectToBeRedirectedFromRegister();
+    await registerPage.expectToBeRedirectedFromPage('/register');
   });
 
   test('should show error for duplicate username', async ({ page }) => {
@@ -34,7 +34,7 @@ test.describe('Register UI tests', () => {
     await registerPage.register(registerData);
 
     // then
-    await registerPage.expectToBeOnRegisterPage();
+    await registerPage.expectToBeOnPage('/register');
     await registerPage.expectErrorMessage('Username already exists');
   });
 
@@ -43,7 +43,7 @@ test.describe('Register UI tests', () => {
     await registerPage.clickLoginLink();
 
     // then
-    await registerPage.expectToBeOnLoginPage();
+    await registerPage.expectToBeOnPage('/login');
   });
 
   test('should have proper form validation for invalid email', async ({ page }) => {
@@ -59,7 +59,7 @@ test.describe('Register UI tests', () => {
 
     // then
     await registerPage.expectValidationError('Invalid email format');
-    await registerPage.expectToBeOnRegisterPage();
+    await registerPage.expectToBeOnPage('/register');
   });
 
   test('should show error for empty required fields', async ({ page }) => {
@@ -68,6 +68,6 @@ test.describe('Register UI tests', () => {
 
     // then
     await registerPage.expectValidationError('Username is required');
-    await registerPage.expectToBeOnRegisterPage();
+    await registerPage.expectToBeOnPage('/register');
   });
 }); 

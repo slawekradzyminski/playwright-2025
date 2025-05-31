@@ -1,9 +1,9 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { RegisterDto } from '../types/auth';
 import { FRONTEND_URL } from '../config/constants';
+import { BasePage } from './BasePage';
 
-export class RegisterPage {
-  readonly page: Page;
+export class RegisterPage extends BasePage {
   readonly usernameInput: Locator;
   readonly emailInput: Locator;
   readonly passwordInput: Locator;
@@ -14,7 +14,7 @@ export class RegisterPage {
   readonly toastDescription: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.usernameInput = page.getByTestId('register-username-input');
     this.emailInput = page.getByTestId('register-email-input');
     this.passwordInput = page.getByTestId('register-password-input');
@@ -49,18 +49,6 @@ export class RegisterPage {
 
   async clickLoginLink() {
     await this.loginLink.click();
-  }
-
-  async expectToBeOnRegisterPage() {
-    await expect(this.page).toHaveURL(`${FRONTEND_URL}/register`);
-  }
-
-  async expectToBeRedirectedFromRegister() {
-    await expect(this.page).not.toHaveURL(`${FRONTEND_URL}/register`);
-  }
-
-  async expectToBeOnLoginPage() {
-    await expect(this.page).toHaveURL(`${FRONTEND_URL}/login`);
   }
 
   async expectSuccessMessage(message: string) {

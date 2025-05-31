@@ -21,7 +21,7 @@ test.describe('Login UI tests', () => {
     await loginPage.login(credentials);
 
     // then
-    await loginPage.expectToBeRedirectedFromLogin();
+    await loginPage.expectToBeRedirectedFromPage('/');
   });
 
   test('should show error for invalid credentials', async ({ page }) => {
@@ -35,7 +35,7 @@ test.describe('Login UI tests', () => {
     await loginPage.login(credentials);
 
     // then
-    await loginPage.expectToBeOnLoginPage();
+    await loginPage.expectToBeOnPage('/login');
     await loginPage.expectErrorMessage('Invalid username/password');
   });
 
@@ -44,7 +44,7 @@ test.describe('Login UI tests', () => {
     await loginPage.clickRegisterButton();
 
     // then
-    await loginPage.expectToBeOnRegisterPage();
+    await loginPage.expectToBeOnPage('/register');
   });
 
   test('should navigate to register page when register link is clicked', async ({ page }) => {
@@ -52,7 +52,7 @@ test.describe('Login UI tests', () => {
     await loginPage.clickRegisterLink();
 
     // then
-    await loginPage.expectToBeOnRegisterPage();
+    await loginPage.expectToBeOnPage('/register');
   });
 
   test('should have proper form validation for short username', async ({ page }) => {
@@ -67,6 +67,6 @@ test.describe('Login UI tests', () => {
 
     // then
     await loginPage.expectUsernameValidationError();
-    await loginPage.expectToBeOnLoginPage();
+    await loginPage.expectToBeOnPage('/login');
   });
 });
