@@ -13,6 +13,9 @@ export const test = authTest.extend<{
     }, authToken);
     
     await page.goto(`${FRONTEND_URL}/`);
+    
     await use(page);
   },
 });
+
+export { expect } from '@playwright/test';
