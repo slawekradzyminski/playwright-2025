@@ -17,4 +17,12 @@ test.describe('/api/products API tests', () => {
       validateProductDto(product);
     });
   });
+
+  test('should return 401 Unauthorized for unauthenticated requests - 401', async ({ request }) => {
+    // when
+    const response = await getProducts(request, 'invalid-token');
+
+    // then
+    expect(response.status()).toBe(401);
+  });
 }); 
