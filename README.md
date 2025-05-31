@@ -4,28 +4,71 @@ A modern TypeScript-based test suite for validating both API and UI layers of a 
 
 ## 📦 Project Overview
 
-This repository contains a comprehensive suite of automated tests using Playwright to validate the functionality of a full-stack application running in a local AWS-like environment provided by awesome-localstack.
+This repository contains a comprehensive suite of automated tests using Playwright to validate the functionality of a full-stack e-commerce application running in a local AWS-like environment provided by awesome-localstack. The test suite covers authentication, product management, shopping cart functionality, user management, and various utility features.
 
 ## 🔧 Features
 
-- **API Testing**: Validates authentication endpoints with various scenarios, including successful logins and error handling.
-- **UI Testing**: Ensures the login interface behaves correctly, covering form validations, navigation, and accessibility.
-- **TypeScript Support**: Utilizes TypeScript for type safety and better developer experience.
-- **Dockerized Environment**: Tests are designed to run against services provided by the awesome-localstack Docker setup.
+- **Comprehensive API Testing**: Validates 11 API endpoints with 34 test cases covering authentication, user management, products, cart operations, and orders
+- **Extensive UI Testing**: Tests 4 complete screens with 23 test cases covering login, registration, home dashboard, and product catalog
+- **Page Object Model**: Clean, maintainable UI test architecture with reusable page objects
+- **TypeScript Support**: Full type safety and better developer experience across all test layers
+- **Authentication Fixtures**: Streamlined API-based authentication for UI tests
+- **Dockerized Environment**: Tests designed for awesome-localstack containerized services
+
+## 📊 Test Coverage Status
+
+### API Test Coverage
+- **Total Endpoints**: 35 endpoint-method combinations
+- **Currently Tested**: 11 endpoints (31% coverage)
+- **Test Cases**: 34 comprehensive API tests
+- **Coverage Plan**: [API Test Coverage Plan](API-test-coverage-plan.md)
+
+### UI Test Coverage  
+- **Total Screens**: 11 application screens
+- **Currently Tested**: 4 screens (36% coverage)
+- **Test Cases**: 23 comprehensive UI tests
+- **Coverage Plan**: [UI Test Coverage Plan](UI-test-coverage-plan.md)
 
 ## 🗂️ Project Structure
 
 ```
 .
 ├── tests/
-│   ├── auth.spec.ts                # API tests for /users/signin endpoint
-│   └── ui/
-│       └── login.spec.ts           # UI tests for the login page
-├── types/
-│   └── auth.ts                     # TypeScript interfaces for authentication
-├── playwright.config.ts            # Playwright configuration
-├── package.json                    # Project metadata and dependencies
-└── ...
+│   ├── api/                        # API test suites
+│   │   ├── auth.spec.ts           # Authentication endpoints
+│   │   ├── users.spec.ts          # User management endpoints
+│   │   ├── products.spec.ts       # Product catalog endpoints
+│   │   ├── cart.spec.ts           # Shopping cart endpoints
+│   │   └── orders.spec.ts         # Order management endpoints
+│   └── ui/                        # UI test suites
+│       ├── login.ui.spec.ts       # Login page tests
+│       ├── register.ui.spec.ts    # Registration page tests
+│       ├── home.ui.spec.ts        # Home dashboard tests
+│       └── products.ui.spec.ts    # Products page tests
+├── pages/                         # Page Object Model classes
+│   ├── BasePage.ts               # Base page functionality
+│   ├── LoginPage.ts              # Login page objects
+│   ├── RegisterPage.ts           # Registration page objects
+│   ├── HomePage.ts               # Home page objects
+│   └── ProductsPage.ts           # Products page objects
+├── fixtures/                     # Test fixtures and utilities
+│   ├── auth.fixture.ts           # API authentication fixture
+│   └── ui.auth.fixture.ts        # UI authentication fixture
+├── types/                        # TypeScript type definitions
+│   ├── auth.ts                   # Authentication types
+│   ├── user.ts                   # User management types
+│   ├── product.ts                # Product types
+│   ├── cart.ts                   # Shopping cart types
+│   └── order.ts                  # Order types
+├── http/                         # HTTP client functions
+├── validators/                   # Response validation utilities
+├── test-plans/                   # Detailed test documentation
+│   ├── products-page-test-plan.md
+│   └── products/                 # Individual test cases
+├── API-test-coverage-plan.md     # API testing strategy
+├── UI-test-coverage-plan.md      # UI testing strategy
+├── playwright.config.ts          # Playwright configuration
+└── package.json                  # Project dependencies
 ```
 
 ## 🚀 Getting Started
@@ -63,13 +106,23 @@ Follow the instructions in the awesome-localstack repository to set up and start
 **API Tests**
 
 ```bash
-npx playwright test tests/auth.spec.ts
+# Run all API tests
+npx playwright test tests/api/
+
+# Run specific API test suites
+npx playwright test tests/api/auth.spec.ts
+npx playwright test tests/api/cart.spec.ts
 ```
 
 **UI Tests**
 
 ```bash
-npx playwright test tests/ui/login.spec.ts
+# Run all UI tests
+npx playwright test tests/ui/
+
+# Run specific UI test suites
+npx playwright test tests/ui/login.ui.spec.ts
+npx playwright test tests/ui/products.ui.spec.ts
 ```
 
 **All Tests**
@@ -86,35 +139,55 @@ The `playwright.config.ts` file is configured to:
 - Use Chromium browser for UI tests
 - Collect trace information on the first retry of a failed test
 - Specify the test directory as `./tests`
+- Support both API and UI testing workflows
 
 ## 🧪 Test Details
 
-### API Tests (`tests/auth.spec.ts`)
+### API Tests
 
-These tests cover various scenarios for the `/users/signin` endpoint:
+Comprehensive API testing covering:
 
-- **Successful Authentication**: Valid credentials return a 200 status with a valid token and user information
-- **Validation Errors**: Tests for empty or short usernames/passwords, expecting 400 status codes with appropriate error messages
-- **Authentication Errors**: Invalid credentials or missing fields result in 422 status codes with error messages
-- **Invalid JSON**: Malformed JSON payloads return a 400 status with an error message indicating invalid format
+- **Authentication** (`tests/api/auth.spec.ts`): Login/signup endpoints with validation and error scenarios
+- **User Management** (`tests/api/users.spec.ts`): User CRUD operations and profile management
+- **Products** (`tests/api/products.spec.ts`): Product catalog and search functionality
+- **Shopping Cart** (`tests/api/cart.spec.ts`): Complete cart CRUD operations with comprehensive error handling
+- **Orders** (`tests/api/orders.spec.ts`): Order creation, retrieval, and management
 
-### UI Tests (`tests/ui/login.spec.ts`)
+### UI Tests
 
-These tests validate the login page's functionality and user experience:
+Extensive UI testing using Page Object Model:
 
-- **Form Elements**: Ensures all necessary form elements are visible
-- **Successful Login**: Valid credentials redirect the user away from the login page
-- **Form Validations**: Empty or invalid inputs keep the user on the login page
-- **Navigation**: Clicking on "Register" buttons or links navigates to the registration page
-- **Form Reset**: Navigating away and back to the login page clears form fields
-- **Keyboard Navigation**: Supports tabbing through fields and submitting the form with the Enter key
+- **Login Page** (`tests/ui/login.ui.spec.ts`): Authentication form, validation, navigation, and accessibility
+- **Register Page** (`tests/ui/register.ui.spec.ts`): Registration form, validation, and user creation flow
+- **Home Page** (`tests/ui/home.ui.spec.ts`): Dashboard navigation, user information, and feature access
+- **Products Page** (`tests/ui/products.ui.spec.ts`): Product catalog, filtering, search, and shopping interactions
+
+## 📋 Test Plans & Documentation
+
+### Detailed Test Plans
+- **[Products Page Test Plan](test-plans/products-page-test-plan.md)**: 15 comprehensive test cases in Testflo format
+- **[Individual Test Cases](test-plans/products/)**: Detailed test case documentation with prerequisites and expected results
+
+### Coverage Plans
+- **[API Test Coverage Plan](API-test-coverage-plan.md)**: Complete API endpoint coverage strategy
+- **[UI Test Coverage Plan](UI-test-coverage-plan.md)**: Comprehensive UI screen coverage plan
 
 ## 🧰 Technologies Used
 
 - **Playwright**: End-to-end testing framework for web applications
-- **TypeScript**: Typed superset of JavaScript
-- **Docker**: Containerization platform
+- **TypeScript**: Typed superset of JavaScript for better development experience
+- **Page Object Model**: Maintainable UI test architecture
+- **Docker**: Containerization platform for consistent test environments
 - **awesome-localstack**: Dockerized local AWS environment for development and testing
+
+## 🎯 Quality Standards
+
+- **Given/When/Then**: All tests follow BDD-style structure with clear comments
+- **Type Safety**: Full TypeScript implementation with comprehensive type definitions
+- **Modern Syntax**: ES6+ features with import/export modules
+- **No Code Comments**: Self-documenting code without explanatory comments
+- **Comprehensive Validation**: Thorough response and UI state validation
+- **Error Scenario Coverage**: Extensive testing of edge cases and error conditions
 
 ## Playwright MCP
 
