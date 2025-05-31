@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { LoginDto } from '../types/auth';
+import { FRONTEND_URL } from '../config/constants';
 
 export class LoginPage {
   readonly page: Page;
@@ -23,7 +24,7 @@ export class LoginPage {
   }
 
   async goto() {
-    await this.page.goto('http://localhost:8081/login');
+    await this.page.goto(`${FRONTEND_URL}/login`);
   }
 
   async login(credentials: LoginDto) {
@@ -41,15 +42,15 @@ export class LoginPage {
   }
 
   async expectToBeOnLoginPage() {
-    await expect(this.page).toHaveURL('http://localhost:8081/login');
+    await expect(this.page).toHaveURL(`${FRONTEND_URL}/login`);
   }
 
   async expectToBeRedirectedFromLogin() {
-    await expect(this.page).not.toHaveURL('http://localhost:8081/login');
+    await expect(this.page).not.toHaveURL(`${FRONTEND_URL}/login`);
   }
 
   async expectToBeOnRegisterPage() {
-    await expect(this.page).toHaveURL('http://localhost:8081/register');
+    await expect(this.page).toHaveURL(`${FRONTEND_URL}/register`);
   }
 
   async expectErrorMessage(message: string) {

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto, LoginResponseDto } from '../../types/auth';
-import { API_BASE_URL } from '../../config/constants';
+import { API_URL } from '../../config/constants';
 
 const SIGNIN_ENDPOINT = '/users/signin';
 
@@ -13,7 +13,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
+    const response = await request.post(`${API_URL}${SIGNIN_ENDPOINT}`, {
       data: loginData,
       headers: {
         'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
+    const response = await request.post(`${API_URL}${SIGNIN_ENDPOINT}`, {
       data: loginData,
       headers: {
         'Content-Type': 'application/json'
@@ -63,7 +63,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
+    const response = await request.post(`${API_URL}${SIGNIN_ENDPOINT}`, {
       data: loginData,
       headers: {
         'Content-Type': 'application/json'
@@ -84,7 +84,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
+    const response = await request.post(`${API_URL}${SIGNIN_ENDPOINT}`, {
       data: loginData,
       headers: {
         'Content-Type': 'application/json'

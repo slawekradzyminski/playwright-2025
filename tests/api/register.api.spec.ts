@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { API_BASE_URL } from '../../config/constants';
+import { API_URL } from '../../config/constants';
 import { RegisterDto } from '../../types/auth';
 import { generateRandomUser } from '../../generators/userGenerator';
 
@@ -11,7 +11,7 @@ test.describe('/users/signup API tests', () => {
     const registerData: RegisterDto = generateRandomUser();
 
     // when
-    const response = await request.post(`${API_BASE_URL}${USERS_SIGNUP}`, {
+    const response = await request.post(`${API_URL}${USERS_SIGNUP}`, {
       data: registerData,
       headers: {
         'Content-Type': 'application/json'
@@ -30,7 +30,7 @@ test.describe('/users/signup API tests', () => {
     registerData.username = 'abc';
 
     // when
-    const response = await request.post(`${API_BASE_URL}${USERS_SIGNUP}`, {
+    const response = await request.post(`${API_URL}${USERS_SIGNUP}`, {
       data: registerData,
       headers: {
         'Content-Type': 'application/json'
