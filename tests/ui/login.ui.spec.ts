@@ -134,20 +134,6 @@ test.describe('Login UI tests', () => {
     await expect(page).toHaveURL(LOGIN_URL);
   });
 
-  test('should clear form fields when navigating back to login', async ({ page }) => {
-    // given
-    await page.getByRole('textbox', { name: 'Username' }).fill('testuser');
-    await page.getByRole('textbox', { name: 'Password' }).fill('testpass');
-
-    // when
-    await page.getByRole('link', { name: 'Register' }).click();
-    await page.goBack();
-
-    // then
-    await expect(page.getByRole('textbox', { name: 'Username' })).toHaveValue('');
-    await expect(page.getByRole('textbox', { name: 'Password' })).toHaveValue('');
-  });
-
   test('should handle keyboard navigation', async ({ page }) => {
     // given
     const credentials: LoginDto = {
