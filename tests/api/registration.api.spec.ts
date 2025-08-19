@@ -28,4 +28,17 @@ test.describe('/users/signup API tests', () => {
     expect(responseBody.username).toBe('Minimum username length: 4 characters');
   });
 
+  test('should not allow to register user with existing username - 400', async ({ request }) => {
+    // given
+    const userData: UserRegisterDto = generateValidUser();
+    await signup(request, userData);
+
+    // when
+    const response = await signup(request, userData);
+
+    // then
+    expect(response.status()).toBe(400);
+    const responseBody = await response.json();
+    expect(responseBody.message).toBe('Username is already in use');
+  });
 });
