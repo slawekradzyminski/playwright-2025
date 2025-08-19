@@ -53,6 +53,9 @@ export const generateUser = (overrides?: Partial<UserRegisterDto>) =>
 export const generateValidUser = (overrides?: Partial<UserRegisterDto>) =>
   buildUser(overrides, 'valid');
 
+export const generateClientUser = (overrides?: Partial<UserRegisterDto>) =>
+  buildUser({ ...overrides, roles: ['ROLE_CLIENT'] }, 'valid');
+
 /** Intentionally violates a single field. `value` is `unknown` on purpose for tests. */
 export const generateInvalidUser = <K extends keyof UserRegisterDto>(
   field: K,

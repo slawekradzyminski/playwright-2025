@@ -59,11 +59,11 @@ This document tracks the implementation status of API tests for all endpoints in
 - **File:** `tests/api/users-username.api.spec.ts`
 
 #### `/users/{username}` (PUT) - Update User
-**Status:** 📋 **TODO**
-- 📋 200 - User was updated
-- 📋 401 - Unauthorized – Missing or invalid token
-- 📋 403 - Forbidden – Insufficient permissions
-- 📋 404 - The user doesn't exist
+**Status:** ✅ **DONE**
+- ✅ 200 - User was updated
+- ✅ 401 - Unauthorized – Missing or invalid token
+- ✅ 403 - Forbidden – Insufficient permissions
+- ✅ 404 - The user doesn't exist
 - **File:** `tests/api/users-update.api.spec.ts`
 
 #### `/users/{username}` (DELETE) - Delete User

@@ -54,3 +54,12 @@ export const getUserByUsernameWithoutToken = async (request: APIRequestContext, 
     }
   });
 };
+
+export const deleteUserByUsername = async (request: APIRequestContext, token: string, username: string): Promise<APIResponse> => {
+  return await request.delete(`${API_BASE_URL}${USERS_ENDPOINT}/${username}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+};
