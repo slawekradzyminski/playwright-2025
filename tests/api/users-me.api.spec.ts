@@ -3,10 +3,10 @@ import { test, expect } from '../../fixtures/auth.fixtures';
 import { UserResponseDto } from '../../types/user';
 
 test.describe('/users/me API tests', () => {
-  test('should successfully get current user details with valid token - 200', async ({ request, authenticatedUser }) => {
+  test('should successfully get current user details with valid token - 200', async ({ request, authenticatedAdmin }) => {
     // given
-    const token = authenticatedUser.token;
-    const expectedUsername = authenticatedUser.user.username;
+    const token = authenticatedAdmin.token;
+    const expectedUsername = authenticatedAdmin.user.username;
 
     // when
     const response = await getCurrentUser(request, token);

@@ -3,9 +3,9 @@ import { test, expect } from '../../fixtures/auth.fixtures';
 import { UserResponseDto } from '../../types/user';
 
 test.describe('/users API tests', () => {
-  test('should successfully get all users with valid token - 200', async ({ request, authenticatedUser }) => {
+  test('should successfully get all users with valid token - 200', async ({ request, authenticatedAdmin }) => {
     // given
-    const token = authenticatedUser.token;
+    const token = authenticatedAdmin.token;
 
     // when
     const response = await getUsers(request, token);

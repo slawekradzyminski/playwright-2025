@@ -10,35 +10,41 @@ export interface AuthenticatedUser {
   token: string;
 }
 
+type Role = 'ROLE_ADMIN' | 'ROLE_CLIENT';
+
+async function ensureOk(response: any, context: string) {
+  if (!response.ok()) {
+    throw new Error(`${context} failed: ${response.status()} ${await response.text()}`);
+  }
+}
+
+async function registerAndAuthenticate(request: any, role: Role): Promise<AuthenticatedUser> {
+  const user: UserRegisterDto = generateValidUser({ roles: [role] });
+
+  const signupResponse = await signup(request, user);
+  await ensureOk(signupResponse, `${role} registration`);
+
+  const loginData: LoginDto = { username: user.username, password: user.password };
+  const loginResponse = await login(request, loginData);
+  await ensureOk(loginResponse, `${role} login`);
+
+  const { token } = (await loginResponse.json()) as LoginResponseDto;
+
+  return { user, token };
+}
+
 export const test = base.extend<{
-  authenticatedUser: AuthenticatedUser;
+  authenticatedAdmin: AuthenticatedUser;
+  authenticatedClient: AuthenticatedUser;
 }>({
-  authenticatedUser: async ({ request }, use) => {
-    const newUser: UserRegisterDto = generateValidUser();
-    
-    const signupResponse = await signup(request, newUser);
-    if (!signupResponse.ok()) {
-      throw new Error(`User registration failed: ${signupResponse.status()} ${await signupResponse.text()}`);
-    }
-    
-    const loginData: LoginDto = {
-      username: newUser.username,
-      password: newUser.password
-    };
-    
-    const loginResponse = await login(request, loginData);
-    if (!loginResponse.ok()) {
-      throw new Error(`User login failed: ${loginResponse.status()} ${await loginResponse.text()}`);
-    }
-    
-    const loginBody: LoginResponseDto = await loginResponse.json();
-    
-    const authenticatedUser: AuthenticatedUser = {
-      user: newUser,
-      token: loginBody.token
-    };
-    
-    await use(authenticatedUser);
+  authenticatedAdmin: async ({ request }, use) => {
+    const auth = await registerAndAuthenticate(request, 'ROLE_ADMIN');
+    await use(auth);
+  },
+
+  authenticatedClient: async ({ request }, use) => {
+    const auth = await registerAndAuthenticate(request, 'ROLE_CLIENT');
+    await use(auth);
   }
 });
 

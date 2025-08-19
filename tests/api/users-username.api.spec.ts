@@ -3,10 +3,10 @@ import { test, expect } from '../../fixtures/auth.fixtures';
 import { UserResponseDto } from '../../types/user';
 
 test.describe('/users/{username} API tests', () => {
-  test('should successfully get user by username with valid token - 200', async ({ request, authenticatedUser }) => {
+  test('should successfully get user by username with valid token - 200', async ({ request, authenticatedAdmin }) => {
     // given
-    const token = authenticatedUser.token;
-    const username = authenticatedUser.user.username;
+    const token = authenticatedAdmin.token;
+    const username = authenticatedAdmin.user.username;
 
     // when
     const response = await getUserByUsername(request, token, username);
@@ -24,9 +24,9 @@ test.describe('/users/{username} API tests', () => {
     expect(Array.isArray(user.roles)).toBe(true);
   });
 
-  test('should return unauthorized error for missing token - 401', async ({ request, authenticatedUser }) => {
+  test('should return unauthorized error for missing token - 401', async ({ request, authenticatedAdmin }) => {
     // given
-    const username = authenticatedUser.user.username;
+    const username = authenticatedAdmin.user.username;
 
     // when
     const response = await getUserByUsernameWithoutToken(request, username);
@@ -35,9 +35,9 @@ test.describe('/users/{username} API tests', () => {
     expect(response.status()).toBe(401);
   });
 
-  test('should return not found error for non-existent user - 404', async ({ request, authenticatedUser }) => {
+  test('should return not found error for non-existent user - 404', async ({ request, authenticatedAdmin }) => {
     // given
-    const token = authenticatedUser.token;
+    const token = authenticatedAdmin.token;
     const nonExistentUsername = 'nonexistentuser123456';
 
     // when

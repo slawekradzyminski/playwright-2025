@@ -2,9 +2,9 @@ import { refreshToken, refreshTokenWithoutToken } from '../../http/authRefreshCl
 import { test, expect } from '../../fixtures/auth.fixtures';
 
 test.describe('/users/refresh API tests', () => {
-  test('should successfully refresh JWT token with valid token - 200', async ({ request, authenticatedUser }) => {
+  test('should successfully refresh JWT token with valid token - 200', async ({ request, authenticatedAdmin }) => {
     // given
-    const originalToken = authenticatedUser.token;
+    const originalToken = authenticatedAdmin.token;
 
     // when
     const response = await refreshToken(request, originalToken);
