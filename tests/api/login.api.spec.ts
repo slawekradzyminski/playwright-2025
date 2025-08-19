@@ -1,8 +1,6 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto, LoginResponseDto } from '../../types/auth';
-import { API_BASE_URL } from '../../http/constants';
 import { login } from '../../http/loginClient';
-
 
 test.describe('/users/signin API tests', () => {
   test('should successfully authenticate with valid credentials - 200', async ({ request }) => {

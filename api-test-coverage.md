@@ -25,10 +25,10 @@ This document tracks the implementation status of API tests for all endpoints in
 - **File:** `tests/api/login.api.spec.ts`
 
 #### `/users/signup` (POST) - User Registration
-**Status:** 🚧 **IN_PROGRESS** (Next Priority)
-- 📋 201 - User was successfully created
-- 📋 400 - Validation failed (various field validations)
-- **Priority:** HIGH
+**Status:** ✅ **DONE**
+- ✅ 201 - User was successfully created
+- ✅ 400 - Validation failed (various field validations)
+- ✅ 500 - Server error for certain invalid inputs
 - **File:** `tests/api/registration.api.spec.ts`
 
 #### `/users/refresh` (GET) - Refresh JWT Token
@@ -260,8 +260,8 @@ This document tracks the implementation status of API tests for all endpoints in
 ## Implementation Priority
 
 ### Phase 1: Core Authentication & User Management (Week 1)
-1. 🚧 **IN_PROGRESS** - `/users/signup` (Registration)
-2. 📋 **TODO** - `/users/refresh` (Token refresh)
+1. ✅ **DONE** - `/users/signup` (Registration)
+2. 📋 **TODO** - `/users/refresh` (Token refresh) - Next Priority
 3. 📋 **TODO** - `/users/me` (Current user)
 4. 📋 **TODO** - `/users` (List users)
 5. 📋 **TODO** - `/users/{username}` (User CRUD operations)
@@ -283,16 +283,31 @@ This document tracks the implementation status of API tests for all endpoints in
 
 ### Required Type Definitions
 - ✅ `types/auth.ts` - Authentication types (DONE)
-- 📋 `types/user.ts` - User management types
+- ✅ `types/user.ts` - User management types (DONE)
 - 📋 `types/product.ts` - Product types
 - 📋 `types/cart.ts` - Cart types
 - 📋 `types/order.ts` - Order types
 - 📋 `types/ollama.ts` - AI service types
 - 📋 `types/common.ts` - Common types (pagination, error responses)
 
+### Dedicated HTTP Clients
+Following the pattern established in `http/loginClient.ts`, each API endpoint group should have a dedicated client:
+- ✅ `http/loginClient.ts` - Authentication login (DONE)
+- ✅ `http/registrationClient.ts` - User registration (DONE)
+- 📋 `http/authRefreshClient.ts` - Token refresh
+- 📋 `http/usersClient.ts` - User management operations
+- 📋 `http/productsClient.ts` - Product management operations
+- 📋 `http/cartClient.ts` - Shopping cart operations
+- 📋 `http/ordersClient.ts` - Order management operations
+- 📋 `http/ollamaClient.ts` - AI service operations
+- 📋 `http/qrClient.ts` - QR code generation
+- 📋 `http/emailClient.ts` - Email operations
+- 📋 `http/trafficClient.ts` - Traffic monitoring
+
 ### Test Utilities
 - 📋 `tests/utils/auth-helper.ts` - Authentication utilities
-- 📋 `tests/utils/test-data.ts` - Test data generators
+- ✅ `tests/utils/userGenerator.ts` - User data generators using Faker.js (DONE)
+- 📋 `tests/utils/test-data.ts` - Other test data generators
 - 📋 `tests/utils/api-client.ts` - API client wrapper
 
 ### Configuration
@@ -303,8 +318,8 @@ This document tracks the implementation status of API tests for all endpoints in
 
 ## Coverage Metrics
 - **Total Endpoints:** 27
-- **Implemented:** 1 (3.7%)
-- **In Progress:** 1 (3.7%)
+- **Implemented:** 2 (7.4%)
+- **In Progress:** 0 (0%)
 - **Remaining:** 25 (92.6%)
 
-**Next Action:** Implement registration endpoint tests (`/users/signup`)
+**Next Action:** Implement token refresh endpoint tests (`/users/refresh`)

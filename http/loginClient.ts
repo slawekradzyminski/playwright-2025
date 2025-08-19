@@ -1,6 +1,6 @@
 import { APIRequestContext, APIResponse } from "@playwright/test";
 import { LoginDto } from "../types/auth";
-import { API_BASE_URL } from "./constants";
+import { API_BASE_URL } from "./costants";
 
 const SIGNIN_ENDPOINT = '/users/signin';
 
