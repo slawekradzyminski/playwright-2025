@@ -12,6 +12,10 @@ export interface LoginResponseDto {
   roles: string[];
 }
 
+export interface RefreshTokenResponseDto {
+  token: string;
+}
+
 export interface ErrorResponse {
   message?: string;
   errors?: Record<string, string[]>;

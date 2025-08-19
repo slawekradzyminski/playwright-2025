@@ -32,9 +32,9 @@ This document tracks the implementation status of API tests for all endpoints in
 - **File:** `tests/api/registration.api.spec.ts`
 
 #### `/users/refresh` (GET) - Refresh JWT Token
-**Status:** 📋 **TODO**
-- 📋 200 - New JWT token
-- 📋 401 - Unauthorized – Missing or invalid token
+**Status:** ✅ **DONE**
+- ✅ 200 - New JWT token
+- ✅ 401 - Unauthorized – Missing or invalid token
 - **File:** `tests/api/auth-refresh.api.spec.ts`
 
 ### 2. User Management Endpoints
@@ -261,8 +261,8 @@ This document tracks the implementation status of API tests for all endpoints in
 
 ### Phase 1: Core Authentication & User Management (Week 1)
 1. ✅ **DONE** - `/users/signup` (Registration)
-2. 📋 **TODO** - `/users/refresh` (Token refresh) - Next Priority
-3. 📋 **TODO** - `/users/me` (Current user)
+2. ✅ **DONE** - `/users/refresh` (Token refresh)
+3. 📋 **TODO** - `/users/me` (Current user) - Next Priority
 4. 📋 **TODO** - `/users` (List users)
 5. 📋 **TODO** - `/users/{username}` (User CRUD operations)
 
@@ -294,7 +294,7 @@ This document tracks the implementation status of API tests for all endpoints in
 Following the pattern established in `http/loginClient.ts`, each API endpoint group should have a dedicated client:
 - ✅ `http/loginClient.ts` - Authentication login (DONE)
 - ✅ `http/registrationClient.ts` - User registration (DONE)
-- 📋 `http/authRefreshClient.ts` - Token refresh
+- ✅ `http/authRefreshClient.ts` - Token refresh (DONE)
 - 📋 `http/usersClient.ts` - User management operations
 - 📋 `http/productsClient.ts` - Product management operations
 - 📋 `http/cartClient.ts` - Shopping cart operations
@@ -318,8 +318,8 @@ Following the pattern established in `http/loginClient.ts`, each API endpoint gr
 
 ## Coverage Metrics
 - **Total Endpoints:** 27
-- **Implemented:** 2 (7.4%)
+- **Implemented:** 3 (11.1%)
 - **In Progress:** 0 (0%)
-- **Remaining:** 25 (92.6%)
+- **Remaining:** 24 (88.9%)
 
-**Next Action:** Implement token refresh endpoint tests (`/users/refresh`)
+**Next Action:** Implement user management endpoint tests (`/users/me`)
