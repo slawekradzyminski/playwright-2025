@@ -1,8 +1,6 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto, LoginResponseDto } from '../../types/auth';
-
-const API_BASE_URL = 'http://localhost:4001';
-const SIGNIN_ENDPOINT = '/users/signin';
+import { login } from '../../http/loginClient';
 
 test.describe('/users/signin API tests', () => {
   test('should successfully authenticate with valid credentials - 200', async ({ request }) => {
@@ -13,12 +11,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await login(request, loginData);
 
     // then
     expect(response.status()).toBe(200);
@@ -40,12 +33,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await login(request, loginData);
 
     // then
     expect(response.status()).toBe(400);
@@ -61,12 +49,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await login(request, loginData);
 
     // then
     expect(response.status()).toBe(422);
