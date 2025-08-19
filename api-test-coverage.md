@@ -40,22 +40,22 @@ This document tracks the implementation status of API tests for all endpoints in
 ### 2. User Management Endpoints
 
 #### `/users` (GET) - Get All Users
-**Status:** 📋 **TODO**
-- 📋 200 - List of users
-- 📋 401 - Unauthorized – Missing or invalid token
+**Status:** ✅ **DONE**
+- ✅ 200 - List of users
+- ✅ 401 - Unauthorized – Missing or invalid token
 - **File:** `tests/api/users.api.spec.ts`
 
 #### `/users/me` (GET) - Get Current User
-**Status:** 📋 **TODO**
-- 📋 200 - Current user details
-- 📋 401 - Unauthorized – Missing or invalid token
+**Status:** ✅ **DONE**
+- ✅ 200 - Current user details
+- ✅ 401 - Unauthorized – Missing or invalid token
 - **File:** `tests/api/users.api.spec.ts`
 
 #### `/users/{username}` (GET) - Get User by Username
-**Status:** 📋 **TODO**
-- 📋 200 - User details
-- 📋 401 - Unauthorized – Missing or invalid token
-- 📋 404 - The user doesn't exist
+**Status:** ✅ **DONE**
+- ✅ 200 - User details
+- ✅ 401 - Unauthorized – Missing or invalid token
+- ✅ 404 - The user doesn't exist
 - **File:** `tests/api/users.api.spec.ts`
 
 #### `/users/{username}` (PUT) - Update User
@@ -262,9 +262,10 @@ This document tracks the implementation status of API tests for all endpoints in
 ### Phase 1: Core Authentication & User Management (Week 1)
 1. ✅ **DONE** - `/users/signup` (Registration)
 2. ✅ **DONE** - `/users/refresh` (Token refresh)
-3. 📋 **TODO** - `/users/me` (Current user) - Next Priority
-4. 📋 **TODO** - `/users` (List users)
-5. 📋 **TODO** - `/users/{username}` (User CRUD operations)
+3. ✅ **DONE** - `/users/me` (Current user)
+4. ✅ **DONE** - `/users` (List users)
+5. ✅ **DONE** - `/users/{username}` (Get user by username)
+6. 📋 **TODO** - `/users/{username}` (PUT/DELETE operations) - Next Priority
 
 ### Phase 2: E-commerce Core (Week 2)
 1. 📋 **TODO** - `/api/products` (Product management)
@@ -295,7 +296,7 @@ Following the pattern established in `http/loginClient.ts`, each API endpoint gr
 - ✅ `http/loginClient.ts` - Authentication login (DONE)
 - ✅ `http/registrationClient.ts` - User registration (DONE)
 - ✅ `http/authRefreshClient.ts` - Token refresh (DONE)
-- 📋 `http/usersClient.ts` - User management operations
+- ✅ `http/usersClient.ts` - User management operations (DONE)
 - 📋 `http/productsClient.ts` - Product management operations
 - 📋 `http/cartClient.ts` - Shopping cart operations
 - 📋 `http/ordersClient.ts` - Order management operations
@@ -318,8 +319,8 @@ Following the pattern established in `http/loginClient.ts`, each API endpoint gr
 
 ## Coverage Metrics
 - **Total Endpoints:** 27
-- **Implemented:** 3 (11.1%)
+- **Implemented:** 6 (22.2%)
 - **In Progress:** 0 (0%)
-- **Remaining:** 24 (88.9%)
+- **Remaining:** 21 (77.8%)
 
-**Next Action:** Implement user management endpoint tests (`/users/me`)
+**Next Action:** Implement user CRUD operations (`/users/{username}` PUT/DELETE endpoints)
