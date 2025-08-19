@@ -5,7 +5,7 @@ import type { UserRegisterDto, UserRole } from '../types/user';
 const ensureMinLen = (s: string, len: number) =>
   s.length >= len ? s : s + faker.string.numeric(len - s.length);
 
-const DEFAULT_ROLES: readonly UserRole[] = ['ROLE_CLIENT'] as const;
+const DEFAULT_ROLES: readonly UserRole[] = ['ROLE_CLIENT', 'ROLE_ADMIN'] as const;
 
 type Variant = 'random' | 'valid';
 

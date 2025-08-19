@@ -43,20 +43,20 @@ This document tracks the implementation status of API tests for all endpoints in
 **Status:** ✅ **DONE**
 - ✅ 200 - List of users
 - ✅ 401 - Unauthorized – Missing or invalid token
-- **File:** `tests/api/users.api.spec.ts`
+- **File:** `tests/api/users-get-all.api.spec.ts`
 
 #### `/users/me` (GET) - Get Current User
 **Status:** ✅ **DONE**
 - ✅ 200 - Current user details
 - ✅ 401 - Unauthorized – Missing or invalid token
-- **File:** `tests/api/users.api.spec.ts`
+- **File:** `tests/api/users-me.api.spec.ts`
 
 #### `/users/{username}` (GET) - Get User by Username
 **Status:** ✅ **DONE**
 - ✅ 200 - User details
 - ✅ 401 - Unauthorized – Missing or invalid token
 - ✅ 404 - The user doesn't exist
-- **File:** `tests/api/users.api.spec.ts`
+- **File:** `tests/api/users-username.api.spec.ts`
 
 #### `/users/{username}` (PUT) - Update User
 **Status:** 📋 **TODO**
@@ -64,7 +64,7 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 401 - Unauthorized – Missing or invalid token
 - 📋 403 - Forbidden – Insufficient permissions
 - 📋 404 - The user doesn't exist
-- **File:** `tests/api/users.api.spec.ts`
+- **File:** `tests/api/users-update.api.spec.ts`
 
 #### `/users/{username}` (DELETE) - Delete User
 **Status:** 📋 **TODO**
@@ -72,7 +72,7 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 401 - Unauthorized – Missing or invalid token
 - 📋 403 - Forbidden – Insufficient permissions
 - 📋 404 - The user doesn't exist
-- **File:** `tests/api/users.api.spec.ts`
+- **File:** `tests/api/users-delete.api.spec.ts`
 
 #### `/users/{username}/system-prompt` (GET) - Get User's System Prompt
 **Status:** 📋 **TODO**
@@ -80,7 +80,7 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 401 - Unauthorized - Missing or invalid token
 - 📋 403 - Forbidden - Insufficient permissions
 - 📋 404 - The user doesn't exist
-- **File:** `tests/api/users.api.spec.ts`
+- **File:** `tests/api/users-system-prompt-get.api.spec.ts`
 
 #### `/users/{username}/system-prompt` (PUT) - Update User's System Prompt
 **Status:** 📋 **TODO**
@@ -88,7 +88,7 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 401 - Unauthorized - Missing or invalid token
 - 📋 403 - Forbidden - Insufficient permissions
 - 📋 404 - The user doesn't exist
-- **File:** `tests/api/users.api.spec.ts`
+- **File:** `tests/api/users-system-prompt-update.api.spec.ts`
 
 ### 3. Product Management Endpoints
 
@@ -96,7 +96,7 @@ This document tracks the implementation status of API tests for all endpoints in
 **Status:** 📋 **TODO**
 - 📋 200 - Successfully retrieved products
 - 📋 401 - Unauthorized
-- **File:** `tests/api/products.api.spec.ts`
+- **File:** `tests/api/products-get-all.api.spec.ts`
 
 #### `/api/products` (POST) - Create New Product
 **Status:** 📋 **TODO**
@@ -104,14 +104,14 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 400 - Invalid input
 - 📋 401 - Unauthorized
 - 📋 403 - Forbidden - requires admin role
-- **File:** `tests/api/products.api.spec.ts`
+- **File:** `tests/api/products-create.api.spec.ts`
 
 #### `/api/products/{id}` (GET) - Get Product by ID
 **Status:** 📋 **TODO**
 - 📋 200 - Successfully retrieved product
 - 📋 401 - Unauthorized
 - 📋 404 - Product not found
-- **File:** `tests/api/products.api.spec.ts`
+- **File:** `tests/api/products-get-by-id.api.spec.ts`
 
 #### `/api/products/{id}` (PUT) - Update Product
 **Status:** 📋 **TODO**
@@ -120,7 +120,7 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 401 - Unauthorized
 - 📋 403 - Forbidden - requires admin role
 - 📋 404 - Product not found
-- **File:** `tests/api/products.api.spec.ts`
+- **File:** `tests/api/products-update.api.spec.ts`
 
 #### `/api/products/{id}` (DELETE) - Delete Product
 **Status:** 📋 **TODO**
@@ -128,7 +128,7 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 401 - Unauthorized
 - 📋 403 - Forbidden - requires admin role
 - 📋 404 - Product not found
-- **File:** `tests/api/products.api.spec.ts`
+- **File:** `tests/api/products-delete.api.spec.ts`
 
 ### 4. Shopping Cart Endpoints
 
@@ -136,13 +136,13 @@ This document tracks the implementation status of API tests for all endpoints in
 **Status:** 📋 **TODO**
 - 📋 200 - Successfully retrieved cart
 - 📋 401 - Unauthorized
-- **File:** `tests/api/cart.api.spec.ts`
+- **File:** `tests/api/cart-get.api.spec.ts`
 
 #### `/api/cart` (DELETE) - Clear Cart
 **Status:** 📋 **TODO**
 - 📋 200 - Cart cleared successfully
 - 📋 401 - Unauthorized
-- **File:** `tests/api/cart.api.spec.ts`
+- **File:** `tests/api/cart-clear.api.spec.ts`
 
 #### `/api/cart/items` (POST) - Add Item to Cart
 **Status:** 📋 **TODO**
@@ -150,7 +150,7 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 400 - Invalid input
 - 📋 401 - Unauthorized
 - 📋 404 - Product not found
-- **File:** `tests/api/cart.api.spec.ts`
+- **File:** `tests/api/cart-add-item.api.spec.ts`
 
 #### `/api/cart/items/{productId}` (PUT) - Update Item Quantity
 **Status:** 📋 **TODO**
@@ -158,14 +158,14 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 400 - Invalid input
 - 📋 401 - Unauthorized
 - 📋 404 - Cart item not found
-- **File:** `tests/api/cart.api.spec.ts`
+- **File:** `tests/api/cart-update-item.api.spec.ts`
 
 #### `/api/cart/items/{productId}` (DELETE) - Remove Item from Cart
 **Status:** 📋 **TODO**
 - 📋 200 - Item removed successfully
 - 📋 401 - Unauthorized
 - 📋 404 - Cart item not found
-- **File:** `tests/api/cart.api.spec.ts`
+- **File:** `tests/api/cart-delete-item.api.spec.ts`
 
 ### 5. Order Management Endpoints
 
@@ -173,21 +173,21 @@ This document tracks the implementation status of API tests for all endpoints in
 **Status:** 📋 **TODO**
 - 📋 200 - Orders retrieved successfully
 - 📋 401 - Unauthorized
-- **File:** `tests/api/orders.api.spec.ts`
+- **File:** `tests/api/orders-get.api.spec.ts`
 
 #### `/api/orders` (POST) - Create Order from Cart
 **Status:** 📋 **TODO**
 - 📋 201 - Order created successfully
 - 📋 400 - Invalid input or empty cart
 - 📋 401 - Unauthorized
-- **File:** `tests/api/orders.api.spec.ts`
+- **File:** `tests/api/orders-create.api.spec.ts`
 
 #### `/api/orders/{id}` (GET) - Get Order by ID
 **Status:** 📋 **TODO**
 - 📋 200 - Order retrieved successfully
 - 📋 401 - Unauthorized
 - 📋 404 - Order not found
-- **File:** `tests/api/orders.api.spec.ts`
+- **File:** `tests/api/orders-get-by-id.api.spec.ts`
 
 #### `/api/orders/{id}/cancel` (POST) - Cancel Order
 **Status:** 📋 **TODO**
@@ -195,7 +195,7 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 400 - Order cannot be cancelled
 - 📋 401 - Unauthorized
 - 📋 404 - Order not found
-- **File:** `tests/api/orders.api.spec.ts`
+- **File:** `tests/api/orders-cancel.api.spec.ts`
 
 #### `/api/orders/{id}/status` (PUT) - Update Order Status (Admin)
 **Status:** 📋 **TODO**
@@ -204,14 +204,14 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 401 - Unauthorized
 - 📋 403 - Forbidden
 - 📋 404 - Order not found
-- **File:** `tests/api/orders.api.spec.ts`
+- **File:** `tests/api/orders-update-status.api.spec.ts`
 
 #### `/api/orders/admin` (GET) - Get All Orders (Admin)
 **Status:** 📋 **TODO**
 - 📋 200 - Orders retrieved successfully
 - 📋 401 - Unauthorized
 - 📋 403 - Forbidden
-- **File:** `tests/api/orders.api.spec.ts`
+- **File:** `tests/api/orders-get-all.api.spec.ts`
 
 ### 6. Ollama AI Endpoints
 
@@ -222,7 +222,7 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 401 - Unauthorized
 - 📋 404 - Model not found
 - 📋 500 - Ollama server error
-- **File:** `tests/api/ollama.api.spec.ts`
+- **File:** `tests/api/ollama-generate.api.spec.ts`
 
 #### `/api/ollama/chat` (POST) - Chat with Model
 **Status:** 📋 **TODO**
@@ -231,7 +231,7 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 401 - Unauthorized
 - 📋 404 - Model not found
 - 📋 500 - Ollama server error
-- **File:** `tests/api/ollama.api.spec.ts`
+- **File:** `tests/api/ollama-chat.api.spec.ts`
 
 ### 7. Utility Endpoints
 
@@ -240,20 +240,20 @@ This document tracks the implementation status of API tests for all endpoints in
 - 📋 200 - Successfully generated QR code
 - 📋 400 - Invalid input
 - 📋 401 - Unauthorized
-- **File:** `tests/api/qr.api.spec.ts`
+- **File:** `tests/api/qr-create.api.spec.ts`
 
 #### `/email` (POST) - Send Email
 **Status:** 📋 **TODO**
 - 📋 200 - Email sent successfully
 - 📋 400 - Invalid email data
 - 📋 401 - Unauthorized
-- **File:** `tests/api/email.api.spec.ts`
+- **File:** `tests/api/email-send.api.spec.ts`
 
 #### `/api/traffic/info` (GET) - Get Traffic Monitoring Info
 **Status:** 📋 **TODO**
 - 📋 200 - Successfully returned info
 - 📋 401 - Unauthorized
-- **File:** `tests/api/traffic.api.spec.ts`
+- **File:** `tests/api/traffic-info.api.spec.ts`
 
 ---
 
@@ -297,6 +297,7 @@ Following the pattern established in `http/loginClient.ts`, each API endpoint gr
 - ✅ `http/registrationClient.ts` - User registration (DONE)
 - ✅ `http/authRefreshClient.ts` - Token refresh (DONE)
 - ✅ `http/usersClient.ts` - User management operations (DONE)
+  - Used by: `users-get-all.api.spec.ts`, `users-me.api.spec.ts`, `users-username.api.spec.ts`
 - 📋 `http/productsClient.ts` - Product management operations
 - 📋 `http/cartClient.ts` - Shopping cart operations
 - 📋 `http/ordersClient.ts` - Order management operations
@@ -324,3 +325,10 @@ Following the pattern established in `http/loginClient.ts`, each API endpoint gr
 - **Remaining:** 21 (77.8%)
 
 **Next Action:** Implement user CRUD operations (`/users/{username}` PUT/DELETE endpoints)
+
+**Note:** User endpoint tests have been split into separate files:
+- `tests/api/users-get-all.api.spec.ts` - GET /users
+- `tests/api/users-me.api.spec.ts` - GET /users/me  
+- `tests/api/users-username.api.spec.ts` - GET /users/{username}
+- Future: `tests/api/users-update.api.spec.ts` - PUT /users/{username}
+- Future: `tests/api/users-delete.api.spec.ts` - DELETE /users/{username}
