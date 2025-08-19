@@ -2,7 +2,10 @@
   "name": "atwwpraktyce",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test:api": "playwright test tests/api",
+    "test:ui": "playwright test tests/ui"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
