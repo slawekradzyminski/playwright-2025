@@ -75,19 +75,19 @@ This document tracks the implementation status of API tests for all endpoints in
 - **File:** `tests/api/users-delete.api.spec.ts`
 
 #### `/users/{username}/system-prompt` (GET) - Get User's System Prompt
-**Status:** 📋 **TODO**
-- 📋 200 - System prompt retrieved successfully
-- 📋 401 - Unauthorized - Missing or invalid token
-- 📋 403 - Forbidden - Insufficient permissions
-- 📋 404 - The user doesn't exist
+**Status:** ✅ **DONE**
+- ✅ 200 - System prompt retrieved successfully
+- ✅ 401 - Unauthorized - Missing or invalid token
+- ✅ 403 - Forbidden - Insufficient permissions
+- ✅ 404 - The user doesn't exist
 - **File:** `tests/api/users-system-prompt-get.api.spec.ts`
 
 #### `/users/{username}/system-prompt` (PUT) - Update User's System Prompt
-**Status:** 📋 **TODO**
-- 📋 200 - System prompt was updated
-- 📋 401 - Unauthorized - Missing or invalid token
-- 📋 403 - Forbidden - Insufficient permissions
-- 📋 404 - The user doesn't exist
+**Status:** ✅ **DONE**
+- ✅ 200 - System prompt was updated
+- ✅ 401 - Unauthorized - Missing or invalid token
+- ✅ 403 - Forbidden - Insufficient permissions
+- ✅ 404 - The user doesn't exist
 - **File:** `tests/api/users-system-prompt-update.api.spec.ts`
 
 ### 3. Product Management Endpoints

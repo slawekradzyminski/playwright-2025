@@ -1,5 +1,6 @@
 import { APIRequestContext, APIResponse } from "@playwright/test";
 import { API_BASE_URL } from "./costants";
+import { SystemPromptDto } from "../types/user";
 
 const USERS_ENDPOINT = '/users';
 const USERS_ME_ENDPOINT = '/users/me';
@@ -61,5 +62,41 @@ export const deleteUserByUsername = async (request: APIRequestContext, token: st
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     }
+  });
+};
+
+export const getSystemPromptForUser = async (request: APIRequestContext, token: string, username: string): Promise<APIResponse> => {
+  return await request.get(`${API_BASE_URL}${USERS_ENDPOINT}/${username}/system-prompt`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+};
+
+export const getSystemPromptForUserWithoutToken = async (request: APIRequestContext, username: string): Promise<APIResponse> => {
+  return await request.get(`${API_BASE_URL}${USERS_ENDPOINT}/${username}/system-prompt`, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+};
+
+export const updateSystemPromptForUser = async (request: APIRequestContext, token: string, username: string, systemPrompt: SystemPromptDto): Promise<APIResponse> => {
+  return await request.put(`${API_BASE_URL}${USERS_ENDPOINT}/${username}/system-prompt`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    data: systemPrompt
+  });
+};
+
+export const updateSystemPromptForUserWithoutToken = async (request: APIRequestContext, username: string, systemPrompt: SystemPromptDto): Promise<APIResponse> => {
+  return await request.put(`${API_BASE_URL}${USERS_ENDPOINT}/${username}/system-prompt`, {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: systemPrompt
   });
 };

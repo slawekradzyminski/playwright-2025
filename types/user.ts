@@ -22,3 +22,7 @@ export interface ValidationErrorResponse {
   [field: string]: string;
 }
 
+export interface SystemPromptDto {
+  systemPrompt: string;
+}
+
