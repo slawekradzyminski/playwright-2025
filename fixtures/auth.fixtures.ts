@@ -4,6 +4,7 @@ import type { UserRegisterDto } from '../types/user';
 import { login } from '../http/loginClient';
 import { signup } from '../http/registrationClient';
 import { generateValidUser } from '../generators/userGenerator';
+import { FRONTEND_URL } from '../pages/constants';
 
 export interface AuthenticatedUser {
   user: UserRegisterDto;
@@ -33,9 +34,23 @@ async function registerAndAuthenticate(request: any, role: Role): Promise<Authen
   return { user, token };
 }
 
+async function authenticateAndNavigateToHomePage(page: any, request: any, role: Role): Promise<AuthenticatedUser> {
+  const auth = await registerAndAuthenticate(request, role);
+  
+  await page.addInitScript((token: string) => {
+    localStorage.setItem('token', token);
+  }, auth.token);
+  
+  await page.goto(`${FRONTEND_URL}/`);
+  
+  return auth;
+}
+
 export const test = base.extend<{
   authenticatedAdmin: AuthenticatedUser;
   authenticatedClient: AuthenticatedUser;
+  loggedInAdmin: AuthenticatedUser;
+  loggedInClient: AuthenticatedUser;
 }>({
   authenticatedAdmin: async ({ request }, use) => {
     const auth = await registerAndAuthenticate(request, 'ROLE_ADMIN');
@@ -44,6 +59,16 @@ export const test = base.extend<{
 
   authenticatedClient: async ({ request }, use) => {
     const auth = await registerAndAuthenticate(request, 'ROLE_CLIENT');
+    await use(auth);
+  },
+
+  loggedInAdmin: async ({ page, request }, use) => {
+    const auth = await authenticateAndNavigateToHomePage(page, request, 'ROLE_ADMIN');
+    await use(auth);
+  },
+
+  loggedInClient: async ({ page, request }, use) => {
+    const auth = await authenticateAndNavigateToHomePage(page, request, 'ROLE_CLIENT');
     await use(auth);
   }
 });
