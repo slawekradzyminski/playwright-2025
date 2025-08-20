@@ -51,13 +51,15 @@ This document tracks the implementation status of UI tests for all screens/views
 - **File:** `tests/ui/home.ui.spec.ts`
 
 #### `/products` - Products Page
-**Status:** 📋 **TODO**
-- 📋 Display list of products with correct information
-- 📋 Filter products by category
-- 📋 Search products functionality
-- 📋 Sort products (Name A-Z, Name Z-A, Price Low-High, Price High-Low)
-- 📋 Add products to cart with quantity controls
-- 📋 Navigate to product details page
+**Status:** ✅ **DONE**
+- ✅ Display list of products with correct information
+- ✅ Filter products by category (All, Audio, Books, Clothing, Computers, Electronics, Food & Beverage, Gaming, Home & Garden, Home & Kitchen, Sports, Toys, Wearables)
+- ✅ Search products functionality
+- ✅ Sort products (Name A-Z, Name Z-A, Price Low-High, Price High-Low)
+- ✅ Add products to cart with quantity controls
+- ✅ Navigate to product details page
+- ✅ Combine filtering and searching
+- ✅ Combine filtering and sorting
 - **File:** `tests/ui/products.ui.spec.ts`
 
 #### `/products/:id` - Product Details Page
@@ -210,9 +212,9 @@ This document tracks the implementation status of UI tests for all screens/views
 
 ### Phase 1: Core User Flows (Week 1)
 1. ✅ **DONE** - Login/Register pages
-2. 📋 **TODO** - Home page navigation
-3. 📋 **TODO** - Products listing and details
-4. 📋 **TODO** - Shopping cart functionality
+2. ✅ **DONE** - Home page navigation
+3. ✅ **DONE** - Products listing and filtering/sorting/search
+4. 📋 **TODO** - Product details and shopping cart functionality
 
 ### Phase 2: User Management & Utilities (Week 2)
 1. 📋 **TODO** - User profile and editing
@@ -234,7 +236,7 @@ Following the pattern established, each screen should have a dedicated Page Obje
 - ✅ `pages/LoginPage.ts` - Login page interactions (DONE)
 - ✅ `pages/RegisterPage.ts` - Registration page interactions (DONE)
 - ✅ `pages/HomePage.ts` - Home page interactions (DONE)
-- 📋 `pages/ProductsPage.ts` - Products listing page
+- ✅ `pages/ProductsPage.ts` - Products listing page (DONE)
 - 📋 `pages/ProductDetailsPage.ts` - Product details page
 - 📋 `pages/UsersPage.ts` - Users management page
 - 📋 `pages/EditUserPage.ts` - Edit user page
@@ -269,11 +271,11 @@ Following the pattern established, each screen should have a dedicated Page Obje
 
 ## Coverage Metrics
 - **Total Screens:** 19 unique views
-- **Implemented:** 3 (15.8%)
+- **Implemented:** 4 (21.1%)
 - **In Progress:** 0 (0%)
-- **Remaining:** 16 (84.2%)
+- **Remaining:** 15 (78.9%)
 
-**Next Action:** Implement products page tests
+**Next Action:** Implement product details page tests
 
 ## Test Strategy Notes
 
