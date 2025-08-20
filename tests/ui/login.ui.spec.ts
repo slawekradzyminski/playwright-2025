@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto } from '../../types/auth';
+import { generateValidUser } from '../../generators/userGenerator';
+import { signup } from '../../http/registrationClient';
 
 const LOGIN_URL = 'http://localhost:8081/login';
 
@@ -8,11 +10,13 @@ test.describe('Login UI tests', () => {
     await page.goto(LOGIN_URL);
   });
 
-  test('should successfully login with valid credentials', async ({ page }) => {
+  test('should successfully login with valid credentials', async ({ page, request }) => {
     // given
+    const user = generateValidUser();
+    await signup(request, user);
     const credentials: LoginDto = {
-      username: 'admin',
-      password: 'admin'
+      username: user.username,
+      password: user.password
     };
 
     // when
@@ -56,15 +60,6 @@ test.describe('Login UI tests', () => {
     await expect(page).toHaveURL(LOGIN_URL);
   });
 
-  test('should navigate to register page when register link is clicked', async ({ page }) => {
-    // given
-    // when
-    await page.getByRole('link', { name: 'Register' }).click();
-
-    // then
-    await expect(page).toHaveURL('http://localhost:8081/register');
-  });
-
   test('should have proper form validation for short username', async ({ page }) => {
     // given
     const credentials = {
@@ -79,6 +74,14 @@ test.describe('Login UI tests', () => {
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);
+  });
+
+  test('should navigate to register page when register link is clicked', async ({ page }) => {
+    // when
+    await page.getByRole('link', { name: 'Register' }).click();
+
+    // then
+    await expect(page).toHaveURL('http://localhost:8081/register');
   });
 
 }); 
