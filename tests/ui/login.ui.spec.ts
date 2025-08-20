@@ -20,12 +20,16 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByTestId('login-username-input').fill(credentials.username);
+    await page.getByTestId('login-password-input').fill(credentials.password);
+    await page.getByTestId('login-submit-button').click();
 
     // then
-    await expect(page).not.toHaveURL(LOGIN_URL);
+    await expect(page).toHaveURL('http://localhost:8081/');
+    await expect(page.getByTestId('home-welcome-title')).toContainText(`Welcome, ${user.firstName}!`);
+    await expect(page.getByTestId('home-user-email')).toContainText(user.email);
+    await expect(page.getByTestId('username-profile-link')).toContainText(`${user.firstName} ${user.lastName}`);
+    await expect(page.getByTestId('logout-button')).toBeVisible();
   });
 
   test('should show error for empty username', async ({ page }) => {
@@ -36,12 +40,13 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByTestId('login-username-input').fill(credentials.username);
+    await page.getByTestId('login-password-input').fill(credentials.password);
+    await page.getByTestId('login-submit-button').click();
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);
+    await expect(page.getByTestId('login-username-error')).toContainText('Username is required');
   });
 
   test('should show error for invalid credentials', async ({ page }) => {
@@ -52,12 +57,13 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByTestId('login-username-input').fill(credentials.username);
+    await page.getByTestId('login-password-input').fill(credentials.password);
+    await page.getByTestId('login-submit-button').click();
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);
+    await expect(page.getByTestId('toast-description')).toContainText('Invalid username/password');
   });
 
   test('should have proper form validation for short username', async ({ page }) => {
@@ -68,17 +74,18 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByTestId('login-username-input').fill(credentials.username);
+    await page.getByTestId('login-password-input').fill(credentials.password);
+    await page.getByTestId('login-submit-button').click();
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);
+    await expect(page.getByTestId('login-username-error')).toContainText('Username must be at least 4 characters');
   });
 
   test('should navigate to register page when register link is clicked', async ({ page }) => {
     // when
-    await page.getByRole('link', { name: 'Register' }).click();
+    await page.getByTestId('login-register-link').click();
 
     // then
     await expect(page).toHaveURL('http://localhost:8081/register');

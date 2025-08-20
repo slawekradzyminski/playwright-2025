@@ -1,0 +1,9 @@
+---
+alwaysApply: false
+---
+
+In UI tests prefer to use `data-testid` attribute to locate elements.
+
+```typescript
+await page.getByTestId('login-button').click();
+```
