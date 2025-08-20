@@ -37,3 +37,7 @@ async expectWelcomeMessage(firstName: string) {
 // Bad - direct assertion in test
 await expect(page.getByTestId('welcome-title')).toContainText(`Welcome, ${firstName}!`);
 ```
+
+### 4. Always run changed/created tests to make sure they pass.
+
+In case of failure fix the test and run it again.
