@@ -18,7 +18,7 @@ await homePage.expectSuccessfulLogin(user.firstName, user.email, user.lastName);
 ```
 
 ### 2. Use data-testid selectors
-In page objects, prefer to use `data-testid` attribute to locate elements.
+In page objects, prefer to use `data-testid` attribute to locate elements. Always use Playwright MCP to find proper selectors. 
 
 ```typescript
 // In page object classes
