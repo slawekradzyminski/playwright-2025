@@ -2,8 +2,38 @@
 alwaysApply: false
 ---
 
-In UI tests prefer to use `data-testid` attribute to locate elements.
+## UI Test Rules
+
+### 1. Use Page Object Model (POM)
+All UI tests MUST use the Page Object Model pattern. Create page objects in the `pages/` directory.
 
 ```typescript
-await page.getByTestId('login-button').click();
+// Create page objects
+const loginPage = new LoginPage(page);
+const homePage = new HomePage(page);
+
+// Use page object methods
+await loginPage.login(credentials);
+await homePage.expectSuccessfulLogin(user.firstName, user.email, user.lastName);
+```
+
+### 2. Use data-testid selectors
+In page objects, prefer to use `data-testid` attribute to locate elements.
+
+```typescript
+// In page object classes
+this.submitButton = page.getByTestId('login-button');
+```
+
+### 3. Encapsulate assertions
+Create expectation methods in page objects instead of writing assertions directly in tests.
+
+```typescript
+// Good - in page object
+async expectWelcomeMessage(firstName: string) {
+  await expect(this.welcomeTitle).toContainText(`Welcome, ${firstName}!`);
+}
+
+// Bad - direct assertion in test
+await expect(page.getByTestId('welcome-title')).toContainText(`Welcome, ${firstName}!`);
 ```
