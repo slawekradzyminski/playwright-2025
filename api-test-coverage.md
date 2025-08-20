@@ -67,11 +67,11 @@ This document tracks the implementation status of API tests for all endpoints in
 - **File:** `tests/api/users-update.api.spec.ts`
 
 #### `/users/{username}` (DELETE) - Delete User
-**Status:** 📋 **TODO**
-- 📋 204 - User was deleted
-- 📋 401 - Unauthorized – Missing or invalid token
-- 📋 403 - Forbidden – Insufficient permissions
-- 📋 404 - The user doesn't exist
+**Status:** ✅ **DONE**
+- ✅ 204 - User was deleted
+- ✅ 401 - Unauthorized – Missing or invalid token
+- ✅ 403 - Forbidden – Insufficient permissions
+- ✅ 404 - The user doesn't exist
 - **File:** `tests/api/users-delete.api.spec.ts`
 
 #### `/users/{username}/system-prompt` (GET) - Get User's System Prompt
@@ -320,9 +320,9 @@ Following the pattern established in `http/loginClient.ts`, each API endpoint gr
 
 ## Coverage Metrics
 - **Total Endpoints:** 27
-- **Implemented:** 6 (22.2%)
+- **Implemented:** 7 (25.9%)
 - **In Progress:** 0 (0%)
-- **Remaining:** 21 (77.8%)
+- **Remaining:** 20 (74.1%)
 
 **Next Action:** Implement user CRUD operations (`/users/{username}` PUT/DELETE endpoints)
 
