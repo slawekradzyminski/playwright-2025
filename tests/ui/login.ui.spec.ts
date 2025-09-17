@@ -1,11 +1,10 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto } from '../../types/auth';
-
-const LOGIN_URL = 'http://localhost:8081/login';
+import { FRONTEND_URL } from '../../config/constants';
 
 test.describe('Login UI tests', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(LOGIN_URL);
+    await page.goto(`${FRONTEND_URL}/login`);
   });
 
   test('should display login form elements', async ({ page }) => {
@@ -33,7 +32,7 @@ test.describe('Login UI tests', () => {
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     // then
-    await expect(page).not.toHaveURL(LOGIN_URL);
+    await expect(page).not.toHaveURL(`${FRONTEND_URL}/login`);
   });
 
   test('should show error for empty username', async ({ page }) => {
@@ -49,7 +48,7 @@ test.describe('Login UI tests', () => {
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     // then
-    await expect(page).toHaveURL(LOGIN_URL);
+    await expect(page).toHaveURL(`${FRONTEND_URL}/login`);
   });
 
   test('should show error for empty password', async ({ page }) => {
@@ -65,7 +64,7 @@ test.describe('Login UI tests', () => {
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     // then
-    await expect(page).toHaveURL(LOGIN_URL);
+    await expect(page).toHaveURL(`${FRONTEND_URL}/login`);
   });
 
   test('should show error for invalid credentials', async ({ page }) => {
@@ -81,7 +80,7 @@ test.describe('Login UI tests', () => {
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     // then
-    await expect(page).toHaveURL(LOGIN_URL);
+    await expect(page).toHaveURL(`${FRONTEND_URL}/login`);
   });
 
   test('should navigate to register page when register button is clicked', async ({ page }) => {
@@ -90,7 +89,7 @@ test.describe('Login UI tests', () => {
     await page.getByRole('button', { name: 'Register' }).click();
 
     // then
-    await expect(page).toHaveURL('http://localhost:8081/register');
+    await expect(page).toHaveURL(`${FRONTEND_URL}/register`);
   });
 
   test('should navigate to register page when register link is clicked', async ({ page }) => {
@@ -99,7 +98,7 @@ test.describe('Login UI tests', () => {
     await page.getByRole('link', { name: 'Register' }).click();
 
     // then
-    await expect(page).toHaveURL('http://localhost:8081/register');
+    await expect(page).toHaveURL(`${FRONTEND_URL}/register`);
   });
 
   test('should have proper form validation for short username', async ({ page }) => {
@@ -115,7 +114,7 @@ test.describe('Login UI tests', () => {
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     // then
-    await expect(page).toHaveURL(LOGIN_URL);
+    await expect(page).toHaveURL(`${FRONTEND_URL}/login`);
   });
 
   test('should have proper form validation for short password', async ({ page }) => {
@@ -131,7 +130,7 @@ test.describe('Login UI tests', () => {
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     // then
-    await expect(page).toHaveURL(LOGIN_URL);
+    await expect(page).toHaveURL(`${FRONTEND_URL}/login`);
   });
 
   test('should handle keyboard navigation', async ({ page }) => {
@@ -148,6 +147,6 @@ test.describe('Login UI tests', () => {
     await page.keyboard.press('Enter');
 
     // then
-    await expect(page).not.toHaveURL(LOGIN_URL);
+    await expect(page).not.toHaveURL(`${FRONTEND_URL}/login`);
   });
 }); 
