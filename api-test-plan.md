@@ -22,7 +22,7 @@
 
 ## Execution Order (easiest → hardest)
 
-1. `/users/signup` 🏗️ 
+1. `/users/signup` ✅ 
 2. `/users/refresh`, `/users/me`, `/api/traffic/info` 
 3. read-only lists/gets 
 4. cart flows 
@@ -38,7 +38,7 @@
 | Endpoint | Method | Client file | Spec file | Status | Notes / Role |
 |----------|--------|-------------|-----------|--------|--------------|
 | `/users/signin` | POST | `loginClient.ts` | `login.api.spec.ts` | ✅ | Already covered |
-| `/users/signup` | POST | `signupClient.ts` | `signup.api.spec.ts` | 🏗️ | Next to implement |
+| `/users/signup` | POST | `signupClient.ts` | `signup.api.spec.ts` | ✅ | Completed with faker.js |
 | `/users/refresh` | GET | `refreshTokenClient.ts` | `refreshToken.api.spec.ts` | ⏳ | Auth required |
 | `/users/me` | GET | `whoAmIClient.ts` | `whoAmI.api.spec.ts` | ⏳ | Auth required |
 | `/users` | GET | `getAllUsersClient.ts` | `getAllUsers.api.spec.ts` | ⏳ | Admin only (403 on non-admin) |
@@ -116,6 +116,11 @@ Each block follows **200/201 → 400 → 401 → 403 → 404**, with **Given / W
 - **Given:** payload missing roles or password
 - **When:** POST
 - **Then:** 400 validation failed
+
+#### 400 (username already exists)
+- **Given:** username already exists
+- **When:** POST
+- **Then:** 400 username already exists
 
 ### 3) `/users/refresh` — Refresh JWT
 
@@ -469,6 +474,6 @@ factories.ts
 
 **Endpoints total:** 31 specs (including method splits)
 
-**Status:** ✅ 1 · 🏗️ 1 · ⏳ 29
+**Status:** ✅ 2 · 🏗️ 0 · ⏳ 29
 
 *Update this list PR-by-PR; keep status icons and links current.*
