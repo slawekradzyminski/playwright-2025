@@ -1,15 +1,7 @@
 ---
-description: 
-globs: 
+description: Always use this rule when API tests are mentioned/created/edited
 alwaysApply: false
 ---
-# Project Setup and Configuration
-
-## Server Configuration
-
-### Frontend Application
-- **URL**: http://localhost:8081
-
 ### Backend API
 - **Base URL**: http://localhost:4001
 - **API Documentation**: http://localhost:4001/v3/api-docs
@@ -20,10 +12,6 @@ alwaysApply: false
 - Located in tests/api directory
 - Example [login.api.spec.ts](mdc:tests/api/login.api.spec.ts)
 
-### UI Tests
-- Located in tests/ui directory
-- Example [login.ui.spec.ts](mdc:tests/ui/login.ui.spec.ts)
-
 ## Authentication
 
 ### TypeScript Types
@@ -33,25 +21,14 @@ When dealing with objects create custom types in types folder.
 
 ### Test Configuration
 - Configuration file: [playwright.config.ts](mdc:playwright.config.ts)
-- Test directory: `./tests`
-- Browser: Chromium (Desktop Chrome)
 - Parallel execution enabled
 
 ### Test Patterns
 - Use given/when/then comments structure
 - API tests ordered by response code (200 → 400 → 401 → 403 → 404)
-- Modern syntax with import/export
 
 ## Development Guidelines
 
-### JavaScript/TypeScript
-- Use npm for package management
-- Modern ES6+ syntax with import/export
-- No code comments explaining functionality
-- TypeScript types stored in `/types` folder
-
 ### Testing Best Practices
-- UI tests use accessibility-focused selectors (`getByRole`)
 - API tests use request context for backend testing
 - Comprehensive test coverage for both positive and negative scenarios
-- Keyboard navigation and accessibility testing included
