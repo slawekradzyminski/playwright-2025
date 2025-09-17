@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import type { LoginDto, LoginResponseDto, ErrorResponse } from '../../types/auth';
+import type { LoginDto, LoginResponseDto } from '../../types/auth';
+import { API_BASE_URL } from '../../config/constants';
 
-const API_BASE_URL = 'http://localhost:4001';
 const SIGNIN_ENDPOINT = '/users/signin';
 
 test.describe('/users/signin API tests', () => {
