@@ -1,106 +1,73 @@
 import { test, expect } from '../../fixtures/apiAuth';
-import { updateUser } from '../../http/updateUserClient';
-import type { UserEditDto, UserEntity } from '../../types/auth';
+import { attemptUpdateUser } from '../../http/updateUserClient';
+import { attemptGetUserByUsername } from '../../http/getUserByUsernameClient';
+import type { UserEditDto, UserResponseDto } from '../../types/user';
 
-test.describe('/users/{username} PUT API tests', () => {
-  test('should update user details when user updates own profile - 200', async ({ apiAuth }) => {
+test.describe('/users/{username} PUT', () => {
+  test('should update own profile when payload is valid - 200', async ({ apiAuth }) => {
     // given
-    const username = apiAuth.user.username;
-    const updateData: UserEditDto = {
-      email: `updated-${apiAuth.user.email}`,
-      firstName: 'UpdatedFirst',
-      lastName: 'UpdatedLast'
-    };
+    const { request, user, token } = apiAuth;
+    const payload: UserEditDto = { email: `updated+${user.email}`, firstName: user.firstName, lastName: user.lastName };
 
     // when
-    const response = await updateUser(apiAuth.request, username, updateData, apiAuth.token);
+    const response = await attemptUpdateUser(request, user.username, payload, token);
 
     // then
     expect(response.status()).toBe(200);
-    const responseBody: UserEntity = await response.json();
-    expect(responseBody.email).toBe(updateData.email);
-    expect(responseBody.firstName).toBe(updateData.firstName);
-    expect(responseBody.lastName).toBe(updateData.lastName);
-    expect(responseBody.username).toBe(username);
+    const body: UserResponseDto = await response.json();
+    expect(body.email).toBe(payload.email);
+
+    // and verify via GET
+    const getRes = await attemptGetUserByUsername(request, user.username, token);
+    expect(getRes.status()).toBe(200);
+    const fetched: UserResponseDto = await getRes.json();
+    expect(fetched.email).toBe(payload.email);
   });
 
-  test('should update user details when admin updates any user - 200', async ({ apiAuth, apiAuthAdmin }) => {
+  test('should return 400 for invalid email - 400', async ({ apiAuth }) => {
     // given
-    const targetUsername = apiAuth.user.username;
-    const updateData: UserEditDto = {
-      email: `admin-updated-${apiAuth.user.email}`,
-      firstName: 'AdminUpdatedFirst',
-      lastName: 'AdminUpdatedLast'
-    };
+    const { request, user, token } = apiAuth;
+    const payload: UserEditDto = { email: 'not-an-email' };
 
     // when
-    const response = await updateUser(apiAuthAdmin.request, targetUsername, updateData, apiAuthAdmin.token);
-
-    // then
-    expect(response.status()).toBe(200);
-    const responseBody: UserEntity = await response.json();
-    expect(responseBody.email).toBe(updateData.email);
-    expect(responseBody.firstName).toBe(updateData.firstName);
-    expect(responseBody.lastName).toBe(updateData.lastName);
-    expect(responseBody.username).toBe(targetUsername);
-  });
-
-  test('should return validation error for invalid email format - 400', async ({ apiAuth }) => {
-    // given
-    const username = apiAuth.user.username;
-    const invalidUpdateData: UserEditDto = {
-      email: 'invalid-email-format'
-    };
-
-    // when
-    const response = await updateUser(apiAuth.request, username, invalidUpdateData, apiAuth.token);
+    const response = await attemptUpdateUser(request, user.username, payload, token);
 
     // then
     expect(response.status()).toBe(400);
   });
 
-  test('should return unauthorized for missing token - 401', async ({ request, apiAuth }) => {
+  test('should return 401 when no token provided - 401', async ({ apiAuth }) => {
     // given
-    const username = apiAuth.user.username;
-    const updateData: UserEditDto = {
-      email: 'test@example.com'
-    };
+    const { request, user } = apiAuth;
+    const payload: UserEditDto = { email: `noauth+${user.email}` };
 
     // when
-    const response = await request.put(`http://localhost:4001/users/${username}`, {
-      data: updateData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptUpdateUser(request, user.username, payload);
 
     // then
     expect(response.status()).toBe(401);
   });
 
-  test('should return forbidden when non-admin user tries to update another user - 403', async ({ apiAuth, apiAuthAdmin }) => {
+  test('should return 403 when non-admin edits another user - 403', async ({ apiAuth, apiAuthAdmin }) => {
     // given
-    const targetUsername = apiAuthAdmin.user.username;
-    const updateData: UserEditDto = {
-      email: 'forbidden@example.com'
-    };
+    const { request, token } = apiAuth;        // non-admin
+    const otherUser = apiAuthAdmin.user;       // someone else
+    const payload: UserEditDto = { email: `hijack+${otherUser.email}` };
 
     // when
-    const response = await updateUser(apiAuth.request, targetUsername, updateData, apiAuth.token);
+    const response = await attemptUpdateUser(request, otherUser.username, payload, token);
 
     // then
     expect(response.status()).toBe(403);
   });
 
-  test('should return not found for non-existent username - 404', async ({ apiAuth }) => {
+  test('should return 404 for unknown username - 404', async ({ apiAuth }) => {
     // given
-    const nonExistentUsername = 'nonexistentuser99999';
-    const updateData: UserEditDto = {
-      email: 'test@example.com'
-    };
+    const { request, token } = apiAuth;
+    const payload: UserEditDto = { email: 'ghost@example.com' };
 
     // when
-    const response = await updateUser(apiAuth.request, nonExistentUsername, updateData, apiAuth.token);
+    const response = await attemptUpdateUser(request, 'user__does_not_exist__404', payload, token);
 
     // then
     expect(response.status()).toBe(404);

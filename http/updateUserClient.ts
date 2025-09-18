@@ -1,15 +1,18 @@
 import { API_BASE_URL } from "../config/constants";
 import { APIRequestContext, APIResponse } from "@playwright/test";
-import type { UserEditDto } from "../types/auth";
+import type { UserEditDto } from "../types/user";
+import { jsonHeaders } from "./httpCommon";
 
-const UPDATE_USER_ENDPOINT = '/users';
+const USER_BY_USERNAME_ENDPOINT = (username: string) => `/users/${encodeURIComponent(username)}`;
 
-export const updateUser = async (request: APIRequestContext, username: string, userData: UserEditDto, token: string): Promise<APIResponse> => {
-  return await request.put(`${API_BASE_URL}${UPDATE_USER_ENDPOINT}/${username}`, {
-    data: userData,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
+export const attemptUpdateUser = async (
+  request: APIRequestContext,
+  username: string,
+  payload: UserEditDto,
+  token?: string
+): Promise<APIResponse> => {
+  return await request.put(`${API_BASE_URL}${USER_BY_USERNAME_ENDPOINT(username)}`, {
+    headers: jsonHeaders(token),
+    data: payload,
   });
 };

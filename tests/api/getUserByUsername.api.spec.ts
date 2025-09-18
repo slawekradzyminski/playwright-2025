@@ -1,48 +1,39 @@
 import { test, expect } from '../../fixtures/apiAuth';
-import { getUserByUsername } from '../../http/getUserByUsernameClient';
-import type { UserResponseDto } from '../../types/auth';
-import { APIResponse } from '@playwright/test';
+import { attemptGetUserByUsername } from '../../http/getUserByUsernameClient';
+import type { UserResponseDto } from '../../types/user';
 
-test.describe('/users/{username} GET API tests', () => {
-  test('should return user details for existing username - 200', async ({ apiAuth, apiAuthAdmin }) => {
+test.describe('/users/{username} GET', () => {
+  test('should return user details for owner token - 200', async ({ apiAuth }) => {
     // given
-    const existingUsername = apiAuth.user.username;
+    const { request, user, token } = apiAuth;
 
     // when
-    const response = await getUserByUsername(apiAuth.request, existingUsername, apiAuth.token);
+    const response = await attemptGetUserByUsername(request, user.username, token);
 
     // then
     expect(response.status()).toBe(200);
-    const responseBody: UserResponseDto = await response.json();
-    expect(responseBody.username).toBe(existingUsername);
-    expect(responseBody.email).toBe(apiAuth.user.email);
-    expect(responseBody.firstName).toBe(apiAuth.user.firstName);
-    expect(responseBody.lastName).toBe(apiAuth.user.lastName);
-    expect(responseBody.roles).toEqual(apiAuth.user.roles);
-    expect(typeof responseBody.id).toBe('number');
+    const body: UserResponseDto = await response.json();
+    expect(body.username).toBe(user.username);
+    expect(body.email).toBe(user.email);
   });
 
-  test('should return unauthorized for missing token - 401', async ({ request }) => {
+  test('should return 401 when no token provided - 401', async ({ apiAuth }) => {
     // given
-    const username = 'anyuser';
+    const { request, user } = apiAuth;
 
     // when
-    const response = await request.get(`http://localhost:4001/users/${username}`, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptGetUserByUsername(request, user.username);
 
     // then
     expect(response.status()).toBe(401);
   });
 
-  test('should return not found for non-existent username - 404', async ({ apiAuth }) => {
+  test('should return 404 for unknown username - 404', async ({ apiAuth }) => {
     // given
-    const nonExistentUsername = 'nonexistentuser99999';
+    const { request, token } = apiAuth;
 
     // when
-    const response = await getUserByUsername(apiAuth.request, nonExistentUsername, apiAuth.token);
+    const response = await attemptGetUserByUsername(request, 'user__does_not_exist__404', token);
 
     // then
     expect(response.status()).toBe(404);

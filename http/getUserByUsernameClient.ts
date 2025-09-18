@@ -1,13 +1,15 @@
 import { API_BASE_URL } from "../config/constants";
 import { APIRequestContext, APIResponse } from "@playwright/test";
+import { jsonHeaders } from "./httpCommon";
 
-const GET_USER_BY_USERNAME_ENDPOINT = '/users';
+const USER_BY_USERNAME_ENDPOINT = (username: string) => `/users/${encodeURIComponent(username)}`;
 
-export const getUserByUsername = async (request: APIRequestContext, username: string, token: string): Promise<APIResponse> => {
-  return await request.get(`${API_BASE_URL}${GET_USER_BY_USERNAME_ENDPOINT}/${username}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
+export const attemptGetUserByUsername = async (
+  request: APIRequestContext,
+  username: string,
+  token?: string
+): Promise<APIResponse> => {
+  return await request.get(`${API_BASE_URL}${USER_BY_USERNAME_ENDPOINT(username)}`, {
+    headers: jsonHeaders(token),
   });
 };

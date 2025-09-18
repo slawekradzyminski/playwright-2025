@@ -1,5 +1,6 @@
 import { test, expect } from '../../fixtures/apiAuth';
 import { attemptTokenRefresh } from '../../http/tokenRefreshClient';
+import { JWT_B64URL_REGEX } from '../../utils/auth';
 
 test.describe('/users/refresh API tests', () => {
   test('should successfully refresh token - 200', async ({ apiAuth }) => {
@@ -12,8 +13,7 @@ test.describe('/users/refresh API tests', () => {
     // then
     expect(response.status()).toBe(200);
     const responseBody = await response.text();
-    expect(responseBody).toBeDefined();
-    expect(responseBody).toMatch(/^eyJ[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/);
+    expect(responseBody).toMatch(JWT_B64URL_REGEX);
   });
 
   test('should return 401 for invalid token - 401', async ({ request }) => {

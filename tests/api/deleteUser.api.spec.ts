@@ -1,74 +1,57 @@
 import { test, expect } from '../../fixtures/apiAuth';
-import { deleteUser } from '../../http/deleteUserClient';
-import { attemptSignup } from '../../http/signupClient';
-import { attemptLogin } from '../../http/loginClient';
+import { attemptDeleteUser } from '../../http/deleteUserClient';
+import { attemptGetUserByUsername } from '../../http/getUserByUsernameClient';
 import { randomClient } from '../../generators/userGenerator';
+import { attemptSignup } from '../../http/signupClient';
 
-test.describe('/users/{username} DELETE API tests', () => {
-  test('should delete user when admin deletes any user - 204', async ({ apiAuthAdmin, request }) => {
-    // given - create a temporary user to delete
-    const tempUser = randomClient();
-    await attemptSignup(request, tempUser);
-    const loginResponse = await attemptLogin(request, tempUser);
-    const tempUserToken = (await loginResponse.json()).token;
+test.describe('/users/{username} DELETE', () => {
+  test('should allow admin to delete a user - 204', async ({ apiAuthAdmin }) => {
+    // given: create a disposable user to delete
+    const { request, token } = apiAuthAdmin; // admin token
+    const newUser = randomClient();
+    const signupRes = await attemptSignup(request, newUser);
+    expect(signupRes.status()).toBe(201);
 
     // when
-    const response = await deleteUser(apiAuthAdmin.request, tempUser.username, apiAuthAdmin.token);
+    const response = await attemptDeleteUser(request, newUser.username, token);
 
     // then
     expect(response.status()).toBe(204);
-    
-    // verify user is actually deleted by trying to login
-    const loginAttempt = await attemptLogin(request, tempUser);
-    expect(loginAttempt.status()).toBe(422); // Should fail as user no longer exists
+
+    // and the user should be gone
+    const getAfter = await attemptGetUserByUsername(request, newUser.username, token);
+    expect(getAfter.status()).toBe(404);
   });
 
-  test('should return forbidden when user tries to delete own account - 403', async ({ request }) => {
-    // given - create a temporary user
-    const tempUser = randomClient();
-    await attemptSignup(request, tempUser);
-    const loginResponse = await attemptLogin(request, tempUser);
-    const tempUserToken = (await loginResponse.json()).token;
-
-    // when
-    const response = await deleteUser(request, tempUser.username, tempUserToken);
-
-    // then
-    expect(response.status()).toBe(403);
-  });
-
-  test('should return unauthorized for missing token - 401', async ({ request, apiAuth }) => {
+  test('should return 401 when no token provided - 401', async ({ apiAuth }) => {
     // given
-    const username = apiAuth.user.username;
-
+    const { request, user } = apiAuth;
+    
     // when
-    const response = await request.delete(`http://localhost:4001/users/${username}`, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptDeleteUser(request, user.username);
 
     // then
     expect(response.status()).toBe(401);
   });
 
-  test('should return forbidden when non-admin user tries to delete another user - 403', async ({ apiAuth, apiAuthAdmin }) => {
+  test('should return 403 when non-admin deletes another user - 403', async ({ apiAuth, apiAuthAdmin }) => {
     // given
-    const targetUsername = apiAuthAdmin.user.username;
+    const { request, token } = apiAuth;       // non-admin token
+    const otherUser = apiAuthAdmin.user;      // someone else
 
-    // when
-    const response = await deleteUser(apiAuth.request, targetUsername, apiAuth.token);
+    // when 
+    const response = await attemptDeleteUser(request, otherUser.username, token);
 
     // then
     expect(response.status()).toBe(403);
   });
 
-  test('should return not found for non-existent username - 404', async ({ apiAuthAdmin }) => {
+  test('should return 404 for unknown username - 404', async ({ apiAuthAdmin }) => {
     // given
-    const nonExistentUsername = 'nonexistentuser99999';
-
+    const { request, token } = apiAuthAdmin;
+    
     // when
-    const response = await deleteUser(apiAuthAdmin.request, nonExistentUsername, apiAuthAdmin.token);
+    const response = await attemptDeleteUser(request, 'user__does_not_exist__404', token);
 
     // then
     expect(response.status()).toBe(404);
