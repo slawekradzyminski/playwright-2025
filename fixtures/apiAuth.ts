@@ -1,11 +1,16 @@
 import { test as base, APIRequestContext } from '@playwright/test';
-import { randomClient } from '../generators/userGenerator';
+import { randomClient, randomAdmin } from '../generators/userGenerator';
 import { attemptSignup } from '../http/signupClient';
 import { attemptLogin } from '../http/loginClient';
 import { UserRegisterDto } from '../types/auth';
 
 export interface ApiAuthFixtures {
   apiAuth: {
+    request: APIRequestContext;
+    user: UserRegisterDto;
+    token: string;
+  };
+  apiAuthAdmin: {
     request: APIRequestContext;
     user: UserRegisterDto;
     token: string;
@@ -21,6 +26,24 @@ export const test = base.extend<ApiAuthFixtures>({
     const token = (await loginResponse.json()).token;
 
     // Provide the authenticated context to the test
+    await use({
+      request,
+      user,
+      token
+    });
+
+    // Teardown can be added here if needed
+    // For now, we don't need explicit cleanup as the user is temporary
+  },
+
+  apiAuthAdmin: async ({ request }, use) => {
+    // Setup: Create admin user, signup, and login to get admin token
+    const user = randomAdmin();
+    await attemptSignup(request, user);
+    const loginResponse = await attemptLogin(request, user);
+    const token = (await loginResponse.json()).token;
+
+    // Provide the authenticated admin context to the test
     await use({
       request,
       user,

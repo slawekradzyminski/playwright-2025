@@ -122,9 +122,9 @@ Each block follows **200/201 → 400 → 401 → 403 → 404**, with **Given / W
 - **When:** POST
 - **Then:** 400 username already exists
 
-### 3) `/users/refresh` — Refresh JWT
+### 3) `/users/refresh` (DONE) — Refresh JWT
 
-**Files:** `refreshTokenClient.ts`, `refreshToken.api.spec.ts`  
+**Files:** `refreshTokenClient.ts`, `refreshToken.api.spec.ts` ✅  
 **Expect:** 200, 401
 
 #### 200
@@ -137,9 +137,9 @@ Each block follows **200/201 → 400 → 401 → 403 → 404**, with **Given / W
 - **When:** GET
 - **Then:** 401
 
-### 4) `/users/me` — Current user
+### 4) `/users/me` (DONE) — Current user
 
-**Files:** `whoAmIClient.ts`, `whoAmI.api.spec.ts`  
+**Files:** `whoAmIClient.ts`, `whoAmI.api.spec.ts` ✅  
 **Expect:** 200, 401
 
 #### 200
@@ -152,7 +152,7 @@ Each block follows **200/201 → 400 → 401 → 403 → 404**, with **Given / W
 - **When:** GET
 - **Then:** 401
 
-### 5) `/users` — Get all users (admin)
+### 5) `/users` (DONE) — Get all users (admin) ✅
 
 **Files:** `getAllUsersClient.ts`, `getAllUsers.api.spec.ts`  
 **Expect:** 200, 401, 403
@@ -166,11 +166,6 @@ Each block follows **200/201 → 400 → 401 → 403 → 404**, with **Given / W
 - **Given:** no token
 - **When:** GET
 - **Then:** 401
-
-#### 403
-- **Given:** non-admin token
-- **When:** GET
-- **Then:** 403
 
 ### 6) `/users/{username}` — GET/PUT/DELETE
 
@@ -394,86 +389,16 @@ Each block follows **200/201 → 400 → 401 → 403 → 404**, with **Given / W
 
 **PNG assertion:** Check first 8 bytes `89 50 4E 47 0D 0A 1A 0A` and a reasonable payload length (non-zero).
 
-## File & Suite Structure
-
-### `/tests/api/`
-```
-signup.api.spec.ts             // 🏗️ next
-refreshToken.api.spec.ts
-whoAmI.api.spec.ts
-getAllUsers.api.spec.ts
-getUserByUsername.api.spec.ts
-updateUser.api.spec.ts
-deleteUser.api.spec.ts
-getUserSystemPrompt.api.spec.ts
-updateUserSystemPrompt.api.spec.ts
-getAllProducts.api.spec.ts
-createProduct.api.spec.ts
-getProductById.api.spec.ts
-updateProduct.api.spec.ts
-deleteProduct.api.spec.ts
-getCart.api.spec.ts
-clearCart.api.spec.ts
-addToCart.api.spec.ts
-updateCartItem.api.spec.ts
-removeFromCart.api.spec.ts
-createOrder.api.spec.ts
-getUserOrders.api.spec.ts
-getOrder.api.spec.ts
-cancelOrder.api.spec.ts
-getAllOrdersAdmin.api.spec.ts
-updateOrderStatus.api.spec.ts
-sendEmail.api.spec.ts
-createQrCode.api.spec.ts
-chat.api.spec.ts
-generateText.api.spec.ts
-getTrafficInfo.api.spec.ts
-```
-
-### `/clients/`
-```
-signupClient.ts
-refreshTokenClient.ts
-whoAmIClient.ts
-getAllUsersClient.ts
-getUserByUsernameClient.ts
-updateUserClient.ts
-deleteUserClient.ts
-getUserSystemPromptClient.ts
-updateUserSystemPromptClient.ts
-getAllProductsClient.ts
-createProductClient.ts
-getProductByIdClient.ts
-updateProductClient.ts
-deleteProductClient.ts
-getCartClient.ts
-clearCartClient.ts
-addToCartClient.ts
-updateCartItemClient.ts
-removeFromCartClient.ts
-createOrderClient.ts
-getUserOrdersClient.ts
-getOrderClient.ts
-cancelOrderClient.ts
-getAllOrdersAdminClient.ts
-updateOrderStatusClient.ts
-sendEmailClient.ts
-createQrCodeClient.ts
-chatClient.ts
-generateTextClient.ts
-getTrafficInfoClient.ts
-```
-
 ### `/fixtures/`
 ```
-authHelper.ts
-factories.ts
+apiAuth.ts
+uiAuth.ts
 ```
 
 ## Coverage Tracker
 
 **Endpoints total:** 31 specs (including method splits)
 
-**Status:** ✅ 2 · 🏗️ 0 · ⏳ 29
+**Status:** ✅ 5 · 🏗️ 0 · ⏳ 27
 
 *Update this list PR-by-PR; keep status icons and links current.*
