@@ -67,7 +67,7 @@
 | `/qr/create` | POST | `createQrCodeClient.ts` | `createQrCode.api.spec.ts` | ✅ | Auth; PNG body |
 | `/api/ollama/chat` | POST | `chatClient.ts` | `chat.api.spec.ts` | ⏳ | Auth; SSE; 400/404/500 |
 | `/api/ollama/generate` | POST | `generateTextClient.ts` | `generateText.api.spec.ts` | ⏳ | Auth; SSE; 400/404/500 |
-| `/api/traffic/info` | GET | `getTrafficInfoClient.ts` | `getTrafficInfo.api.spec.ts` | ⏳ | Auth |
+| `/api/traffic/info` | GET | `getTrafficInfoClient.ts` | `getTrafficInfo.api.spec.ts` | ✅ | Auth |
 
 ## Global Setup & Utilities
 
@@ -366,7 +366,7 @@ Each block follows **200/201 → 400 → 401 → 403 → 404**, with **Given / W
 
 ### 14) Traffic Monitoring
 
-#### `/api/traffic/info` — GET
+#### `/api/traffic/info` — GET (DONE) ✅
 
 **Files:** `getTrafficInfoClient.ts`, `getTrafficInfo.api.spec.ts`
 
@@ -399,6 +399,6 @@ uiAuth.ts
 
 **Endpoints total:** 31 specs (including method splits)
 
-**Status:** ✅ 9 · 🏗️ 0 · ⏳ 23
+**Status:** ✅ 10 · 🏗️ 0 · ⏳ 22
 
 *Update this list PR-by-PR; keep status icons and links current.*
