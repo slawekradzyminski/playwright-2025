@@ -1,16 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures/apiAuth';
 import { attemptTokenRefresh } from '../../http/tokenRefreshClient';
-import { randomClient } from '../../generators/userGenerator';
-import { attemptSignup } from '../../http/signupClient';
-import { attemptLogin } from '../../http/loginClient';
 
 test.describe('/users/refresh API tests', () => {
-  test('should successfully refresh token - 200', async ({ request }) => {
+  test('should successfully refresh token - 200', async ({ apiAuth }) => {
     // given
-    const user = randomClient();
-    await attemptSignup(request, user);
-    const loginResponse = await attemptLogin(request, user);
-    const token = (await loginResponse.json()).token;
+    const { request, token } = apiAuth;
 
     // when
     const response = await attemptTokenRefresh(request, token);
