@@ -1,0 +1,37 @@
+---
+description: Always use this rule when UI tests are mentioned/created/edited
+alwaysApply: false
+---
+### Frontend Application
+- **Base URL**: http://localhost:8081
+
+## Testing Structure
+
+### UI Tests
+- Located in tests/ui directory
+- Example [login.ui.spec.ts](mdc:tests/ui/login.ui.spec.ts)
+- **MANDATORY**: Use Page Object Model (POM) pattern for all UI tests
+
+### Page Object Model (POM)
+- All page objects must be created in pages/ directory
+- Example [loginPage.ts](mdc:pages/loginPage.ts)
+- Encapsulate locators as readonly properties
+- Create reusable methods for common actions
+- Add assertion methods for better test readability
+- Use proper TypeScript typing
+
+## Element Selection Strategy
+
+### Data-TestId Selectors (PREFERRED)
+- **MANDATORY**: Use data-testid attributes for element selection
+- Format: `page.getByTestId('element-testid')`
+
+### Playwright MCP Integration
+- **REQUIRED**: Use Playwright MCP to inspect elements and find data-testid attributes
+- Navigate to pages using MCP to discover selectors
+- Use MCP to identify error messages and their selectors
+
+### Test Patterns
+- Use given/when/then comments structure
+- Test user interactions (clicks, form fills, navigation)
+- Verify visual feedback and error states
