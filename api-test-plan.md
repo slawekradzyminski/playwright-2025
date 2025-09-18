@@ -42,9 +42,9 @@
 | `/users/refresh` | GET | `refreshTokenClient.ts` | `refreshToken.api.spec.ts` | ✅ | Auth required |
 | `/users/me` | GET | `whoAmIClient.ts` | `whoAmI.api.spec.ts` | ✅ | Auth required |
 | `/users` | GET | `getAllUsersClient.ts` | `getAllUsers.api.spec.ts` | ✅ | Admin only (403 on non-admin) |
-| `/users/{username}` | GET | `getUserByUsernameClient.ts` | `getUserByUsername.api.spec.ts` | ⏳ | Auth; 404 on missing |
-| `/users/{username}` | PUT | `updateUserClient.ts` | `updateUser.api.spec.ts` | ⏳ | Auth; 403 on insufficient perms |
-| `/users/{username}` | DELETE | `deleteUserClient.ts` | `deleteUser.api.spec.ts` | ⏳ | Auth; 204 success; 403/404 |
+| `/users/{username}` | GET | `getUserByUsernameClient.ts` | `getUserByUsername.api.spec.ts` | ✅ | Auth; 404 on missing |
+| `/users/{username}` | PUT | `updateUserClient.ts` | `updateUser.api.spec.ts` | ✅ | Auth; 403 on insufficient perms |
+| `/users/{username}` | DELETE | `deleteUserClient.ts` | `deleteUser.api.spec.ts` | ✅ | Auth; 204 success; 403/404 |
 | `/users/{username}/system-prompt` | GET | `getUserSystemPromptClient.ts` | `getUserSystemPrompt.api.spec.ts` | ⏳ | Auth; 403/404 |
 | `/users/{username}/system-prompt` | PUT | `updateUserSystemPromptClient.ts` | `updateUserSystemPrompt.api.spec.ts` | ⏳ | Auth; 403/404 |
 | `/api/products` | GET | `getAllProductsClient.ts` | `getAllProducts.api.spec.ts` | ⏳ | Auth |
@@ -167,7 +167,7 @@ Each block follows **200/201 → 400 → 401 → 403 → 404**, with **Given / W
 - **When:** GET
 - **Then:** 401
 
-### 6) `/users/{username}` — GET/PUT/DELETE
+### 6) `/users/{username}` (DONE) — GET/PUT/DELETE ✅
 
 **Files:** `getUserByUsernameClient.ts`, `getUserByUsername.api.spec.ts`; `updateUserClient.ts`, `updateUser.api.spec.ts`; `deleteUserClient.ts`, `deleteUser.api.spec.ts`
 
@@ -399,6 +399,6 @@ uiAuth.ts
 
 **Endpoints total:** 31 specs (including method splits)
 
-**Status:** ✅ 6 · 🏗️ 0 · ⏳ 26
+**Status:** ✅ 9 · 🏗️ 0 · ⏳ 23
 
 *Update this list PR-by-PR; keep status icons and links current.*
