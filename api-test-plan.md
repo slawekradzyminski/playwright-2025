@@ -47,8 +47,8 @@
 | `/users/{username}` | DELETE | `deleteUserClient.ts` | `deleteUser.api.spec.ts` | ✅ | Auth; 204 success; 403/404 |
 | `/users/{username}/system-prompt` | GET | `getUserSystemPromptClient.ts` | `getUserSystemPrompt.api.spec.ts` | ⏳ | Auth; 403/404 |
 | `/users/{username}/system-prompt` | PUT | `updateUserSystemPromptClient.ts` | `updateUserSystemPrompt.api.spec.ts` | ⏳ | Auth; 403/404 |
-| `/api/products` | GET | `getAllProductsClient.ts` | `getAllProducts.api.spec.ts` | ⏳ | Auth |
-| `/api/products` | POST | `createProductClient.ts` | `createProduct.api.spec.ts` | ⏳ | Admin; 201 on success |
+| `/api/products` | GET | `getAllProductsClient.ts` | `getAllProducts.api.spec.ts` | ✅ | Auth |
+| `/api/products` | POST | `createProductClient.ts` | `createProduct.api.spec.ts` | ✅ | Admin; 201 on success |
 | `/api/products/{id}` | GET | `getProductByIdClient.ts` | `getProductById.api.spec.ts` | ⏳ | Auth; 404 |
 | `/api/products/{id}` | PUT | `updateProductClient.ts` | `updateProduct.api.spec.ts` | ⏳ | Admin; 400/403/404 |
 | `/api/products/{id}` | DELETE | `deleteProductClient.ts` | `deleteProduct.api.spec.ts` | ⏳ | Admin; 204/403/404 |
@@ -206,7 +206,7 @@ Each block follows **200/201 → 400 → 401 → 403 → 404**, with **Given / W
 
 ### 8) Products
 
-#### `/api/products` — GET / POST
+#### `/api/products` (DONE) ✅ — GET / POST
 
 **Files:** `getAllProductsClient.ts` / `getAllProducts.api.spec.ts`; `createProductClient.ts` / `createProduct.api.spec.ts`
 
@@ -399,6 +399,6 @@ uiAuth.ts
 
 **Endpoints total:** 31 specs (including method splits)
 
-**Status:** ✅ 10 · 🏗️ 0 · ⏳ 22
+**Status:** ✅ 11 · 🏗️ 0 · ⏳ 21
 
 *Update this list PR-by-PR; keep status icons and links current.*
