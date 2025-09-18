@@ -102,9 +102,9 @@ Each block follows **200/201 → 400 → 401 → 403 → 404**, with **Given / W
 - **When:** posting
 - **Then:** 422 invalid credentials
 
-### 2) `/users/signup` — Create account
+### 2) `/users/signup` (DONE) — Create account
 
-**Files:** `signupClient.ts`, `signup.api.spec.ts` 🏗️  
+**Files:** `signupClient.ts`, `signup.api.spec.ts` ✅  
 **Expect:** 201, 400
 
 #### 201
