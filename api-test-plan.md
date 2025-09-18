@@ -39,9 +39,9 @@
 |----------|--------|-------------|-----------|--------|--------------|
 | `/users/signin` | POST | `loginClient.ts` | `login.api.spec.ts` | ✅ | Already covered |
 | `/users/signup` | POST | `signupClient.ts` | `signup.api.spec.ts` | ✅ | Completed with faker.js |
-| `/users/refresh` | GET | `refreshTokenClient.ts` | `refreshToken.api.spec.ts` | ⏳ | Auth required |
-| `/users/me` | GET | `whoAmIClient.ts` | `whoAmI.api.spec.ts` | ⏳ | Auth required |
-| `/users` | GET | `getAllUsersClient.ts` | `getAllUsers.api.spec.ts` | ⏳ | Admin only (403 on non-admin) |
+| `/users/refresh` | GET | `refreshTokenClient.ts` | `refreshToken.api.spec.ts` | ✅ | Auth required |
+| `/users/me` | GET | `whoAmIClient.ts` | `whoAmI.api.spec.ts` | ✅ | Auth required |
+| `/users` | GET | `getAllUsersClient.ts` | `getAllUsers.api.spec.ts` | ✅ | Admin only (403 on non-admin) |
 | `/users/{username}` | GET | `getUserByUsernameClient.ts` | `getUserByUsername.api.spec.ts` | ⏳ | Auth; 404 on missing |
 | `/users/{username}` | PUT | `updateUserClient.ts` | `updateUser.api.spec.ts` | ⏳ | Auth; 403 on insufficient perms |
 | `/users/{username}` | DELETE | `deleteUserClient.ts` | `deleteUser.api.spec.ts` | ⏳ | Auth; 204 success; 403/404 |
@@ -64,7 +64,7 @@
 | `/api/orders/admin` | GET | `getAllOrdersAdminClient.ts` | `getAllOrdersAdmin.api.spec.ts` | ⏳ | Admin; 403 |
 | `/api/orders/{id}/status` | PUT | `updateOrderStatusClient.ts` | `updateOrderStatus.api.spec.ts` | ⏳ | Admin; transitions/400/403/404 |
 | `/email` | POST | `sendEmailClient.ts` | `sendEmail.api.spec.ts` | ⏳ | Auth; 400 |
-| `/qr/create` | POST | `createQrCodeClient.ts` | `createQrCode.api.spec.ts` | ⏳ | Auth; PNG body |
+| `/qr/create` | POST | `createQrCodeClient.ts` | `createQrCode.api.spec.ts` | ✅ | Auth; PNG body |
 | `/api/ollama/chat` | POST | `chatClient.ts` | `chat.api.spec.ts` | ⏳ | Auth; SSE; 400/404/500 |
 | `/api/ollama/generate` | POST | `generateTextClient.ts` | `generateText.api.spec.ts` | ⏳ | Auth; SSE; 400/404/500 |
 | `/api/traffic/info` | GET | `getTrafficInfoClient.ts` | `getTrafficInfo.api.spec.ts` | ⏳ | Auth |
@@ -399,6 +399,6 @@ uiAuth.ts
 
 **Endpoints total:** 31 specs (including method splits)
 
-**Status:** ✅ 5 · 🏗️ 0 · ⏳ 27
+**Status:** ✅ 6 · 🏗️ 0 · ⏳ 26
 
 *Update this list PR-by-PR; keep status icons and links current.*
