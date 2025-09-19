@@ -11,6 +11,7 @@ alwaysApply: false
 - Located in tests/ui directory
 - Example [login.ui.spec.ts](mdc:tests/ui/login.ui.spec.ts)
 - **MANDATORY**: Use Page Object Model (POM) pattern for all UI tests
+- Run using `npm run test:ui`
 
 ### Page Object Model (POM)
 - All page objects must be created in pages/ directory

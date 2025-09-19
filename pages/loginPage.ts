@@ -1,9 +1,9 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { LoginDto } from '../types/auth';
 import { FRONTEND_URL } from '../config/constants';
-import { BasePage } from './basePage';
+import { LoggedOutPage } from './loggedOutPage';
 
-export class LoginPage extends BasePage {
+export class LoginPage extends LoggedOutPage {
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly signInButton: Locator;
@@ -62,10 +62,6 @@ export class LoginPage extends BasePage {
     await expect(this.passwordError).toHaveText('Password is required');
   }
 
-  async expectInvalidCredentialsError() {
-    await this.getToast().verifyErrorMessage('Invalid username/password');
-  }
-
   async expectNoUsernameError() {
     await expect(this.usernameError).not.toBeVisible();
   }
@@ -78,4 +74,5 @@ export class LoginPage extends BasePage {
     await expect(this.usernameError).toBeVisible();
     await expect(this.usernameError).toHaveText('Username must be at least 4 characters');
   }
+
 }

@@ -1,8 +1,8 @@
 import { expect, Locator, type Page } from '@playwright/test';
 import { FRONTEND_URL } from '../config/constants';
-import { BasePage } from './basePage';
+import { LoggedInPage } from './loggedInPage';
 
-export class ProfilePage extends BasePage {
+export class ProfilePage extends LoggedInPage {
 
   constructor(page: Page) {
     super(page);

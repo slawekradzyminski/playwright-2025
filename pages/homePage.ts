@@ -1,8 +1,8 @@
 import { expect, Locator, type Page } from '@playwright/test';
 import { FRONTEND_URL } from '../config/constants';
-import { BasePage } from './basePage';
+import { LoggedInPage } from './loggedInPage';
 
-export class HomePage extends BasePage {
+export class HomePage extends LoggedInPage {
 
   readonly welcomeHeading: Locator;
   readonly userEmail: Locator;
@@ -66,4 +66,5 @@ export class HomePage extends BasePage {
   async clickSendEmails() {
     await this.sendEmailsButton.click();
   }
+
 }

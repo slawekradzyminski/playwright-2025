@@ -11,6 +11,7 @@ alwaysApply: false
 ### API Tests
 - Located in tests/api directory
 - Example [login.api.spec.ts](mdc:tests/api/login.api.spec.ts)
+- Run using `npm run test:api`
 
 ## Authentication
 

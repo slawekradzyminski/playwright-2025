@@ -73,7 +73,7 @@ test.describe('Login UI tests', () => {
 
     // then
     await loginPage.expectToBeOnLoginPage();
-    await loginPage.expectInvalidCredentialsError();
+    await loginPage.toast.verifyErrorMessage('Invalid username/password');
   });
 
   test('should navigate to register page when register button is clicked', async () => {

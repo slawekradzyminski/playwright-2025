@@ -22,7 +22,7 @@ test.describe('Register UI tests', () => {
 
     // then
     await loginPage.expectToBeOnLoginPage();
-    await loginPage.getToast().verifySuccessMessage('Registration successful! You can now log in.');
+    loginPage.toast.verifySuccessMessage('Registration successful! You can now log in.');
   });
 
   test('should show required field errors when all fields are empty', async () => {
@@ -77,7 +77,7 @@ test.describe('Register UI tests', () => {
 
     // then
     await registerPage.expectToBeOnRegisterPage();
-    await registerPage.getToast().verifyErrorMessage('Username already exists');
+    registerPage.toast.verifyErrorMessage('Username already exists');
   });
 
   test('should navigate to login page when sign in link is clicked', async () => {
