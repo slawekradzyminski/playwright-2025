@@ -11,7 +11,6 @@ import { EmailPage } from '../../pages/emailPage';
 test.describe('Home UI tests', () => {
   let homePage: HomePage;
 
-
   test.beforeEach(async ({ page }) => {
     homePage = new HomePage(page);
     await homePage.goto();

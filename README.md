@@ -116,6 +116,56 @@ These tests validate the login page's functionality and user experience:
 - **Docker**: Containerization platform
 - **awesome-localstack**: Dockerized local AWS environment for development and testing
 
+## UI Page Object Model (POM) Diagram
+
+```mermaid
+classDiagram
+    class AbstractPage
+    class LoggedOutPage
+    class LoggedInPage
+    class LoginPage
+    class RegisterPage
+    class HomePage
+    class ProductsPage
+    class TrafficPage
+    class LoggedOutHeader
+    class LoggedInHeader
+
+    %% Inheritance (blue)
+    AbstractPage <|-- LoggedOutPage
+    AbstractPage <|-- LoggedInPage
+    LoggedOutPage <|-- LoginPage
+    LoggedOutPage <|-- RegisterPage
+    LoggedInPage <|-- HomePage
+    LoggedInPage <|-- ProductsPage
+    LoggedInPage <|-- TrafficPage
+
+    %% Composition (green)
+    LoggedOutPage *-- LoggedOutHeader
+    LoggedInPage *-- LoggedInHeader
+```
+
+### Textual Description for AI Agent
+
+The system models different types of pages in a web application, separating logged-in and logged-out states.
+
+- **AbstractPage**: Serves as the base class for all pages.
+- **LoggedOutPage** (inherits from AbstractPage):
+    - Has access to LoggedOutHeader (composition).
+    - Specialised into:
+        - LoginPage
+        - RegisterPage
+- **LoggedInPage** (inherits from AbstractPage):
+    - Has access to LoggedInHeader (composition).
+    - Specialised into:
+        - HomePage
+        - ProductsPage
+        - TrafficPage
+
+**Key distinction**:
+- **Inheritance (blue)**: Defines specialisation of abstract/base pages.
+- **Composition (green)**: Indicates that a page "has access to" or "contains" another component (e.g., a header).
+
 ## Playwright MCP
 
 Read more about Playwright MCP here: https://github.com/microsoft/playwright-mcp
