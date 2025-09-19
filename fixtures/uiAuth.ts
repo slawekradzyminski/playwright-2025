@@ -1,66 +1,40 @@
-import { test as base, Page } from '@playwright/test';
-import { randomClient, randomAdmin } from '../generators/userGenerator';
-import { attemptSignup } from '../http/signupClient';
-import { attemptLogin } from '../http/loginClient';
+import { test as base, Page } from './apiAuth';
 import { UserRegisterDto } from '../types/auth';
 import { FRONTEND_URL } from '../config/constants';
 
+export interface UiAuthFixture {
+  page: Page;
+  user: UserRegisterDto;
+  token: string;
+}
+
 export interface UiAuthFixtures {
-  uiAuth: {
-    page: Page;
-    user: UserRegisterDto;
-    token: string;
-  };
-  uiAuthAdmin: {
-    page: Page;
-    user: UserRegisterDto;
-    token: string;
-  };
+  uiAuth: UiAuthFixture;
+  uiAuthAdmin: UiAuthFixture;
+}
+
+async function setupUiAuth(
+  page: Page,
+  token: string,
+  user: UserRegisterDto,
+  use: (fixture: UiAuthFixture) => Promise<void>
+) {
+  await page.evaluate((tokenValue) => {
+    localStorage.setItem('token', tokenValue);
+  }, token);
+
+  await page.goto(`${FRONTEND_URL}/`);
+
+  await use({ page, user, token });
 }
 
 export const test = base.extend<UiAuthFixtures>({
-  uiAuth: async ({ page, request }, use) => {
-    // given
-    const user = randomClient();
-    await attemptSignup(request, user);
-    const loginResponse = await attemptLogin(request, user);
-    const token = (await loginResponse.json()).token;
-
-    // when
-    await page.goto(FRONTEND_URL);
-    await page.evaluate((tokenValue) => {
-      localStorage.setItem('token', tokenValue);
-    }, token);
-    await page.goto(`${FRONTEND_URL}/`);
-
-    // then
-    await use({
-      page,
-      user,
-      token
-    });
+  uiAuth: async ({ apiAuth, page }, use) => {
+    await setupUiAuth(page, apiAuth.token, apiAuth.user, use);
   },
 
-  uiAuthAdmin: async ({ page, request }, use) => {
-    // given
-    const user = randomAdmin();
-    await attemptSignup(request, user);
-    const loginResponse = await attemptLogin(request, user);
-    const token = (await loginResponse.json()).token;
-
-    // when
-    await page.goto(FRONTEND_URL);
-    await page.evaluate((tokenValue) => {
-      localStorage.setItem('token', tokenValue);
-    }, token);
-    await page.goto(`${FRONTEND_URL}/`);
-
-    // then
-    await use({
-      page,
-      user,
-      token
-    });
+  uiAuthAdmin: async ({ apiAuthAdmin, page }, use) => {
+    await setupUiAuth(page, apiAuthAdmin.token, apiAuthAdmin.user, use);
   }
 });
 

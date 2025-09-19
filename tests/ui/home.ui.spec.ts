@@ -13,7 +13,8 @@ test.describe('Home UI tests', () => {
 
   test('should successfully navigate to products page', async ({ uiAuth }) => {
     // given
-    const productsPage = new ProductsPage(uiAuth.page);
+    const { page } = uiAuth;
+    const productsPage = new ProductsPage(page);
     
     // when
     await homePage.clickViewProducts();

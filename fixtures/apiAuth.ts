@@ -17,42 +17,38 @@ export interface ApiAuthFixtures {
   };
 }
 
+type UserGenerator = () => UserRegisterDto;
+
+async function setupApiAuth(
+  request: APIRequestContext,
+  gen: UserGenerator
+): Promise<{ request: APIRequestContext; user: UserRegisterDto; token: string }> {
+  const user = gen();
+  await attemptSignup(request, user);
+
+  const loginResponse = await attemptLogin(request, user);
+  if (!loginResponse.ok()) {
+    const body = await loginResponse.text();
+    throw new Error(`Login failed with status ${loginResponse.status()}: ${body}`);
+  }
+
+  const json = await loginResponse.json();
+  const token = json?.token as string | undefined;
+  if (!token) throw new Error('Login response did not contain a token');
+
+  return { request, user, token };
+}
+
 export const test = base.extend<ApiAuthFixtures>({
   apiAuth: async ({ request }, use) => {
-    // Setup: Create user, signup, and login to get token
-    const user = randomClient();
-    await attemptSignup(request, user);
-    const loginResponse = await attemptLogin(request, user);
-    const token = (await loginResponse.json()).token;
-
-    // Provide the authenticated context to the test
-    await use({
-      request,
-      user,
-      token
-    });
-
-    // Teardown can be added here if needed
-    // For now, we don't need explicit cleanup as the user is temporary
+    const fixture = await setupApiAuth(request, randomClient);
+    await use(fixture);
   },
 
   apiAuthAdmin: async ({ request }, use) => {
-    // Setup: Create admin user, signup, and login to get admin token
-    const user = randomAdmin();
-    await attemptSignup(request, user);
-    const loginResponse = await attemptLogin(request, user);
-    const token = (await loginResponse.json()).token;
-
-    // Provide the authenticated admin context to the test
-    await use({
-      request,
-      user,
-      token
-    });
-
-    // Teardown can be added here if needed
-    // For now, we don't need explicit cleanup as the user is temporary
+    const fixture = await setupApiAuth(request, randomAdmin);
+    await use(fixture);
   }
 });
 
-export { expect } from '@playwright/test';
+export { expect, Page } from '@playwright/test';
