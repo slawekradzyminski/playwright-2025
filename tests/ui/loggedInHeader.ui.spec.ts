@@ -12,8 +12,8 @@ test.describe('Logged In Header UI tests', () => {
 
   let homePage: HomePage;
 
-  test.beforeEach(async ({ page }) => {
-    homePage = new HomePage(page);
+  test.beforeEach(async ({ uiAuth }) => {
+    homePage = new HomePage(uiAuth.page);
   });
 
   test.describe('Header visibility and elements', () => {

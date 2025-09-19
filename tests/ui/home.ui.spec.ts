@@ -11,9 +11,8 @@ import { EmailPage } from '../../pages/emailPage';
 test.describe('Home UI tests', () => {
   let homePage: HomePage;
 
-  test.beforeEach(async ({ page }) => {
-    homePage = new HomePage(page);
-    await homePage.goto();
+  test.beforeEach(async ({ uiAuth }) => {
+    homePage = new HomePage(uiAuth.page);
   });
 
   test.describe('Welcome info', () => {
@@ -103,17 +102,6 @@ test.describe('Home UI tests', () => {
     });
   });
 
-  test.describe('Auth gating', () => {
-    test('should redirect to login when not authenticated', async ({ page }) => {
-      // given
-      // User is not authenticated (no token in localStorage)
-
-      // when
-      await page.goto('http://localhost:8081/');
-
-      // then
-      await expect(page).toHaveURL(/.*\/login/);
-    });
-  });
+  
 
 }); 

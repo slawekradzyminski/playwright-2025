@@ -120,4 +120,17 @@ test.describe('Login UI tests', () => {
     await loginPage.expectPasswordRequiredError();
   });
 
+  test.describe('Auth gating', () => {
+    test('should redirect to login when not authenticated', async ({ page }) => {
+      // given
+      // User is not authenticated (no token in localStorage)
+
+      // when
+      await page.goto('http://localhost:8081/');
+
+      // then
+      await expect(page).toHaveURL(/.*\/login/);
+    });
+  });
+
 }); 
