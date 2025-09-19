@@ -1,11 +1,43 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Page, type Locator } from '@playwright/test';
 import { FRONTEND_URL } from '../config/constants';
 
-export abstract class BasePage {
+export class Toast {
   readonly page: Page;
+  readonly toastViewport: Locator;
 
   constructor(page: Page) {
     this.page = page;
+    this.toastViewport = page.getByTestId('toast-viewport');
+  }
+
+  async verifySuccessMessage(expectedMessage: string) {
+    await expect(this.toastViewport).toContainText(expectedMessage);
+  }
+
+  async verifyErrorMessage(expectedMessage: string) {
+    await expect(this.toastViewport).toContainText(expectedMessage);
+  }
+
+  async waitForToastToAppear() {
+    await expect(this.toastViewport.locator('[role="status"]')).toBeVisible();
+  }
+
+  async waitForToastToDisappear() {
+    await expect(this.toastViewport.locator('[role="status"]')).not.toBeVisible();
+  }
+}
+
+export abstract class BasePage {
+  readonly page: Page;
+  private toast: Toast;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.toast = new Toast(page);
+  }
+
+  getToast(): Toast {
+    return this.toast;
   }
 
   async expectToBeOnPage(path: string) {

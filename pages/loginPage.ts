@@ -11,8 +11,6 @@ export class LoginPage extends BasePage {
   readonly registerLink: Locator;
   readonly usernameError: Locator;
   readonly passwordError: Locator;
-  readonly toastViewport: Locator;
-
   constructor(page: Page) {
     super(page);
     this.usernameInput = page.getByTestId('login-username-input');
@@ -22,7 +20,6 @@ export class LoginPage extends BasePage {
     this.registerLink = page.getByTestId('register-link');
     this.usernameError = page.getByTestId('login-username-error');
     this.passwordError = page.getByTestId('login-password-error');
-    this.toastViewport = page.getByTestId('toast-viewport');
   }
 
   async goto() {
@@ -55,7 +52,6 @@ export class LoginPage extends BasePage {
     await this.registerLink.click();
   }
 
-
   async expectUsernameRequiredError() {
     await expect(this.usernameError).toBeVisible();
     await expect(this.usernameError).toHaveText('Username is required');
@@ -67,7 +63,7 @@ export class LoginPage extends BasePage {
   }
 
   async expectInvalidCredentialsError() {
-    await expect(this.toastViewport).toContainText('Invalid username/password');
+    await this.getToast().verifyErrorMessage('Invalid username/password');
   }
 
   async expectNoUsernameError() {

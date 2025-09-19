@@ -16,8 +16,6 @@ export class RegisterPage extends BasePage {
   readonly passwordError: Locator;
   readonly firstNameError: Locator;
   readonly lastNameError: Locator;
-  readonly toastViewport: Locator;
-
   constructor(page: Page) {
     super(page);
     this.usernameInput = page.getByTestId('register-username-input');
@@ -32,7 +30,6 @@ export class RegisterPage extends BasePage {
     this.passwordError = page.getByTestId('register-password-error');
     this.firstNameError = page.getByTestId('register-firstname-error');
     this.lastNameError = page.getByTestId('register-lastname-error');
-    this.toastViewport = page.getByTestId('toast-viewport');
   }
 
   async goto() {
@@ -76,7 +73,6 @@ export class RegisterPage extends BasePage {
     await this.signInLink.click();
   }
 
-
   async expectUsernameRequiredError() {
     await expect(this.usernameError).toBeVisible();
     await expect(this.usernameError).toHaveText('Username is required');
@@ -115,14 +111,6 @@ export class RegisterPage extends BasePage {
   async expectFirstNameMinLengthError() {
     await expect(this.firstNameError).toBeVisible();
     await expect(this.firstNameError).toHaveText('First name must be at least 4 characters');
-  }
-
-  async expectUsernameAlreadyExistsError() {
-    await expect(this.toastViewport).toContainText('Username already exists');
-  }
-
-  async expectSuccessToast() {
-    await expect(this.toastViewport).toContainText('Account created successfully');
   }
 
   async expectNoUsernameError() {

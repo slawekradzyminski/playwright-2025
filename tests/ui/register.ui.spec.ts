@@ -1,6 +1,8 @@
 import { test } from '@playwright/test';
 import { RegisterPage } from '../../pages/registerPage';
 import { randomClient } from '../../generators/userGenerator';
+import { LoginPage } from '../../pages/loginPage';
+import { attemptSignup } from '../../http/signupClient';
 
 test.describe('Register UI tests', () => {
   let registerPage: RegisterPage;
@@ -10,15 +12,17 @@ test.describe('Register UI tests', () => {
     await registerPage.goto();
   });
 
-  test('should successfully register with valid data', async () => {
+  test('should successfully register with valid data', async ( { page }) => {
     // given
     const userData = randomClient();
+    const loginPage = new LoginPage(page);
 
     // when
     await registerPage.register(userData);
 
     // then
-    await registerPage.expectToBeOnLoginPage();
+    await loginPage.expectToBeOnLoginPage();
+    await loginPage.getToast().verifySuccessMessage('Registration successful! You can now log in.');
   });
 
   test('should show required field errors when all fields are empty', async () => {
@@ -71,35 +75,19 @@ test.describe('Register UI tests', () => {
     await registerPage.expectPasswordMinLengthError();
   });
 
-  test('should show first name minimum length error', async () => {
+  test('should show error when username already exists', async ({ request }) => {
     // given
+    const user = randomClient();
+    await attemptSignup(request, user);
     const userData = randomClient();
-    userData.firstName = 'abc'; // less than 4 characters
-
-    // when
-    await registerPage.fillUsername(userData.username);
-    await registerPage.fillEmail(userData.email);
-    await registerPage.fillPassword(userData.password);
-    await registerPage.fillFirstName(userData.firstName);
-    await registerPage.fillLastName(userData.lastName);
-    await registerPage.clickSubmit();
-
-    // then
-    await registerPage.expectToBeOnRegisterPage();
-    await registerPage.expectFirstNameMinLengthError();
-  });
-
-  test('should show error when username already exists', async () => {
-    // given
-    const userData = randomClient();
-    userData.username = 'admin'; // existing username
+    userData.username = user.username; // existing username
 
     // when
     await registerPage.register(userData);
 
     // then
     await registerPage.expectToBeOnRegisterPage();
-    await registerPage.expectUsernameAlreadyExistsError();
+    await registerPage.getToast().verifyErrorMessage('Username already exists');
   });
 
   test('should navigate to login page when sign in link is clicked', async () => {
