@@ -8,21 +8,74 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 
 ## 🔧 Features
 
-- **API Testing**: Validates authentication endpoints with various scenarios, including successful logins and error handling.
-- **UI Testing**: Ensures the login interface behaves correctly, covering form validations, navigation, and accessibility.
-- **TypeScript Support**: Utilizes TypeScript for type safety and better developer experience.
-- **Dockerized Environment**: Tests are designed to run against services provided by the awesome-localstack Docker setup.
+- **Comprehensive API Testing**: Validates 13+ endpoints covering authentication, user management, product operations, QR code generation, and traffic monitoring with full error handling scenarios.
+- **Extensive UI Testing**: Ensures all major user interfaces work correctly, including login, registration, home page, navigation, and header components with accessibility considerations.
+- **Page Object Model (POM)**: Implements a robust POM architecture with abstract base classes and specialized page objects for maintainable test code.
+- **API Client Architecture**: Dedicated HTTP client classes for each endpoint with proper TypeScript typing and error handling.
+- **Authentication Fixtures**: Reusable authentication helpers for both API and UI tests supporting admin and client user roles.
+- **TypeScript Support**: Full TypeScript implementation for type safety, better developer experience, and maintainable test code.
+- **Dockerized Environment**: Tests run against services provided by the awesome-localstack Docker setup with proper environment configuration.
+- **WebSocket Testing**: Includes real-time traffic monitoring tests with WebSocket connections.
+- **Test Data Management**: Proper test data creation, validation, and cleanup with factory patterns.
 
 ## 🗂️ Project Structure
 
 ```
 .
 ├── tests/
-│   ├── auth.spec.ts                # API tests for /users/signin endpoint
-│   └── ui/
-│       └── login.spec.ts           # UI tests for the login page
-├── types/
-│   └── auth.ts                     # TypeScript interfaces for authentication
+│   ├── api/                        # API test specifications
+│   │   ├── login.api.spec.ts       # Authentication endpoint tests
+│   │   ├── signup.api.spec.ts      # User registration tests
+│   │   ├── token.refresh.api.spec.ts # JWT refresh tests
+│   │   ├── whoAmI.api.spec.ts      # Current user info tests
+│   │   ├── getAllUsers.api.spec.ts # User management tests
+│   │   ├── getUserByUsername.api.spec.ts # User lookup tests
+│   │   ├── updateUser.api.spec.ts  # User update tests
+│   │   ├── deleteUser.api.spec.ts  # User deletion tests
+│   │   ├── getAllProducts.api.spec.ts # Product listing tests
+│   │   ├── createProduct.api.spec.ts # Product creation tests
+│   │   ├── createQrCode.api.spec.ts # QR code generation tests
+│   │   ├── getTrafficInfo.api.spec.ts # Traffic monitoring tests
+│   │   └── trafficWebSocket.api.spec.ts # WebSocket traffic tests
+│   └── ui/                         # UI test specifications
+│       ├── login.ui.spec.ts         # Login page tests
+│       ├── register.ui.spec.ts      # Registration page tests
+│       ├── home.ui.spec.ts          # Home page tests
+│       └── loggedInHeader.ui.spec.ts # Navigation header tests
+├── http/                           # API client implementations
+│   ├── loginClient.ts              # Authentication client
+│   ├── signupClient.ts             # Registration client
+│   ├── tokenRefreshClient.ts       # JWT refresh client
+│   ├── whoAmIClient.ts             # Current user client
+│   ├── getAllUsersClient.ts        # User management client
+│   ├── getUserByUsernameClient.ts  # User lookup client
+│   ├── updateUserClient.ts         # User update client
+│   ├── deleteUserClient.ts         # User deletion client
+│   ├── getAllProductsClient.ts     # Product listing client
+│   ├── createProductClient.ts      # Product creation client
+│   ├── createQrCodeClient.ts       # QR code generation client
+│   └── getTrafficInfoClient.ts     # Traffic monitoring client
+├── pages/                          # Page Object Model classes
+│   ├── abstractPage.ts             # Base page class
+│   ├── loggedInPage.ts             # Base logged-in page
+│   ├── loggedOutPage.ts            # Base logged-out page
+│   ├── loginPage.ts                # Login page POM
+│   ├── registerPage.ts             # Registration page POM
+│   ├── homePage.ts                 # Home page POM
+│   ├── productsPage.ts             # Products page POM
+│   ├── usersPage.ts                # Users page POM
+│   ├── profilePage.ts              # Profile page POM
+│   ├── emailPage.ts                # Email page POM
+│   ├── qrPage.ts                   # QR code page POM
+│   ├── llmPage.ts                  # LLM page POM
+│   ├── trafficPage.ts              # Traffic page POM
+│   └── components/                 # Reusable page components
+│       ├── loggedInHeader.ts       # Logged-in navigation
+│       ├── loggedOutHeader.ts      # Logged-out navigation
+│       └── toast.ts                # Toast notifications
+├── fixtures/                       # Test fixtures and helpers
+│   ├── apiAuth.ts                  # API authentication helpers
+│   └── uiAuth.ts                   # UI authentication helpers
 ├── playwright.config.ts            # Playwright configuration
 ├── package.json                    # Project metadata and dependencies
 └── ...
@@ -63,19 +116,44 @@ Follow the instructions in the awesome-localstack repository to set up and start
 **API Tests**
 
 ```bash
-npx playwright test tests/auth.spec.ts
+# Run all API tests
+npx playwright test tests/api/
+
+# Run specific API test suites
+npx playwright test tests/api/login.api.spec.ts
+npx playwright test tests/api/signup.api.spec.ts
+npx playwright test tests/api/getAllUsers.api.spec.ts
 ```
 
 **UI Tests**
 
 ```bash
-npx playwright test tests/ui/login.spec.ts
+# Run all UI tests
+npx playwright test tests/ui/
+
+# Run specific UI test suites
+npx playwright test tests/ui/login.ui.spec.ts
+npx playwright test tests/ui/register.ui.spec.ts
+npx playwright test tests/ui/home.ui.spec.ts
 ```
 
 **All Tests**
 
 ```bash
 npx playwright test
+```
+
+**Test by Category**
+
+```bash
+# Authentication tests only
+npx playwright test --grep "auth"
+
+# User management tests only
+npx playwright test --grep "user"
+
+# Product tests only
+npx playwright test --grep "product"
 ```
 
 ## ⚙️ Configuration
@@ -89,25 +167,57 @@ The `playwright.config.ts` file is configured to:
 
 ## 🧪 Test Details
 
-### API Tests (`tests/auth.spec.ts`)
+### API Test Coverage (13+ Endpoints)
 
-These tests cover various scenarios for the `/users/signin` endpoint:
+The API test suite provides comprehensive coverage of the backend services with dedicated client classes and test specifications:
 
-- **Successful Authentication**: Valid credentials return a 200 status with a valid token and user information
-- **Validation Errors**: Tests for empty or short usernames/passwords, expecting 400 status codes with appropriate error messages
-- **Authentication Errors**: Invalid credentials or missing fields result in 422 status codes with error messages
-- **Invalid JSON**: Malformed JSON payloads return a 400 status with an error message indicating invalid format
+#### Authentication & User Management
+- **`login.api.spec.ts`**: `/users/signin` endpoint with 200/400/422 scenarios
+- **`signup.api.spec.ts`**: `/users/signup` endpoint with 201/400 scenarios and faker.js integration
+- **`token.refresh.api.spec.ts`**: `/users/refresh` endpoint with 200/401 scenarios
+- **`whoAmI.api.spec.ts`**: `/users/me` endpoint with 200/401 scenarios
+- **`getAllUsers.api.spec.ts`**: `/users` endpoint with 200/401/403 scenarios (admin-only)
+- **`getUserByUsername.api.spec.ts`**: `/users/{username}` GET with 200/401/404 scenarios
+- **`updateUser.api.spec.ts`**: `/users/{username}` PUT with 200/400/401/403/404 scenarios
+- **`deleteUser.api.spec.ts`**: `/users/{username}` DELETE with 204/401/403/404 scenarios
 
-### UI Tests (`tests/ui/login.spec.ts`)
+#### Product Management
+- **`getAllProducts.api.spec.ts`**: `/api/products` GET with 200/401 scenarios
+- **`createProduct.api.spec.ts`**: `/api/products` POST with 201/400/401/403 scenarios (admin-only)
 
-These tests validate the login page's functionality and user experience:
+#### Utility Services
+- **`createQrCode.api.spec.ts`**: `/qr/create` endpoint with 200/400/401 scenarios and PNG validation
+- **`getTrafficInfo.api.spec.ts`**: `/api/traffic/info` endpoint with 200/401 scenarios
+- **`trafficWebSocket.api.spec.ts`**: WebSocket traffic monitoring with real-time connection tests
 
-- **Form Elements**: Ensures all necessary form elements are visible
-- **Successful Login**: Valid credentials redirect the user away from the login page
-- **Form Validations**: Empty or invalid inputs keep the user on the login page
-- **Navigation**: Clicking on "Register" buttons or links navigates to the registration page
-- **Form Reset**: Navigating away and back to the login page clears form fields
-- **Keyboard Navigation**: Supports tabbing through fields and submitting the form with the Enter key
+### UI Test Coverage (4+ Pages)
+
+The UI test suite implements Page Object Model pattern with comprehensive user interface validation:
+
+#### Authentication Pages
+- **`login.ui.spec.ts`**: Login page with form validation, navigation, keyboard support, and accessibility
+- **`register.ui.spec.ts`**: Registration page with form validation, success/error handling, and navigation
+
+#### Application Pages
+- **`home.ui.spec.ts`**: Home page with welcome message, CTA buttons, and authentication gating
+- **`loggedInHeader.ui.spec.ts`**: Navigation header with role-based menus, cart badge, and mobile responsiveness
+
+### Test Architecture Features
+
+#### Page Object Model (POM)
+- **Abstract Base Classes**: `AbstractPage`, `LoggedInPage`, `LoggedOutPage` for consistent page behavior
+- **Specialized Pages**: Dedicated page objects for each UI component with reusable methods
+- **Component Composition**: Reusable components like headers and toast notifications
+
+#### API Client Architecture
+- **Dedicated Clients**: One client class per endpoint with proper TypeScript typing
+- **Error Handling**: Comprehensive error scenarios with proper HTTP status code validation
+- **Authentication**: Bearer token injection and role-based access control testing
+
+#### Test Fixtures & Helpers
+- **`apiAuth.ts`**: API authentication helpers with user creation and token management
+- **`uiAuth.ts`**: UI authentication helpers with localStorage token injection
+- **Data Management**: Proper test data creation, validation, and cleanup patterns
 
 ## 🧰 Technologies Used
 
@@ -165,6 +275,47 @@ The system models different types of pages in a web application, separating logg
 **Key distinction**:
 - **Inheritance (blue)**: Defines specialisation of abstract/base pages.
 - **Composition (green)**: Indicates that a page "has access to" or "contains" another component (e.g., a header).
+
+## 📊 Test Coverage Status
+
+### API Test Progress
+Based on the comprehensive API test plan, the current implementation covers:
+
+**✅ Completed (11 endpoints):**
+- Authentication: `/users/signin`, `/users/signup`, `/users/refresh`, `/users/me`
+- User Management: `/users`, `/users/{username}` (GET/PUT/DELETE)
+- Products: `/api/products` (GET/POST)
+- Utilities: `/qr/create`, `/api/traffic/info`
+- WebSocket: Traffic monitoring with real-time connections
+
+**⏳ Planned (20+ endpoints):**
+- Cart operations: `/api/cart`, `/api/cart/items`
+- Order management: `/api/orders`, `/api/orders/{id}`
+- Admin operations: `/api/orders/admin`, `/api/orders/{id}/status`
+- Email service: `/email`
+- LLM integration: `/api/ollama/chat`, `/api/ollama/generate`
+- System prompts: `/users/{username}/system-prompt`
+
+### UI Test Progress
+Based on the comprehensive UI test plan, the current implementation covers:
+
+**✅ Completed (4 pages):**
+- Authentication: Login, Register pages
+- Application: Home page, Navigation header
+
+**⏳ Planned (15+ pages):**
+- Product management: Products list, Product details, Cart, Checkout
+- User management: Users list, Edit user, Profile
+- Admin features: Admin dashboard, Admin products, Admin orders
+- Utility pages: Email, QR code, LLM, Traffic monitor
+- Order management: Order details
+
+### Test Architecture Maturity
+- **Page Object Model**: Fully implemented with abstract base classes
+- **API Client Architecture**: Complete with dedicated clients for each endpoint
+- **Authentication Fixtures**: Comprehensive helpers for both API and UI tests
+- **Test Data Management**: Proper creation, validation, and cleanup patterns
+- **Error Handling**: Comprehensive HTTP status code validation and error scenarios
 
 ## Playwright MCP
 

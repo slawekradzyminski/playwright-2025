@@ -55,8 +55,8 @@ From AppRoutes.tsx plus global Navigation (desktop & mobile) and auth gating:
 | :----------------------- | :-------------------------- | :------------------ | :------------------------------------ | :------ |
 | Login                    | `/login`                    | `LoginPage`         | `tests/ui/login.ui.spec.ts`           | ✅      |
 | Register                 | `/register`                 | `RegisterPage`      | `tests/ui/register.ui.spec.ts`        | ✅      |
-| Home (logged-in)         | `/`                         | `HomePage`          | `tests/ui/home.ui.spec.ts`            | 🏗️      |
-| Navigation (desktop/mobile) | global                      | `Navigation`        | `tests/ui/navigation.ui.spec.ts`      | ⏳      |
+| Home (logged-in)         | `/`                         | `HomePage`          | `tests/ui/home.ui.spec.ts`            | ✅      |
+| Navigation (desktop/mobile) | global                      | `Navigation`        | `tests/ui/navigation.ui.spec.ts`      | ✅      |
 | Products list            | `/products`                 | `ProductsPage`      | `tests/ui/products.ui.spec.ts`        | ⏳      |
 | Product details          | `/products/:id`             | `ProductDetailsPage`| `tests/ui/product-details.ui.spec.ts` | ⏳      |
 | Cart                     | `/cart`                     | `CartPage`          | `tests/ui/cart.ui.spec.ts`            | ⏳      |
@@ -78,7 +78,7 @@ Note: Login page is already covered; Register and Home are prioritised next.
 
 ## Test Cases by Screen
 
-### 1) Register Page — `/register` (NEXT)
+### 1) Register Page — `/register` (✅)
 
 References: `registerPage.tsx` (testids, success path & error handling), `validators/auth.ts` (zod rules)
 
@@ -105,7 +105,7 @@ References: `registerPage.tsx` (testids, success path & error handling), `valida
 
 *   Locators by `data-testid`: `register-username-input`, `register-email-input`, `register-password-input`, `register-firstname-input`, `register-lastname-input`, errors, `register-submit-button`, `register-login-link`. (Derive from field containers + inputs in page.)
 
-### 2) Home Page — `/` (NEXT)
+### 2) Home Page — `/` (✅)
 
 References: `homePage.tsx` (welcome section, CTA buttons), `ProtectedRoute` (auth required).
 
@@ -133,7 +133,7 @@ References: `homePage.tsx` (welcome section, CTA buttons), `ProtectedRoute` (aut
 
 *   Use `home-*` testids (e.g. `home-products-button`, `home-users-button`, `home-profile-button`, `home-llm-button`, `home-qr-button`, `home-email-button`, `home-traffic-button`).
 
-### 3) Navigation (global)
+### 3) Navigation (global) (✅)
 
 References: `components/layout/Navigation.tsx` (desktop & mobile menus, role-based items, cart counter).
 
@@ -232,8 +232,8 @@ References: `components/layout/Navigation.tsx` (desktop & mobile menus, role-bas
 ## Execution Order (easiest → hardest)
 
 1.  Register ✅
-2.  Home 🏗️
-3.  Navigation
+2.  Home ✅
+3.  Navigation ✅
 4.  Products list
 5.  Product details
 6.  Cart
