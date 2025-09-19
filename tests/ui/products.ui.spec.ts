@@ -1,17 +1,24 @@
 import { test, expect } from "../../fixtures/uiAuth";
 import { ProductsPage } from "../../pages/productsPage";
+import { randomProduct } from "../../generators/productGenerator";
+import { createProduct } from "../../http/createProductClient";
 
 test.describe("Products UI tests", () => {
   let productsPage: ProductsPage;
+  let productName: string;
 
-  test.beforeEach(async ({ uiAuth }) => {
-    productsPage = new ProductsPage(uiAuth.page);
+  test.beforeEach(async ({ uiAuthAdmin, request }) => {
+    productsPage = new ProductsPage(uiAuthAdmin.page);
+    const { token } = uiAuthAdmin;
+    const product = randomProduct();
+    await createProduct(request, product, token);
+    productName = product.name;
     await productsPage.goto();
   });
 
-  test("should add product to cart and verify all changes", async ({ uiAuth }) => {
+  test("should add product to cart and verify all changes", async ({ uiAuthAdmin }) => {
     // given
-    const productName = "iPhone 13 Pro";
+    await productsPage.searchProduct(productName);
     
     // when
     await productsPage.addProductToCartByName(productName);

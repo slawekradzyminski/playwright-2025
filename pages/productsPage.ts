@@ -12,6 +12,7 @@ export class ProductsPage extends LoggedInPage {
   readonly quantityControls: Locator;
   readonly toastNotification: Locator;
   readonly toastMessage: Locator;
+  readonly productSearchInput: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -24,6 +25,7 @@ export class ProductsPage extends LoggedInPage {
     this.quantityControls = page.getByTestId('product-quantity-controls');
     this.toastNotification = page.getByTestId('toast-title');
     this.toastMessage = page.getByTestId('toast-description');
+    this.productSearchInput = page.getByTestId('product-search');
   }
 
   async goto() {
@@ -41,6 +43,10 @@ export class ProductsPage extends LoggedInPage {
   async addProductToCartByName(productName: string) {
     const productCard = await this.getProductByName(productName);
     await productCard.getByTestId('product-add-button').click();
+  }
+
+  async searchProduct(productName: string) {
+    await this.productSearchInput.fill(productName);
   }
 
   async expectProductInCart(productName: string) {
