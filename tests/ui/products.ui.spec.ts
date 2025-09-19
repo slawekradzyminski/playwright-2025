@@ -19,6 +19,6 @@ test.describe("Products UI tests", () => {
     // then
     await expect(productsPage.page.getByTestId('cart-item-count')).toHaveText("1");
     await productsPage.expectProductInCart(productName);
-    await productsPage.expectToastMessage(`1 × ${productName} added to your cart`);
+    await productsPage.toast.verifySuccessMessage(`1 × ${productName} added to your cart`);
   });
 });

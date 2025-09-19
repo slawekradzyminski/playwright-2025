@@ -50,9 +50,4 @@ export class ProductsPage extends LoggedInPage {
     await expect(productCard.getByTestId('product-add-button').filter({ hasText: 'Update Cart' })).toBeVisible();
   }
 
-  async expectToastMessage(message: string) {
-    await expect(this.toastNotification).toBeVisible();
-    await expect(this.toastMessage).toContainText(message);
-  }
-
 }
