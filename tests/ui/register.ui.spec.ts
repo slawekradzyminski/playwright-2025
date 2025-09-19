@@ -76,8 +76,8 @@ test.describe('Register UI tests', () => {
     await registerPage.register(userData);
 
     // then
+    await registerPage.toast.verifyErrorMessage('Username already exists');
     await registerPage.expectToBeOnRegisterPage();
-    registerPage.toast.verifyErrorMessage('Username already exists');
   });
 
   test('should navigate to login page when sign in link is clicked', async () => {

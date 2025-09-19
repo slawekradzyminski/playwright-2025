@@ -75,4 +75,8 @@ export class LoginPage extends LoggedOutPage {
     await expect(this.usernameError).toHaveText('Username must be at least 4 characters');
   }
 
+  async verifyUsernameInputDisplayed() {
+    await expect(this.usernameInput).toBeVisible();
+  }
+
 }

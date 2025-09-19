@@ -1,7 +1,6 @@
 import { test, expect } from '../../fixtures/uiAuth';
 import { HomePage } from '../../pages/homePage';
 import { ProductsPage } from '../../pages/productsPage';
-import { UsersPage } from '../../pages/usersPage';
 import { ProfilePage } from '../../pages/profilePage';
 import { TrafficPage } from '../../pages/trafficPage';
 import { LlmPage } from '../../pages/llmPage';
@@ -11,27 +10,24 @@ import { LoginPage } from '../../pages/loginPage';
 
 test.describe('Logged In Header UI tests', () => {
 
+  let homePage: HomePage;
+
+  test.beforeEach(async ({ page }) => {
+    homePage = new HomePage(page);
+  });
+
   test.describe('Header visibility and elements', () => {
     test('should display all header elements when logged in', async ({ uiAuth }) => {
-      // given
-      const homePage = new HomePage(uiAuth.page);
-
-      // when
-      // User is already on home page via uiAuth fixture
-
       // then
       await homePage.header.expectToBeVisible();
-      await homePage.header.expectProfileText('Test User');
+      await homePage.header.expectProfileText(`${uiAuth.user.firstName} ${uiAuth.user.lastName}`);
     });
   });
 
   test.describe('Navigation links', () => {
     test('should navigate to home page via header link', async ({ uiAuth }) => {
       // given
-      const homePage = new HomePage(uiAuth.page);
       const productsPage = new ProductsPage(uiAuth.page);
-      
-      // Navigate away from home first
       await productsPage.goto();
       
       // when
@@ -43,7 +39,6 @@ test.describe('Logged In Header UI tests', () => {
 
     test('should navigate to products page via header link', async ({ uiAuth }) => {
       // given
-      const homePage = new HomePage(uiAuth.page);
       const productsPage = new ProductsPage(uiAuth.page);
       
       // when
@@ -55,7 +50,6 @@ test.describe('Logged In Header UI tests', () => {
 
     test('should navigate to send email page via header link', async ({ uiAuth }) => {
       // given
-      const homePage = new HomePage(uiAuth.page);
       const emailPage = new EmailPage(uiAuth.page);
       
       // when
@@ -67,7 +61,6 @@ test.describe('Logged In Header UI tests', () => {
 
     test('should navigate to QR code page via header link', async ({ uiAuth }) => {
       // given
-      const homePage = new HomePage(uiAuth.page);
       const qrPage = new QrPage(uiAuth.page);
       
       // when
@@ -79,7 +72,6 @@ test.describe('Logged In Header UI tests', () => {
 
     test('should navigate to LLM page via header link', async ({ uiAuth }) => {
       // given
-      const homePage = new HomePage(uiAuth.page);
       const llmPage = new LlmPage(uiAuth.page);
       
       // when
@@ -91,7 +83,6 @@ test.describe('Logged In Header UI tests', () => {
 
     test('should navigate to traffic monitor page via header link', async ({ uiAuth }) => {
       // given
-      const homePage = new HomePage(uiAuth.page);
       const trafficPage = new TrafficPage(uiAuth.page);
       
       // when
@@ -105,7 +96,6 @@ test.describe('Logged In Header UI tests', () => {
   test.describe('User actions', () => {
     test('should navigate to profile page when clicking profile link', async ({ uiAuth }) => {
       // given
-      const homePage = new HomePage(uiAuth.page);
       const profilePage = new ProfilePage(uiAuth.page);
       
       // when
@@ -117,7 +107,6 @@ test.describe('Logged In Header UI tests', () => {
 
     test('should navigate to cart page when clicking cart icon', async ({ uiAuth }) => {
       // given
-      const homePage = new HomePage(uiAuth.page);
       
       // when
       await homePage.header.clickCart();
@@ -128,17 +117,14 @@ test.describe('Logged In Header UI tests', () => {
 
     test('should logout and redirect to login page when clicking logout', async ({ uiAuth }) => {
       // given
-      const homePage = new HomePage(uiAuth.page);
       const loginPage = new LoginPage(uiAuth.page);
       
       // when
       await homePage.header.clickLogout();
 
       // then
-      await loginPage.expectToBeOnPage('/login');
-      
-      // Note: We don't check localStorage.token here as the app may handle logout differently
-      // The important thing is that the user is redirected to the login page
+      await loginPage.verifyUsernameInputDisplayed();
+      await loginPage.expectToBeOnLoginPage();
     });
   });
 

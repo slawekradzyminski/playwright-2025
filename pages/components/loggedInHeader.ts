@@ -16,17 +16,17 @@ export class LoggedInHeader {
 
   constructor(page: Page) {
     this.page = page;
-    this.navigation = page.locator('navigation');
-    this.homeLink = page.getByRole('link', { name: 'Home' });
-    this.productsLink = page.getByRole('link', { name: 'Products' });
-    this.sendEmailLink = page.getByRole('link', { name: 'Send Email' });
-    this.qrCodeLink = page.getByRole('link', { name: 'QR Code' });
-    this.llmLink = page.getByRole('link', { name: 'LLM' });
-    this.trafficMonitorLink = page.getByRole('link', { name: 'Traffic Monitor' });
-    this.cartLink = page.locator('a[href="/cart"]');
+    this.navigation = page.getByTestId('navigation');
+    this.homeLink = page.getByTestId('desktop-menu-home');
+    this.productsLink = page.getByTestId('desktop-menu-products');
+    this.sendEmailLink = page.getByTestId('desktop-menu-send-email');
+    this.qrCodeLink = page.getByTestId('desktop-menu-qr-code');
+    this.llmLink = page.getByTestId('desktop-menu-llm');
+    this.trafficMonitorLink = page.getByTestId('desktop-menu-traffic-monitor');
+    this.cartLink = page.getByTestId('desktop-cart-icon');
     this.cartIcon = this.cartLink.locator('img');
-    this.profileLink = page.getByRole('link').filter({ hasText: /User/ });
-    this.logoutButton = page.getByRole('button', { name: 'Logout' });
+    this.profileLink = page.getByTestId('username-profile-link');
+    this.logoutButton = page.getByTestId('logout-button');
   }
 
   async clickHome() {

@@ -8,9 +8,9 @@ export class LoggedOutHeader {
 
   constructor(page: Page) {
     this.page = page;
-    this.navigation = page.locator('navigation');
-    this.loginLink = page.getByRole('link', { name: 'Login' });
-    this.registerLink = page.getByRole('link', { name: 'Register' });
+    this.navigation = page.getByTestId('navigation');
+    this.loginLink = page.getByTestId('login-link');
+    this.registerLink = page.getByTestId('register-link');
   }
 
   async clickLogin() {
