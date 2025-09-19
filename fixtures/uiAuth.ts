@@ -19,7 +19,7 @@ async function setupUiAuth(
   user: UserRegisterDto,
   use: (fixture: UiAuthFixture) => Promise<void>
 ) {
-  await page.evaluate((tokenValue) => {
+  await page.addInitScript((tokenValue) => {
     localStorage.setItem('token', tokenValue);
   }, token);
 

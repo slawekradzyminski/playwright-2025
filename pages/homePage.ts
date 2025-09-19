@@ -4,17 +4,35 @@ import { BasePage } from './basePage';
 
 export class HomePage extends BasePage {
 
+  readonly welcomeHeading: Locator;
   readonly userEmail: Locator;
-  readonly viewProductsLink: Locator;
+  readonly viewProductsButton: Locator;
+  readonly manageUsersButton: Locator;
+  readonly viewProfileButton: Locator;
+  readonly openTrafficMonitorButton: Locator;
+  readonly openAiAssistantButton: Locator;
+  readonly generateQrCodesButton: Locator;
+  readonly sendEmailsButton: Locator;
 
   constructor(page: Page) {
     super(page);
-    this.userEmail = page.getByTestId('home-user-email');
-    this.viewProductsLink = page.getByTestId('home-products-button')
+    this.welcomeHeading = page.locator('h1');
+    this.userEmail = page.locator('p').first();
+    this.viewProductsButton = page.getByTestId('home-products-button');
+    this.manageUsersButton = page.getByTestId('home-users-button');
+    this.viewProfileButton = page.getByTestId('home-profile-button');
+    this.openTrafficMonitorButton = page.getByTestId('home-traffic-button');
+    this.openAiAssistantButton = page.getByTestId('home-llm-button');
+    this.generateQrCodesButton = page.getByTestId('home-qr-button');
+    this.sendEmailsButton = page.getByTestId('home-email-button');
   }
 
   async goto() {
     await this.page.goto(`${FRONTEND_URL}/`);
+  }
+
+  async verifyWelcomeMessage(firstName: string) {
+    await expect(this.welcomeHeading).toHaveText(`Welcome, ${firstName}!`);
   }
 
   async verifyUserEmail(email: string) {
@@ -22,6 +40,30 @@ export class HomePage extends BasePage {
   }
 
   async clickViewProducts() {
-    await this.viewProductsLink.click();
+    await this.viewProductsButton.click();
+  }
+
+  async clickManageUsers() {
+    await this.manageUsersButton.click();
+  }
+
+  async clickViewProfile() {
+    await this.viewProfileButton.click();
+  }
+
+  async clickOpenTrafficMonitor() {
+    await this.openTrafficMonitorButton.click();
+  }
+
+  async clickOpenAiAssistant() {
+    await this.openAiAssistantButton.click();
+  }
+
+  async clickGenerateQrCodes() {
+    await this.generateQrCodesButton.click();
+  }
+
+  async clickSendEmails() {
+    await this.sendEmailsButton.click();
   }
 }
