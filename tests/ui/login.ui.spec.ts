@@ -39,9 +39,7 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await loginPage.fillUsername(credentials.username);
-    await loginPage.fillPassword(credentials.password);
-    await loginPage.clickSignIn();
+    await loginPage.login(credentials);
 
     // then
     await loginPage.expectToBeOnLoginPage();
@@ -56,9 +54,7 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await loginPage.fillUsername(credentials.username);
-    await loginPage.fillPassword(credentials.password);
-    await loginPage.clickSignIn();
+    await loginPage.login(credentials);
 
     // then
     await loginPage.expectToBeOnLoginPage();
@@ -106,9 +102,7 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await loginPage.fillUsername(credentials.username);
-    await loginPage.fillPassword(credentials.password);
-    await loginPage.clickSignIn();
+    await loginPage.login(credentials);
 
     // then
     await loginPage.expectToBeOnLoginPage();

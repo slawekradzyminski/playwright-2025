@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { RegisterPage } from '../../pages/registerPage';
 import { randomClient } from '../../generators/userGenerator';
 import { LoginPage } from '../../pages/loginPage';
@@ -45,12 +45,7 @@ test.describe('Register UI tests', () => {
     userData.username = 'abc'; // less than 4 characters
 
     // when
-    await registerPage.fillUsername(userData.username);
-    await registerPage.fillEmail(userData.email);
-    await registerPage.fillPassword(userData.password);
-    await registerPage.fillFirstName(userData.firstName);
-    await registerPage.fillLastName(userData.lastName);
-    await registerPage.clickSubmit();
+    await registerPage.register(userData);
 
     // then
     await registerPage.expectToBeOnRegisterPage();
@@ -63,12 +58,7 @@ test.describe('Register UI tests', () => {
     userData.password = '1234567'; // less than 8 characters
 
     // when
-    await registerPage.fillUsername(userData.username);
-    await registerPage.fillEmail(userData.email);
-    await registerPage.fillPassword(userData.password);
-    await registerPage.fillFirstName(userData.firstName);
-    await registerPage.fillLastName(userData.lastName);
-    await registerPage.clickSubmit();
+    await registerPage.register(userData);
 
     // then
     await registerPage.expectToBeOnRegisterPage();
@@ -97,5 +87,21 @@ test.describe('Register UI tests', () => {
 
     // then
     await registerPage.expectToBeOnLoginPage();
+  });
+
+  test('should show loading state during registration', async ({ page }) => {
+    // given
+    const userData = randomClient();
+    await page.route('**/users/signup', async (route) => {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      await route.continue();
+    });
+
+    // when
+    await registerPage.register(userData);
+    
+    // then
+    await expect(registerPage.submitButton).toBeDisabled();
+    await expect(registerPage.submitButton).toHaveText('Creating account...');
   });
 });
