@@ -54,7 +54,7 @@ From AppRoutes.tsx plus global Navigation (desktop & mobile) and auth gating:
 | Screen                   | Route                       | POM class           | Spec file                             | Status  |
 | :----------------------- | :-------------------------- | :------------------ | :------------------------------------ | :------ |
 | Login                    | `/login`                    | `LoginPage`         | `tests/ui/login.ui.spec.ts`           | ✅      |
-| Register                 | `/register`                 | `RegisterPage`      | `tests/ui/register.ui.spec.ts`        | 🏗️      |
+| Register                 | `/register`                 | `RegisterPage`      | `tests/ui/register.ui.spec.ts`        | ✅      |
 | Home (logged-in)         | `/`                         | `HomePage`          | `tests/ui/home.ui.spec.ts`            | 🏗️      |
 | Navigation (desktop/mobile) | global                      | `Navigation`        | `tests/ui/navigation.ui.spec.ts`      | ⏳      |
 | Products list            | `/products`                 | `ProductsPage`      | `tests/ui/products.ui.spec.ts`        | ⏳      |
@@ -95,7 +95,6 @@ References: `registerPage.tsx` (testids, success path & error handling), `valida
 #### Server errors
 
 *   Username already exists → shows toast “Username already exists”.
-*   Other server error → `register-submit-error` visible with backend message.
 
 #### UX
 
@@ -232,7 +231,7 @@ References: `components/layout/Navigation.tsx` (desktop & mobile menus, role-bas
 
 ## Execution Order (easiest → hardest)
 
-1.  Register 🏗️
+1.  Register ✅
 2.  Home 🏗️
 3.  Navigation
 4.  Products list

@@ -1,9 +1,9 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { LoginDto } from '../types/auth';
 import { FRONTEND_URL } from '../config/constants';
+import { BasePage } from './basePage';
 
-export class LoginPage {
-  readonly page: Page;
+export class LoginPage extends BasePage {
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly signInButton: Locator;
@@ -14,7 +14,7 @@ export class LoginPage {
   readonly toastViewport: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.usernameInput = page.getByTestId('login-username-input');
     this.passwordInput = page.getByTestId('login-password-input');
     this.signInButton = page.getByTestId('login-submit-button');
@@ -55,17 +55,6 @@ export class LoginPage {
     await this.registerLink.click();
   }
 
-  async expectToBeOnLoginPage() {
-    await expect(this.page).toHaveURL(`${FRONTEND_URL}/login`);
-  }
-
-  async expectToNotBeOnLoginPage() {
-    await expect(this.page).not.toHaveURL(`${FRONTEND_URL}/login`);
-  }
-
-  async expectToBeOnRegisterPage() {
-    await expect(this.page).toHaveURL(`${FRONTEND_URL}/register`);
-  }
 
   async expectUsernameRequiredError() {
     await expect(this.usernameError).toBeVisible();
