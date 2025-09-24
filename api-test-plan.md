@@ -60,7 +60,7 @@ Tick ✅ Spec when the `<operationId>.api.spec.ts` is complete and ✅ Client wh
 | users | POST | `/users/signin` | login | ✅ (existing) | ✅ (existing) |
 | users | GET | `/users/refresh` | refresh | [ ] | [ ] |
 | users | GET | `/users/me` | whoAmI | [ ] | [ ] |
-| users | POST | `/users/signup` | signup | [ ] | [ ] |
+| users | POST | `/users/signup` | signup | ✅ | ✅ |
 | users | GET | `/users` | getAll | [ ] | [ ] |
 | users | GET | `/users/{username}` | getByUsername | [ ] | [ ] |
 | users | PUT | `/users/{username}` | edit | [ ] | [ ] |
@@ -91,7 +91,7 @@ Tick ✅ Spec when the `<operationId>.api.spec.ts` is complete and ✅ Client wh
 
 *All endpoints and operation IDs are taken directly from `api-docs.json`*
 
-**Progress:** 1 / 31 complete (3.2%)
+**Progress:** 2 / 31 complete (6.5%)
 
 ## Per-Endpoint Scenario Catalogue (what to cover)
 
