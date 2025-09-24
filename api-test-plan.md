@@ -83,7 +83,7 @@ Tick ✅ Spec when the `<operationId>.api.spec.ts` is complete and ✅ Client wh
 | Orders | POST | `/api/orders/{id}/cancel` | cancelOrder | [ ] | [ ] |
 | Orders (Admin) | GET | `/api/orders/admin` | getAllOrders | [ ] | [ ] |
 | Orders (Admin) | PUT | `/api/orders/{id}/status` | updateOrderStatus | [ ] | [ ] |
-| QR | POST | `/qr/create` | createQrCode | [ ] | [ ] |
+| QR | POST | `/qr/create` | createQrCode | ✅ | ✅ |
 | email | POST | `/email` | sendEmail | [ ] | [ ] |
 | Traffic Monitoring | GET | `/api/traffic/info` | getTrafficInfo | [ ] | [ ] |
 | ollama | POST | `/api/ollama/generate` | generateText | [ ] | [ ] |
@@ -91,7 +91,7 @@ Tick ✅ Spec when the `<operationId>.api.spec.ts` is complete and ✅ Client wh
 
 *All endpoints and operation IDs are taken directly from `api-docs.json`*
 
-**Progress:** 2 / 31 complete (6.5%)
+**Progress:** 3 / 31 complete (9.7%)
 
 ## Per-Endpoint Scenario Catalogue (what to cover)
 

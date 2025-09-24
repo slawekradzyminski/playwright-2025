@@ -24,4 +24,8 @@ export interface UserRegisterDto {
 export interface ErrorResponse {
   message?: string;
   errors?: Record<string, string[]>;
+}
+
+export interface CreateQrDto {
+  text: string;
 } 
