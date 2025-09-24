@@ -58,10 +58,9 @@ Tick ✅ Spec when the `<operationId>.api.spec.ts` is complete and ✅ Client wh
 | Tag | Method | Path | operationId | Spec | Client |
 |-----|--------|------|-------------|------|--------|
 | users | POST | `/users/signin` | login | ✅ (existing) | ✅ (existing) |
-| users | POST | `/users/signup` | signup | [ ] | [ ] |
-
 | users | GET | `/users/refresh` | refresh | [ ] | [ ] |
 | users | GET | `/users/me` | whoAmI | [ ] | [ ] |
+| users | POST | `/users/signup` | signup | [ ] | [ ] |
 | users | GET | `/users` | getAll | [ ] | [ ] |
 | users | GET | `/users/{username}` | getByUsername | [ ] | [ ] |
 | users | PUT | `/users/{username}` | edit | [ ] | [ ] |
