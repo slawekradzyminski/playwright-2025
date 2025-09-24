@@ -15,16 +15,8 @@ test.describe('/users/signin API tests', () => {
 
     // then
     expect(response.status()).toBe(200);
-    
     const responseBody: LoginResponseDto = await response.json();
-    expect(responseBody.token).toBeDefined();
-    expect(responseBody.token).toMatch(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/);
-    expect(responseBody.username).toBe(loginData.username);
-    expect(responseBody.email).toBeDefined();
-    expect(responseBody.firstName).toBeDefined();
-    expect(responseBody.lastName).toBeDefined();
-    expect(responseBody.roles).toBeDefined();
-    expect(Array.isArray(responseBody.roles)).toBe(true);
+    validateLoginResponse(responseBody, loginData);
   });
 
   test('should return validation error for empty username - 400', async ({ request }) => {
@@ -58,5 +50,18 @@ test.describe('/users/signin API tests', () => {
     const responseBody = await response.json();
     expect(responseBody.message).toBe('Invalid username/password supplied');
   });
+
+  // change to arrow function
+  const validateLoginResponse = (responseBody: LoginResponseDto, loginData: LoginDto) => {
+    // validate login response
+    expect(responseBody.token).toBeDefined();
+    expect(responseBody.token).toMatch(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/);
+    expect(responseBody.username).toBe(loginData.username);
+    expect(responseBody.email).toBeDefined();
+    expect(responseBody.firstName).toBeDefined();   
+    expect(responseBody.lastName).toBeDefined();
+    expect(responseBody.roles).toBeDefined();
+    expect(Array.isArray(responseBody.roles)).toBe(true);
+  }
 
 }); 
