@@ -1,0 +1,8 @@
+---
+description: Apply for all UI tests related stuff
+alwaysApply: false
+---
+
+- Use Page Object Model for UI tests (pages folder)
+- Use data-testid for all selectors
+- Find selectors via Playwright MCP

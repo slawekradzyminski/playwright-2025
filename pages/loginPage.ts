@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { LoginDto } from '../types/auth';
+import { BACKEND_BASE_URL } from '../config/constants';
 
 export class LoginPage {
   readonly page: Page;
@@ -11,18 +12,18 @@ export class LoginPage {
   readonly registerLink: Locator;
   readonly noAccountText: Locator;
   
-  private readonly loginUrl = 'http://localhost:8081/login';
-  private readonly registerUrl = 'http://localhost:8081/register';
+  private readonly loginUrl = `${BACKEND_BASE_URL}/login`;
+  private readonly registerUrl = `${BACKEND_BASE_URL}/register`;
 
   constructor(page: Page) {
     this.page = page;
-    this.heading = page.getByRole('heading', { name: 'Sign in to your account' });
-    this.usernameInput = page.getByRole('textbox', { name: 'Username' });
-    this.passwordInput = page.getByRole('textbox', { name: 'Password' });
-    this.signInButton = page.getByRole('button', { name: 'Sign in' });
-    this.registerButton = page.getByRole('button', { name: 'Register' });
-    this.registerLink = page.getByRole('link', { name: 'Register' });
-    this.noAccountText = page.getByText("Don't have an account?");
+    this.heading = page.getByTestId('login-title');
+    this.usernameInput = page.getByTestId('login-username-input');
+    this.passwordInput = page.getByTestId('login-password-input');
+    this.signInButton = page.getByTestId('login-submit-button');
+    this.registerButton = page.getByTestId('login-register-link');
+    this.registerLink = page.getByTestId('register-link');
+    this.noAccountText = page.getByTestId('login-register-link-container');
   }
 
   async goto() {
