@@ -5,35 +5,35 @@ import { createProduct } from '../../http/productsClient';
 import { APIResponse } from '@playwright/test';
 
 test.describe('POST /api/products API tests', () => {
-  test('should successfully create product with valid data - 201', async ({ request, authenticatedUser }) => {
+  test('should successfully create product with valid data for admin - 201', async ({ request, authenticatedAdmin }) => {
     // given
     const productData = generateProduct();
 
     // when
-    const response = await createProduct(request, productData, authenticatedUser.token);
+    const response = await createProduct(request, productData, authenticatedAdmin.token);
 
     // then
     expect(response.status()).toBe(201);
     await validateProductResponse(response, productData);
   });
 
-  test('should return bad request for product with invalid name (too short) - 400', async ({ request, authenticatedUser }) => {
+  test('should return bad request for product with invalid name (too short) - 400', async ({ request, authenticatedAdmin }) => {
     // given
     const productData = generateProductWithInvalidName();
 
     // when
-    const response = await createProduct(request, productData, authenticatedUser.token);
+    const response = await createProduct(request, productData, authenticatedAdmin.token);
 
     // then
     expect(response.status()).toBe(400);
   });
 
-  test('should return bad request for product with invalid price (negative) - 400', async ({ request, authenticatedUser }) => {
+  test('should return bad request for product with invalid price (negative) - 400', async ({ request, authenticatedAdmin }) => {
     // given
     const productData = generateProductWithInvalidPrice();
 
     // when
-    const response = await createProduct(request, productData, authenticatedUser.token);
+    const response = await createProduct(request, productData, authenticatedAdmin.token);
 
     // then
     expect(response.status()).toBe(400);
@@ -48,6 +48,17 @@ test.describe('POST /api/products API tests', () => {
 
     // then
     expect(response.status()).toBe(401);
+  });
+
+  test('should return forbidden error for client - 403', async ({ request, authenticatedClient }) => {
+    // given
+    const productData = generateProduct();
+
+    // when
+    const response = await createProduct(request, productData, authenticatedClient.token);
+
+    // then
+    expect(response.status()).toBe(403);
   });
 });
 

@@ -3,9 +3,9 @@ import type { UserResponseDto } from '../../types/user';
 import { getUsers } from '../../http/usersClient';
 
 test.describe('/users API tests', () => {
-  test('should successfully get users with valid JWT token - 200', async ({ request, authenticatedUser }) => {
+  test('should successfully get users with valid JWT token - 200', async ({ request, authenticatedClient }) => {
     // when
-    const response = await getUsers(request, authenticatedUser.token);
+    const response = await getUsers(request, authenticatedClient.token);
 
     // then
     expect(response.status()).toBe(200);
