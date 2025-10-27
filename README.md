@@ -10,7 +10,7 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 
 - **API Testing**: Validates authentication endpoints with various scenarios, including successful logins and error handling.
 - **UI Testing**: Ensures the login interface behaves correctly, covering form validations, navigation, and accessibility.
-- **TypeScript Support**: Utilizes TypeScript for type safety and better developer experience.
+- **TypeScript Support**: Utilizes TypeScript for type safety and better developer experience with dedicated types in `/types` folder.
 - **Dockerized Environment**: Tests are designed to run against services provided by the awesome-localstack Docker setup.
 
 ## 🗂️ Project Structure
@@ -18,9 +18,10 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 ```
 .
 ├── tests/
-│   ├── auth.spec.ts                # API tests for /users/signin endpoint
+│   ├── api/
+│   │   └── login.api.spec.ts       # API tests for /users/signin endpoint
 │   └── ui/
-│       └── login.spec.ts           # UI tests for the login page
+│       └── login.ui.spec.ts        # UI tests for the login page
 ├── types/
 │   └── auth.ts                     # TypeScript interfaces for authentication
 ├── playwright.config.ts            # Playwright configuration
@@ -63,18 +64,24 @@ Follow the instructions in the awesome-localstack repository to set up and start
 **API Tests**
 
 ```bash
-npx playwright test tests/auth.spec.ts
+npm run test:api
+# or
+npx playwright test tests/api/login.api.spec.ts
 ```
 
 **UI Tests**
 
 ```bash
-npx playwright test tests/ui/login.spec.ts
+npm run test:ui
+# or
+npx playwright test tests/ui/login.ui.spec.ts
 ```
 
 **All Tests**
 
 ```bash
+npm test
+# or
 npx playwright test
 ```
 
@@ -85,29 +92,28 @@ The `playwright.config.ts` file is configured to:
 - Run tests in parallel for faster execution
 - Use Chromium browser for UI tests
 - Collect trace information on the first retry of a failed test
-- Specify the test directory as `./tests`
+- Use list reporter for test output
+- Retry failed tests on CI (up to 2 retries)
+- Use single worker on CI, parallel workers locally
 
 ## 🧪 Test Details
 
-### API Tests (`tests/auth.spec.ts`)
+### API Tests (`tests/api/login.api.spec.ts`)
 
-These tests cover various scenarios for the `/users/signin` endpoint:
+These tests cover various scenarios for the `/users/signin` endpoint, ordered by response code:
 
-- **Successful Authentication**: Valid credentials return a 200 status with a valid token and user information
-- **Validation Errors**: Tests for empty or short usernames/passwords, expecting 400 status codes with appropriate error messages
-- **Authentication Errors**: Invalid credentials or missing fields result in 422 status codes with error messages
-- **Invalid JSON**: Malformed JSON payloads return a 400 status with an error message indicating invalid format
+- **Successful Authentication (200)**: Valid credentials return a 200 status with a JWT token and complete user information
+- **Validation Errors (400)**: Tests for empty username, short username, and short password scenarios with appropriate error messages
+- **Authentication Errors (422)**: Invalid credentials result in 422 status codes with error messages
 
-### UI Tests (`tests/ui/login.spec.ts`)
+### UI Tests (`tests/ui/login.ui.spec.ts`)
 
 These tests validate the login page's functionality and user experience:
 
-- **Form Elements**: Ensures all necessary form elements are visible
 - **Successful Login**: Valid credentials redirect the user away from the login page
-- **Form Validations**: Empty or invalid inputs keep the user on the login page
+- **Form Validation**: Empty password and invalid credentials keep the user on the login page
 - **Navigation**: Clicking on "Register" buttons or links navigates to the registration page
-- **Form Reset**: Navigating away and back to the login page clears form fields
-- **Keyboard Navigation**: Supports tabbing through fields and submitting the form with the Enter key
+- **Input Validation**: Short username validation prevents form submission
 
 ## 🧰 Technologies Used
 
