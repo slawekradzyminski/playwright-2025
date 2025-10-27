@@ -28,7 +28,7 @@ test.describe('/users/signup API tests', () => {
     // then
     expect(response.status()).toBe(400);
     const responseBody = await response.json();
-    expect(responseBody.username).toBeDefined();
+    expect(responseBody.username).toBe('Minimum username length: 4 characters');
   });
 
   test('should return validation error for password too short - 400', async ({ request }) => {
@@ -44,7 +44,7 @@ test.describe('/users/signup API tests', () => {
     // then
     expect(response.status()).toBe(400);
     const responseBody = await response.json();
-    expect(responseBody.password).toBeDefined();
+    expect(responseBody.password).toBe('Minimum password length: 8 characters');
   });
 
   test('should return validation error for invalid email format - 400', async ({ request }) => {
@@ -60,7 +60,7 @@ test.describe('/users/signup API tests', () => {
     // then
     expect(response.status()).toBe(400);
     const responseBody = await response.json();
-    expect(responseBody.email).toBeDefined();
+    expect(responseBody.email).toBe('Email should be valid');
   });
 
   test('should return validation error for missing roles - 400', async ({ request }) => {
@@ -76,7 +76,7 @@ test.describe('/users/signup API tests', () => {
     // then
     expect(response.status()).toBe(400);
     const responseBody = await response.json();
-    expect(responseBody.roles).toBeDefined();
+    expect(responseBody.roles).toBe('At least one role must be specified');
   });
 });
 
