@@ -1,22 +1,11 @@
-import { test, expect } from '@playwright/test';
-import type { LoginDto, LoginResponseDto } from '../../types/auth';
+import { test, expect } from '../../fixtures/apiAuthFixture';
 import type { UserResponseDto } from '../../types/user';
-import { attemptLogin } from '../../http/loginClient';
 import { getUsers } from '../../http/usersClient';
 
 test.describe('/users API tests', () => {
-  test('should successfully get users with valid JWT token - 200', async ({ request }) => {
-    // given
-    const loginData: LoginDto = {
-      username: 'admin',
-      password: 'admin'
-    };
-    const loginResponse = await attemptLogin(request, loginData);
-    const loginBody: LoginResponseDto = await loginResponse.json();
-    const token = loginBody.token;
-
+  test('should successfully get users with valid JWT token - 200', async ({ request, authenticatedUser }) => {
     // when
-    const response = await getUsers(request, token);
+    const response = await getUsers(request, authenticatedUser.token);
 
     // then
     expect(response.status()).toBe(200);
