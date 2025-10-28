@@ -1,0 +1,9 @@
+---
+description: Use this rule always when you write UI tests
+alwaysApply: false
+---
+- Use Page Object Model (POM) pattern to write UI tests, add pages to pages/ folder, add components to pages/components/ folder
+- Use data-testid based selectors (frontend should be prepared for this)
+- Frontend is running on http://localhost:8081
+- Use Playwright MCP to find data-testid based selectors
+- Use npm run test:ui to run UI tests
