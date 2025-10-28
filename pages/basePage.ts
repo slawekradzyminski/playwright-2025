@@ -1,4 +1,4 @@
-import { expect, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import { FRONTEND_URL } from '../config/constants';
 
 export class BasePage {
@@ -18,5 +18,12 @@ export class BasePage {
 
   async expectNotOnPage(url: string) {
     await expect(this.page).not.toHaveURL(`${FRONTEND_URL}/${url}`);
+  }
+
+
+
+  async expectToastMessage(message: string) {
+    const toast = this.page.getByTestId('toast-description');
+    await expect(toast).toHaveText(message);
   }
 }

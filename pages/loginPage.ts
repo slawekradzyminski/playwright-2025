@@ -1,4 +1,4 @@
-import type { Locator, Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import type { LoginDto } from '../types/auth';  
 import { BasePage } from './basePage';
 
@@ -8,6 +8,8 @@ export class LoginPage extends BasePage {
   readonly signInButton: Locator;
   readonly registerButton: Locator;
   readonly registerLink: Locator;
+  readonly usernameError: Locator;
+  readonly passwordError: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -16,6 +18,8 @@ export class LoginPage extends BasePage {
     this.signInButton = page.getByTestId('login-submit-button');
     this.registerButton = page.getByTestId('login-register-link');
     this.registerLink = page.getByTestId('register-link');
+    this.usernameError = page.getByTestId('login-username-error');
+    this.passwordError = page.getByTestId('login-password-error');
   }
 
   async login(credentials: LoginDto) {
@@ -30,6 +34,14 @@ export class LoginPage extends BasePage {
 
   async clickRegisterLink() {
     await this.registerLink.click();
+  }
+
+  async expectUsernameError(message: string) {
+    await expect(this.usernameError).toHaveText(message);
+  }
+
+  async expectPasswordError(message: string) {
+    await expect(this.passwordError).toHaveText(message);
   }
 
 }
