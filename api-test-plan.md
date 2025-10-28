@@ -98,37 +98,35 @@ GET    /api/traffic/info           http/getTrafficInfoClient.ts         tests/ap
 - 📁 Client: `http/userByUsernameClient.ts`
 - 📄 Tests: `tests/api/user-by-username.api.spec.ts`
 
-### 📝 **TODO** - Need Implementation (24 endpoints remaining)
+#### 8. PUT /users/{username} (update-user.api.spec.ts)
+- ✅ Successful update (200)
+- ✅ Non-existent user handling (404)
+- ✅ Authorization checks (401, 403)
+- 📁 Client: `http/updateUserClient.ts`
+- 📄 Tests: `tests/api/update-user.api.spec.ts`
 
-#### User Management Endpoints (4 endpoints)
+#### 9. DELETE /users/{username} (delete-user.api.spec.ts)
+- ✅ Successful deletion (204)
+- ✅ Non-existent user handling (404)
+- ✅ Authorization checks (401, 403)
+- 📁 Client: `http/deleteUserClient.ts`
+- 📄 Tests: `tests/api/delete-user.api.spec.ts`
 
-##### 8. PUT /users/{username}
-- [ ] Successful update (200)
-- [ ] Non-existent user (404)
-- [ ] Authorization checks (401, 403)
-- 📁 Client: `http/updateUserClient.ts` (needs creation)
-- 📄 Tests: `tests/api/update-user.api.spec.ts` (needs creation)
+#### 10. GET /users/{username}/system-prompt (get-system-prompt.api.spec.ts)
+- ✅ System prompt retrieval (200)
+- ✅ Non-existent user handling (returns 401 Unauthorized in current API)
+- ✅ Authorization checks (401, 403)
+- 📁 Client: `http/getSystemPromptClient.ts`
+- 📄 Tests: `tests/api/get-system-prompt.api.spec.ts`
 
-##### 9. DELETE /users/{username}
-- [ ] Successful deletion (204)
-- [ ] Non-existent user (404)
-- [ ] Authorization checks (401, 403)
-- 📁 Client: `http/deleteUserClient.ts` (needs creation)
-- 📄 Tests: `tests/api/delete-user.api.spec.ts` (needs creation)
+#### 11. PUT /users/{username}/system-prompt (update-system-prompt.api.spec.ts)
+- ✅ System prompt update (200)
+- ✅ Non-existent user handling (returns 401 Unauthorized in current API)
+- ✅ Authorization checks (401, 403)
+- 📁 Client: `http/updateSystemPromptClient.ts`
+- 📄 Tests: `tests/api/update-system-prompt.api.spec.ts`
 
-##### 10. GET /users/{username}/system-prompt
-- [ ] Retrieve system prompt (200)
-- [ ] Non-existent user (404)
-- [ ] Authorization checks (401, 403)
-- 📁 Client: `http/getSystemPromptClient.ts` (needs creation)
-- 📄 Tests: `tests/api/get-system-prompt.api.spec.ts` (needs creation)
-
-##### 11. PUT /users/{username}/system-prompt
-- [ ] Update system prompt (200)
-- [ ] Non-existent user (404)
-- [ ] Authorization checks (401, 403)
-- 📁 Client: `http/updateSystemPromptClient.ts` (needs creation)
-- 📄 Tests: `tests/api/update-system-prompt.api.spec.ts` (needs creation)
+### 📝 **TODO** - Need Implementation (20 endpoints remaining)
 
 #### Product Endpoints (4 endpoints)
 
@@ -359,11 +357,11 @@ test.describe('ENDPOINT API tests', () => {
 ## Progress Summary
 
 - **Total Endpoints**: 31
-- **Completed**: 7 (22.6%)
-- **Remaining**: 24 (77.4%)
+- **Completed**: 11 (35.5%)
+- **Remaining**: 20 (64.5%)
 
 ### By Category
-- **User Management**: 6/10 completed (60%)
+- **User Management**: 10/10 completed (100%)
 - **Products**: 1/5 completed (20%)
 - **Orders**: 0/6 completed (0%)
 - **Cart**: 0/5 completed (0%)
@@ -371,11 +369,10 @@ test.describe('ENDPOINT API tests', () => {
 
 ## Next Steps
 
-1. Implement remaining User Management endpoints (4 endpoints)
-2. Complete Product endpoints (4 endpoints)
-3. Implement Order management (6 endpoints)
-4. Implement Cart functionality (5 endpoints)
-5. Implement additional features (5 endpoints)
+1. Complete Product endpoints (4 endpoints)
+2. Implement Order management (6 endpoints)
+3. Implement Cart functionality (5 endpoints)
+4. Implement additional features (5 endpoints)
 
 ---
 

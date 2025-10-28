@@ -7,3 +7,16 @@ export interface UserResponseDto {
   lastName: string;
 }
 
+export interface UserEditDto {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface UserEntityDto extends UserResponseDto {
+  systemPrompt?: string | null;
+}
+
+export interface SystemPromptDto {
+  systemPrompt: string | null;
+}
