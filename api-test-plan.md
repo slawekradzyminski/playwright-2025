@@ -78,28 +78,29 @@ GET    /api/traffic/info           http/getTrafficInfoClient.ts         tests/ap
 - 📁 Client: `http/productsClient.ts`
 - 📄 Tests: `tests/api/products.api.spec.ts`
 
-### 📝 **TODO** - Need Implementation (27 endpoints remaining)
+#### 5. GET /users/refresh (refresh.api.spec.ts)
+- ✅ Valid token refresh (200)
+- ✅ Invalid/expired token handling (401)
+- 📁 Client: `http/refreshClient.ts`
+- 📄 Tests: `tests/api/refresh.api.spec.ts`
 
-#### User Management Endpoints (7 endpoints)
+#### 6. GET /users/me (me.api.spec.ts)
+- ✅ Current user retrieval with valid token (200)
+- ✅ Missing token handling (401)
+- ✅ Invalid token handling (401)
+- 📁 Client: `http/meClient.ts`
+- 📄 Tests: `tests/api/me.api.spec.ts`
 
-##### 5. GET /users/refresh
-- [ ] Valid token refresh (200)
-- [ ] Invalid/expired token handling (401)
-- 📁 Client: `http/refreshClient.ts` (needs creation)
-- 📄 Tests: `tests/api/refresh.api.spec.ts` (needs creation)
+#### 7. GET /users/{username} (user-by-username.api.spec.ts)
+- ✅ Existing user retrieval (200)
+- ✅ Non-existent user handling (404)
+- ✅ Authorization checks (401) - missing and invalid token
+- 📁 Client: `http/userByUsernameClient.ts`
+- 📄 Tests: `tests/api/user-by-username.api.spec.ts`
 
-##### 6. GET /users/me
-- [ ] Current user retrieval (200)
-- [ ] Authorization checks (401)
-- 📁 Client: `http/meClient.ts` (needs creation)
-- 📄 Tests: `tests/api/me.api.spec.ts` (needs creation)
+### 📝 **TODO** - Need Implementation (24 endpoints remaining)
 
-##### 7. GET /users/{username}
-- [ ] Existing user retrieval (200)
-- [ ] Non-existent user (404)
-- [ ] Authorization checks (401)
-- 📁 Client: `http/userByUsernameClient.ts` (needs creation)
-- 📄 Tests: `tests/api/user-by-username.api.spec.ts` (needs creation)
+#### User Management Endpoints (4 endpoints)
 
 ##### 8. PUT /users/{username}
 - [ ] Successful update (200)
@@ -358,11 +359,11 @@ test.describe('ENDPOINT API tests', () => {
 ## Progress Summary
 
 - **Total Endpoints**: 31
-- **Completed**: 4 (12.9%)
-- **Remaining**: 27 (87.1%)
+- **Completed**: 7 (22.6%)
+- **Remaining**: 24 (77.4%)
 
 ### By Category
-- **User Management**: 3/10 completed (30%)
+- **User Management**: 6/10 completed (60%)
 - **Products**: 1/5 completed (20%)
 - **Orders**: 0/6 completed (0%)
 - **Cart**: 0/5 completed (0%)
@@ -370,7 +371,7 @@ test.describe('ENDPOINT API tests', () => {
 
 ## Next Steps
 
-1. Implement remaining User Management endpoints (7 endpoints)
+1. Implement remaining User Management endpoints (4 endpoints)
 2. Complete Product endpoints (4 endpoints)
 3. Implement Order management (6 endpoints)
 4. Implement Cart functionality (5 endpoints)
