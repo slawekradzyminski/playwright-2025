@@ -1,4 +1,4 @@
-import { test, expect } from '../../fixtures/uiAuthFixture';
+import { test } from '../../fixtures/uiAuthFixture';
 import { HomePage } from '../../pages/homePage';
 
 test.describe('Home UI tests', () => {
