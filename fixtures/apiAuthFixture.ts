@@ -18,7 +18,8 @@ async function createAuthenticatedUser(
 ): Promise<AuthenticatedUser> {
   const userData = generateRandomUserWithRole(role);
 
-  await attemptRegistration(request, userData);
+  const registrationResponse = await attemptRegistration(request, userData);
+  expect(registrationResponse.ok(), 'Registration should succeed').toBeTruthy();
 
   const loginData: LoginDto = {
     username: userData.username,
