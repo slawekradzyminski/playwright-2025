@@ -5,7 +5,7 @@ import { generateRandomUserWithRole } from '../generators/userGenerator';
 import { attemptRegistration } from '../http/registerClient';
 import { attemptLogin } from '../http/loginClient';
 
-type Role = 'ROLE_ADMIN' | 'ROLE_CLIENT';
+export type Role = 'ROLE_ADMIN' | 'ROLE_CLIENT';
 
 export interface AuthenticatedUserData {
   userData: UserRegisterDto;

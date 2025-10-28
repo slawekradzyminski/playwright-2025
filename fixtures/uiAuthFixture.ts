@@ -1,10 +1,8 @@
 import { test as base, expect } from '@playwright/test';
 import type { Page, APIRequestContext } from '@playwright/test';
 import type { UserRegisterDto } from '../types/auth';
-import { registerAndLoginUser } from './authHelpers';
+import { registerAndLoginUser, type Role } from './authHelpers';
 import { FRONTEND_URL } from '../config/constants';
-
-type Role = 'ROLE_ADMIN' | 'ROLE_CLIENT';
 
 export interface AuthenticatedUIUser {
   userData: UserRegisterDto;

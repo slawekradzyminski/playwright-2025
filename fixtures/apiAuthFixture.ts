@@ -1,9 +1,7 @@
 import { test as base, expect } from '@playwright/test';
 import type { APIRequestContext } from '@playwright/test';
 import type { UserRegisterDto } from '../types/auth';
-import { registerAndLoginUser } from './authHelpers';
-
-type Role = 'ROLE_ADMIN' | 'ROLE_CLIENT';
+import { registerAndLoginUser, type Role } from './authHelpers';
 
 export interface AuthenticatedUser {
   userData: UserRegisterDto;
