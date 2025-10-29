@@ -65,5 +65,9 @@ export class RegisterPage extends LoggedOutPage {
     await expect(this.lastNameError).toHaveText(message);
   }
 
+  async expectOnPage() {
+    await expect(this.page).toHaveURL(/\/register/);
+  }
+
 }
 

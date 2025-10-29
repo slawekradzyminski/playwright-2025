@@ -4,6 +4,7 @@ import type { LoginDto } from '../../types/auth';
 import { generateRandomUser } from '../../generators/userGenerator';  
 import { attemptRegistration } from '../../http/registerClient';
 import { HomePage } from '../../pages/homePage';
+import { RegisterPage } from '../../pages/registerPage';
 
 test.describe('Login UI tests', () => {
   let loginPage: LoginPage;
@@ -41,7 +42,7 @@ test.describe('Login UI tests', () => {
     await loginPage.login(credentials);
 
     // then
-    await loginPage.expectOnPage('login');
+    await loginPage.expectOnPage();
     await loginPage.expectUsernameError('Username must be at least 4 characters');
   });
 
@@ -56,7 +57,7 @@ test.describe('Login UI tests', () => {
     await loginPage.login(credentials);
 
     // then
-    await loginPage.expectOnPage('login');
+    await loginPage.expectOnPage();
     await loginPage.expectPasswordError('Password is required');
   });
 
@@ -71,26 +72,28 @@ test.describe('Login UI tests', () => {
     await loginPage.login(credentials);
 
     // then
-    await loginPage.expectOnPage('login');
+    await loginPage.expectOnPage();
     await loginPage.expectErrorToastMessage('Invalid username/password');
   });
 
-  test('should navigate to register page when register button is clicked', async () => {
+  test('should navigate to register page when register button is clicked', async ({ page }) => {
     // given
     // when
     await loginPage.clickRegisterButton();
 
     // then
-    await loginPage.expectOnPage('register');
+    const registerPage = new RegisterPage(page);
+    await registerPage.expectOnPage();
   });
 
-  test('should navigate to register page when register link is clicked', async () => {
+  test('should navigate to register page when register link is clicked', async ({ page }) => {
     // given
     // when
     await loginPage.clickRegisterLink();
 
     // then
-    await loginPage.expectOnPage('register');
+    const registerPage = new RegisterPage(page);
+    await registerPage.expectOnPage();
   });
 
 }); 

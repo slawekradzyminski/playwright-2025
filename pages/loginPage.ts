@@ -44,5 +44,8 @@ export class LoginPage extends LoggedOutPage {
     await expect(this.passwordError).toHaveText(message);
   }
 
+  async expectOnPage() {
+    await expect(this.page).toHaveURL(/\/login/);
+  }
 }
 

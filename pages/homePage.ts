@@ -23,6 +23,10 @@ export class HomePage extends LoggedInPage {
     this.sendEmailsButton = page.getByTestId('home-email-button');
   }
 
+  async expectOnPage() {
+    await expect(this.page).toHaveURL(/\/(home)?$/);
+  }
+
   async expectUserEmail(email: string) {
     await expect(this.userEmail).toHaveText(email);
   }

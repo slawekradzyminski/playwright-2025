@@ -23,7 +23,7 @@ test.describe('Register UI tests', () => {
     // then
     await registerPage.expectNotOnPage('register');
     const loginPage = new LoginPage(page);
-    await loginPage.expectOnPage('login');
+    await loginPage.expectOnPage();
     await loginPage.expectSuccessToastMessage('Registration successful! You can now log in.');
   });
 
@@ -40,7 +40,7 @@ test.describe('Register UI tests', () => {
     await registerPage.register(duplicateUsernameUser);
 
     // then
-    await registerPage.expectOnPage('register');
+    await registerPage.expectOnPage();
     await registerPage.expectErrorToastMessage('Username already exists');
   });
 
@@ -58,7 +58,7 @@ test.describe('Register UI tests', () => {
     await registerPage.register(duplicateEmailUser);
 
     // then
-    await registerPage.expectOnPage('register');
+    await registerPage.expectOnPage();
     await registerPage.expectErrorToastMessage('Email already exists');
   });
 
@@ -77,7 +77,7 @@ test.describe('Register UI tests', () => {
     await registerPage.register(invalidUser);
 
     // then
-    await registerPage.expectOnPage('register');
+    await registerPage.expectOnPage();
     await registerPage.expectUsernameError('Username must be at least 4 characters');
     await registerPage.expectEmailError('Email is required');
     await registerPage.expectPasswordError('Password is required');
@@ -96,16 +96,17 @@ test.describe('Register UI tests', () => {
     await registerPage.register(userData);
 
     // then
-    await registerPage.expectOnPage('register');
+    await registerPage.expectOnPage();
     await registerPage.expectFirstNameError('First name must be at least 4 characters');
   });
 
-  test('should navigate to login page when sign in button is clicked', async () => {
+  test('should navigate to login page when sign in button is clicked', async ({ page }) => {
     // when
     await registerPage.clickSignInButton();
 
     // then
-    await registerPage.expectOnPage('login');
+    const loginPage = new LoginPage(page);
+    await loginPage.expectOnPage();
   });
 
 });
