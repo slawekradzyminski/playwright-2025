@@ -12,6 +12,13 @@ export const generateProduct = (): ProductCreateDto => {
   };
 };
 
+export const generateProductWithName = (name: string): ProductCreateDto => {
+  return {
+    ...generateProduct(),
+    name: name
+  };
+};
+
 export const generateProductWithInvalidName = (): ProductCreateDto => {
   return {
     ...generateProduct(),

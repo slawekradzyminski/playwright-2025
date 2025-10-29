@@ -87,9 +87,14 @@ export class ProductsPage extends LoggedInPage {
     }
   }
 
+  async expectProductsCount(count: number) {
+    const productsCount = await this.productCards.count();
+    expect(productsCount).toEqual(count);
+  }
+
   async expectMinimumProducts(minCount: number) {
-    const count = await this.productCards.count();
-    expect(count).toBeGreaterThanOrEqual(minCount);
+    const productsCount = await this.productCards.count();
+    expect(productsCount).toBeGreaterThanOrEqual(minCount);
   }
 
   getProductCard(index: number) {

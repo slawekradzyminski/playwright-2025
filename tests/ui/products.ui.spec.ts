@@ -1,24 +1,37 @@
-import { test } from '../../fixtures/uiAuthFixture';
+import { AuthenticatedUIUser, test } from '../../fixtures/uiAuthFixture';
+import { generateProductWithName } from '../../generators/productGenerator';
 import { ProductsPage } from '../../pages/productsPage';
+import { ProductDto } from '../../types/product';
+import { createProductViaAPI, getAllProductsFromAPI, getProductsByCategory, searchProducts } from '../../utils/productUtil';
 
 test.describe('Products Page UI Tests', () => {
   let productsPage: ProductsPage;
+  let client: AuthenticatedUIUser;
 
-  test.beforeEach(async ({ page, authenticatedUIClient }) => {
+  test.beforeEach(async ({ page, authenticatedUIAdmin }) => {
+    client = authenticatedUIAdmin;
     productsPage = new ProductsPage(page);
     await productsPage.header.clickProducts();
     await productsPage.expectOnPage();
   });
 
   test.describe('Category Filtering', () => {
-    test('should display all products by default', async () => {
+    test('should display all products by default', async ({ request }) => {
+      // given
+      const products = await getAllProductsFromAPI(request, client.token);
+      const productCount = products.length;
+
       // then
       await productsPage.expectCategoryActive('all');
       await productsPage.expectProductListTitle('All Products');
-      await productsPage.expectMinimumProducts(1);
+      await productsPage.expectProductsCount(productCount);
     });
 
-    test('should filter products when Electronics category is selected', async () => {
+    test('should filter products when Electronics category is selected', async ({ request }) => {
+      // given
+      const electronicsProducts = await getProductsByCategory(request, client.token, 'Electronics');
+      const electronicsCount = electronicsProducts.length;
+
       // when
       await productsPage.clickCategory('electronics');
 
@@ -26,10 +39,13 @@ test.describe('Products Page UI Tests', () => {
       await productsPage.expectProductListTitle('Electronics Products');
       await productsPage.expectCategoryActive('electronics');
       await productsPage.expectAllProductsHaveCategory('Electronics');
+      await productsPage.expectProductsCount(electronicsCount);
     });
 
-    test('should reset filter when All Products is clicked', async () => {
+    test('should reset filter when All Products is clicked', async ({ request }) => {
       // given
+      const products = await getAllProductsFromAPI(request, client.token);
+      const productCount = products.length;
       await productsPage.clickCategory('electronics');
       await productsPage.expectCategoryActive('electronics');
 
@@ -39,16 +55,28 @@ test.describe('Products Page UI Tests', () => {
       // then
       await productsPage.expectProductListTitle('All Products');
       await productsPage.expectCategoryActive('all');
+      await productsPage.expectProductsCount(productCount);
     });
   });
 
   test.describe('Search Functionality', () => {
-    test('should filter products when searching', async () => {
+    test('should filter products when searching', async ({ request, page }) => {
+      // given
+      const productName = 'iPhone 14';
+      let products = await getAllProductsFromAPI(request, client.token);
+      if (!products.some((product: ProductDto) => product.name === productName)) {
+        await createProductViaAPI(request, generateProductWithName(productName), client.token);
+        await page.reload();
+        await productsPage.expectOnPage();
+      }
+      const filteredCount = (await searchProducts(request, client.token, productName)).length;
+
       // when
-      await productsPage.search('iPhone');
+      await productsPage.search(productName);
 
       // then
       await productsPage.expectMinimumProducts(1);
+      await productsPage.expectProductsCount(filteredCount);
       await productsPage.expectClearSearchVisible();
     });
 
