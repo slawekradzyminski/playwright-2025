@@ -29,6 +29,41 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 └── ...
 ```
 
+## 🏗️ Page Object Architecture
+
+The project follows the Page Object Model (POM) pattern with a clear inheritance hierarchy:
+
+```mermaid
+graph TD
+    BasePage[BasePage]
+    LoggedInPage[LoggedInPage]
+    LoggedOutPage[LoggedOutPage]
+    LoggedInHeader[LoggedInHeader]
+    LoggedOutHeader[LoggedOutHeader]
+    
+    HomePage[HomePage]
+    LoginPage[LoginPage]
+    RegisterPage[RegisterPage]
+    
+    BasePage --> LoggedInPage
+    BasePage --> LoggedOutPage
+    
+    LoggedInHeader --> LoggedInPage
+    LoggedOutHeader --> LoggedOutPage
+    
+    LoggedInPage --> HomePage
+    
+    LoggedOutPage --> LoginPage
+    LoggedOutPage --> RegisterPage
+```
+
+### Key Design Principles
+
+- **BasePage**: Abstract base class providing common functionality (navigation, URL assertions, toast messages)
+- **LoggedInPage**: Abstract class for authenticated pages, includes `LoggedInHeader` component
+- **LoggedOutPage**: Abstract class for unauthenticated pages (login, register)
+- **Components**: Reusable UI components like `LoggedInHeader` and `ToastComponent`
+
 ## 🚀 Getting Started
 
 ### Prerequisites
