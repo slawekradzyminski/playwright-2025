@@ -1,17 +1,14 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { FRONTEND_URL } from '../config/constants';
 import { ToastComponent } from './components/toastComponent';
-import { LoggedInHeader } from './components/loggedInHeader';
 
-export class BasePage {
+export abstract class BasePage {
   readonly page: Page;
   readonly toast: ToastComponent;
-  readonly header: LoggedInHeader;
 
   constructor(page: Page) {
     this.page = page;
     this.toast = new ToastComponent(page);
-    this.header = new LoggedInHeader(page);
   }
 
   async goto(url: string) {

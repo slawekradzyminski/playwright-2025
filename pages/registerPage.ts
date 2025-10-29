@@ -1,8 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { UserRegisterDto } from '../types/auth';
-import { BasePage } from './basePage';
+import { LoggedOutPage } from './loggedOutPage';
 
-export class RegisterPage extends BasePage {
+export class RegisterPage extends LoggedOutPage {
   readonly usernameInput: Locator;
   readonly emailInput: Locator;
   readonly passwordInput: Locator;

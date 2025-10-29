@@ -1,7 +1,7 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { BasePage } from "./basePage";
+import { LoggedInPage } from "./loggedInPage";
 
-export class HomePage extends BasePage {
+export class HomePage extends LoggedInPage {
   readonly userEmail: Locator;
   readonly viewProductsButton: Locator;
   readonly manageUsersButton: Locator;
