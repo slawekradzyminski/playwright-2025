@@ -8,6 +8,7 @@ export class LoggedInHeader {
   readonly qrCodeLink: Locator;
   readonly llmLink: Locator;
   readonly trafficMonitorLink: Locator;
+  readonly adminLink: Locator;
   readonly cartIcon: Locator;
   readonly userProfileLink: Locator;
   readonly logoutButton: Locator;
@@ -20,6 +21,7 @@ export class LoggedInHeader {
     this.qrCodeLink = page.getByTestId('desktop-menu-qr-code');
     this.llmLink = page.getByTestId('desktop-menu-llm');
     this.trafficMonitorLink = page.getByTestId('desktop-menu-traffic-monitor');
+    this.adminLink = page.getByTestId('desktop-menu-admin');
     this.cartIcon = page.getByTestId('desktop-cart-icon');
     this.userProfileLink = page.getByTestId('username-profile-link');
     this.logoutButton = page.getByTestId('logout-button');
@@ -49,6 +51,14 @@ export class LoggedInHeader {
     await this.trafficMonitorLink.click();
   }
 
+  async clickAdmin() {
+    await this.adminLink.click();
+  }
+
+  async expectAdminLinkHidden() {
+    await expect(this.adminLink).toHaveCount(0);
+  }
+
   async clickCart() {
     await this.cartIcon.click();
   }
@@ -65,4 +75,3 @@ export class LoggedInHeader {
     await expect(this.userProfileLink).toHaveText(name);
   }
 }
-
