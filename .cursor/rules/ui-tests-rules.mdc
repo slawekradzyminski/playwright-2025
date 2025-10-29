@@ -6,4 +6,4 @@ alwaysApply: false
 - Use data-testid based selectors (frontend should be prepared for this)
 - Frontend is running on http://localhost:8081
 - Use Playwright MCP to find data-testid based selectors
-- Use npm run test:ui to run UI tests
+- To run tests from single file use npx playwright test tests/ui/home.ui.spec.ts (replace home.ui.spec.ts with the file you want to run)
