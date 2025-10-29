@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { LoggedInPage } from "./loggedInPage";
+import { LoggedInPage } from "./abstract/loggedInPage";
 
 export class HomePage extends LoggedInPage {
   readonly userEmail: Locator;

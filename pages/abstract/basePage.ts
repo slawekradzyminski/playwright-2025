@@ -1,6 +1,6 @@
-import { expect, type Locator, type Page } from '@playwright/test';
-import { FRONTEND_URL } from '../config/constants';
-import { ToastComponent } from './components/toastComponent';
+import { expect, type Page } from '@playwright/test';
+import { FRONTEND_URL } from '../../config/constants';
+import { ToastComponent } from '../components/toastComponent';
 
 export abstract class BasePage {
   readonly page: Page;
