@@ -2,7 +2,20 @@ import { expect, Locator, Page } from '@playwright/test';
 import { LoggedInPage } from './abstract/loggedInPage';
 import { ToastComponent } from './components/toastComponent';
 
+export enum SortOption {
+  NameAsc = 'name-asc',
+  NameDesc = 'name-desc',
+  PriceAsc = 'price-asc',
+  PriceDesc = 'price-desc',
+}
+
+export enum Category {
+  All = 'all',
+}
+
 export class ProductsPage extends LoggedInPage {
+  static readonly MAX_SORT_CHECK = 5;
+
   readonly toast: ToastComponent;
   readonly productsTitle: Locator;
   readonly categoriesTitle: Locator;
@@ -32,6 +45,7 @@ export class ProductsPage extends LoggedInPage {
 
   async expectOnPage() {
     await expect(this.page).toHaveURL(/\/products/);
+    await expect(this.productsTitle).toBeVisible();
   }
 
   getCategoryButton(category: string) {
@@ -47,8 +61,8 @@ export class ProductsPage extends LoggedInPage {
   }
 
   async expectCategoryActive(category: string) {
-    const categoryButton = category === 'all' 
-      ? this.categoryAll 
+    const categoryButton = category === 'all'
+      ? this.categoryAll
       : this.getCategoryButton(category);
     await expect(categoryButton).toHaveClass(/bg-blue-100/);
     await expect(categoryButton).toHaveClass(/text-blue-700/);
@@ -74,17 +88,12 @@ export class ProductsPage extends LoggedInPage {
     await expect(this.clearSearchButton).toBeVisible();
   }
 
-  async selectSort(option: string) {
+  async selectSort(option: string | SortOption) {
     await this.sortDropdown.selectOption(option);
   }
 
   async expectProductCount(count: number) {
-    if (count === 0) {
-      await expect(this.productCards).toHaveCount(0);
-    } else {
-      await expect(this.productCards.first()).toBeVisible();
-      await expect(this.productCards).toHaveCount(count);
-    }
+    await expect(this.productCards).toHaveCount(count);
   }
 
   async expectProductsCount(count: number) {
@@ -145,48 +154,22 @@ export class ProductsPage extends LoggedInPage {
     await expect(this.getProductQuantity(index)).toHaveText(quantity.toString());
   }
 
-  async expectProductsSortedByName(ascending: boolean = true) {
-    const count = await this.productCards.count();
-    const names: string[] = [];
-    for (let i = 0; i < Math.min(count, 5); i++) {
-      const name = await this.getProductName(i).textContent();
-      if (name) names.push(name);
-    }
-    const sorted = [...names].sort((a, b) => 
-      ascending ? a.localeCompare(b) : b.localeCompare(a)
-    );
-    expect(names).toEqual(sorted);
-  }
-
-  async expectProductsSortedByPrice(ascending: boolean = true) {
-    const count = await this.productCards.count();
-    const prices: number[] = [];
-    for (let i = 0; i < Math.min(count, 5); i++) {
-      const priceText = await this.getProductPrice(i).textContent();
-      if (priceText) {
-        const price = parseFloat(priceText.replace('$', ''));
-        prices.push(price);
-      }
-    }
-    const sorted = [...prices].sort((a, b) => 
-      ascending ? a - b : b - a
-    );
-    expect(prices).toEqual(sorted);
-  }
-
   async expectAllProductsHaveCategory(category: string) {
-    const count = await this.productCards.count();
-    for (let i = 0; i < Math.min(count, 3); i++) {
-      await expect(this.getProductCategory(i)).toHaveText(category, { ignoreCase: true });
+    const items = await this.productCards.locator('[data-testid="product-category"]').allTextContents();
+    const slice = items.slice(0, 3);
+    for (const text of slice) {
+      expect(text.trim().toLowerCase()).toBe(category.trim().toLowerCase());
     }
   }
 
   async expectCartBadge(count: string) {
-    await expect(this.cartBadge).toContainText(count);
+    await expect(this.cartBadge).toHaveText(count);
   }
 
   async getFirstProductName(): Promise<string> {
-    return await this.getProductName(0).textContent() || '';
+    const text = await this.getProductName(0).textContent();
+    expect(text, 'First product name should exist').toBeTruthy();
+    return (text ?? '').trim();
   }
 
   async expectAddedToCartToast(message: string | RegExp) {
@@ -196,5 +179,42 @@ export class ProductsPage extends LoggedInPage {
     await expect(toast).toHaveText(message);
   }
 
-}
+  private static parsePrice(input: string): number {
+    const noSpaces = input.replace(/\s/g, '');
+    const stripped = noSpaces.replace(/[^\d,.-]/g, '');
+    const euroDecimal = /,\d{1,2}$/.test(stripped);
+    const canonical = euroDecimal
+      ? stripped.replace(/\./g, '').replace(',', '.')
+      : stripped.replace(/,/g, '');
+    const n = Number(canonical);
+    return Number.isNaN(n) ? 0 : n;
+  }
 
+  async getVisibleProductNames(limit = ProductsPage.MAX_SORT_CHECK): Promise<string[]> {
+    const names = await this.productCards
+      .locator('[data-testid="product-name"]')
+      .allTextContents();
+    return names.slice(0, limit).map(s => s.trim()).filter(Boolean);
+  }
+
+  async getVisibleProductPrices(limit = ProductsPage.MAX_SORT_CHECK): Promise<number[]> {
+    const texts = await this.productCards
+      .locator('[data-testid="product-price"]')
+      .allTextContents();
+    return texts.slice(0, limit).map(t => ProductsPage.parsePrice(t));
+  }
+
+  async expectProductsSortedByName(ascending = true) {
+    const names = await this.getVisibleProductNames();
+    const sorted = [...names].sort((a, b) =>
+      (ascending ? 1 : -1) * a.localeCompare(b, undefined, { sensitivity: 'base', numeric: true })
+    );
+    expect(names, `Product names not sorted in ${ascending ? 'ascending' : 'descending'} order`).toEqual(sorted);
+  }
+
+  async expectProductsSortedByPrice(ascending = true) {
+    const prices = await this.getVisibleProductPrices();
+    const sorted = [...prices].sort((a, b) => (ascending ? a - b : b - a));
+    expect(prices, `Product prices not sorted in ${ascending ? 'ascending' : 'descending'} order`).toEqual(sorted);
+  }
+}
