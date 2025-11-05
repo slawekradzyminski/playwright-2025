@@ -28,6 +28,7 @@ test.describe('/api/cart/items/{productId} PUT', () => {
     // then
     expect(response.status()).toBe(200);
     const responseBody = (await response.json()) as CartDto;
+    expect(responseBody.username).toBe(authenticatedClient.user.username);
     expect(responseBody.items.length).toBe(1);
     expect(responseBody.items[0].quantity).toBe(4);
     expect(responseBody.totalItems).toBe(4);
