@@ -4,9 +4,9 @@ import { getUsers, getUsersWithoutAuth } from '../../http/usersClient';
 import type { UserResponseDto } from '../../types/auth';
 
 test.describe('/users API tests', () => {
-  test('should successfully retrieve all users with valid token - 200', async ({ request, authenticatedUser }) => {
+  test('should successfully retrieve all users with valid token - 200', async ({ request, authenticatedAdmin }) => {
     // when
-    const response = await getUsers(request, authenticatedUser.token);
+    const response = await getUsers(request, authenticatedAdmin.token);
 
     // then
     expect(response.status()).toBe(200);

@@ -4,16 +4,37 @@ import { attemptRegistration } from '../../http/registrationClient';
 import { attemptLogin } from '../../http/loginClient';
 import type { UserRegisterDto, LoginResponseDto } from '../../types/auth';
 
+type AuthenticatedUser = {
+  token: string;
+  user: UserRegisterDto;
+};
+
 type AuthFixtures = {
-  authenticatedUser: {
-    token: string;
-    user: UserRegisterDto;
-  };
+  authenticatedClient: AuthenticatedUser;
+  authenticatedAdmin: AuthenticatedUser;
 };
 
 export const test = base.extend<AuthFixtures>({
-  authenticatedUser: async ({ request }, use) => {
+  authenticatedClient: async ({ request }, use) => {
     const userData = generateUserData(['ROLE_CLIENT']);
+    
+    await attemptRegistration(request, userData);
+    
+    const loginResponse = await attemptLogin(request, {
+      username: userData.username,
+      password: userData.password
+    });
+    
+    const loginData: LoginResponseDto = await loginResponse.json();
+    
+    await use({
+      token: loginData.token,
+      user: userData
+    });
+  },
+
+  authenticatedAdmin: async ({ request }, use) => {
+    const userData = generateUserData(['ROLE_ADMIN']);
     
     await attemptRegistration(request, userData);
     
