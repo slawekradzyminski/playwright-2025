@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto } from '../../types/auth';
+import { UI_BASE_URL } from '../../config/constants';
 
-const LOGIN_URL = 'http://localhost:8081/login';
+const LOGIN_URL = `${UI_BASE_URL}/login`;
 
 test.describe('Login UI tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -16,9 +17,9 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByTestId('login-username-input').fill(credentials.username);
+    await page.getByTestId('login-password-input').fill(credentials.password);
+    await page.getByTestId('login-submit-button').click();
 
     // then
     await expect(page).not.toHaveURL(LOGIN_URL);
@@ -32,9 +33,9 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByTestId('login-username-input').fill(credentials.username);
+    await page.getByTestId('login-password-input').fill(credentials.password);
+    await page.getByTestId('login-submit-button').click();
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);
@@ -48,9 +49,9 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByTestId('login-username-input').fill(credentials.username);
+    await page.getByTestId('login-password-input').fill(credentials.password);
+    await page.getByTestId('login-submit-button').click();
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);
@@ -59,7 +60,7 @@ test.describe('Login UI tests', () => {
   test('should navigate to register page when register button is clicked', async ({ page }) => {
     // given
     // when
-    await page.getByRole('button', { name: 'Register' }).click();
+    await page.getByTestId('login-register-link').click();
 
     // then
     await expect(page).toHaveURL('http://localhost:8081/register');
@@ -68,7 +69,7 @@ test.describe('Login UI tests', () => {
   test('should navigate to register page when register link is clicked', async ({ page }) => {
     // given
     // when
-    await page.getByRole('link', { name: 'Register' }).click();
+    await page.getByTestId('register-link').click();
 
     // then
     await expect(page).toHaveURL('http://localhost:8081/register');
@@ -82,9 +83,9 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByTestId('login-username-input').fill(credentials.username);
+    await page.getByTestId('login-password-input').fill(credentials.password);
+    await page.getByTestId('login-submit-button').click();
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);
