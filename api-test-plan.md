@@ -23,8 +23,8 @@
 
 | Component | Files |
 |-----------|-------|
-| **Tests** | `login.api.spec.ts`, `registration.api.spec.ts`, `users.api.spec.ts`, `tests/api/users/users.username.get.api.spec.ts`, `tests/api/users/users.username.put.api.spec.ts`, `tests/api/users/users.username.delete.api.spec.ts`, `tests/api/users/users.me.get.api.spec.ts`, `tests/api/users/users.refresh.get.api.spec.ts`, `tests/api/users/system-prompt.get.api.spec.ts`, `tests/api/users/system-prompt.put.api.spec.ts` |
-| **Clients** | `loginClient.ts`, `registrationClient.ts`, `usersClient.ts`, `http/users/usersByUsernameGetClient.ts`, `http/users/usersByUsernamePutClient.ts`, `http/users/usersByUsernameDeleteClient.ts`, `http/users/usersMeClient.ts`, `http/users/usersRefreshClient.ts`, `http/users/systemPromptGetClient.ts`, `http/users/systemPromptPutClient.ts` |
+| **Tests** | `login.api.spec.ts`, `registration.api.spec.ts`, `users.api.spec.ts`, `tests/api/users/users.username.get.api.spec.ts`, `tests/api/users/users.username.put.api.spec.ts`, `tests/api/users/users.username.delete.api.spec.ts`, `tests/api/users/users.me.get.api.spec.ts`, `tests/api/users/users.refresh.get.api.spec.ts`, `tests/api/users/system-prompt.get.api.spec.ts`, `tests/api/users/system-prompt.put.api.spec.ts`, `tests/api/products/products.collection.get.api.spec.ts`, `tests/api/products/products.collection.post.api.spec.ts`, `tests/api/products/products.by-id.get.api.spec.ts`, `tests/api/products/products.by-id.put.api.spec.ts`, `tests/api/products/products.by-id.delete.api.spec.ts` |
+| **Clients** | `loginClient.ts`, `registrationClient.ts`, `usersClient.ts`, `http/users/usersByUsernameGetClient.ts`, `http/users/usersByUsernamePutClient.ts`, `http/users/usersByUsernameDeleteClient.ts`, `http/users/usersMeClient.ts`, `http/users/usersRefreshClient.ts`, `http/users/systemPromptGetClient.ts`, `http/users/systemPromptPutClient.ts`, `http/products/productsCollectionGetClient.ts`, `http/products/productsCollectionPostClient.ts`, `http/products/productsByIdGetClient.ts`, `http/products/productsByIdPutClient.ts`, `http/products/productsByIdDeleteClient.ts` |
 
 ---
 
@@ -47,11 +47,11 @@
 ### Products Management
 | Endpoint | Method | Status | Notes |
 |----------|--------|--------|-------|
-| `/api/products` | GET | ⏳ TODO | List all products |
-| `/api/products` | POST | ⏳ TODO | Create new product (admin required) |
-| `/api/products/{id}` | GET | ⏳ TODO | Get product by ID |
-| `/api/products/{id}` | PUT | ⏳ TODO | Update product by ID (admin required) |
-| `/api/products/{id}` | DELETE | ⏳ TODO | Delete product by ID (admin required) |
+| `/api/products` | GET | ✅ DONE | Covered by `tests/api/products/products.collection.get.api.spec.ts` + `http/products/productsCollectionGetClient.ts` |
+| `/api/products` | POST | ✅ DONE | Covered by `tests/api/products/products.collection.post.api.spec.ts` + `http/products/productsCollectionPostClient.ts` |
+| `/api/products/{id}` | GET | ✅ DONE | Covered by `tests/api/products/products.by-id.get.api.spec.ts` + `http/products/productsByIdGetClient.ts` |
+| `/api/products/{id}` | PUT | ✅ DONE | Covered by `tests/api/products/products.by-id.put.api.spec.ts` + `http/products/productsByIdPutClient.ts` |
+| `/api/products/{id}` | DELETE | ✅ DONE | Covered by `tests/api/products/products.by-id.delete.api.spec.ts` + `http/products/productsByIdDeleteClient.ts` |
 
 ### Shopping Cart
 | Endpoint | Method | Status | Notes |
