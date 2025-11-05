@@ -1,8 +1,10 @@
-import { test, expect } from '@playwright/test';
-import type { LoginDto } from '../../types/auth';
+import { test, expect, request } from '@playwright/test';
+import { generateUserData } from '../../generators/userGenerator';
 import { LoginPage } from '../../pages/loginPage';
 import { RegisterPage } from '../../pages/registerPage';
 import { HomePage } from '../../pages/homePage';
+import type { LoginDto, UserRegisterDto } from '../../types/auth';
+import { attemptRegistration } from '../../http/registerClient';
 
 test.describe('Login UI tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -10,22 +12,18 @@ test.describe('Login UI tests', () => {
     await loginPage.goto();
   });
 
-  test('should successfully login with valid credentials', async ({ page }) => {
+  test('should successfully login with valid credentials', async ({ page, request }) => {
     // given
     const loginPage = new LoginPage(page);
     const homePage = new HomePage(page);
-    const credentials: LoginDto = {
-      username: 'admin',
-      password: 'admin'
-    };
+    const user = generateUserData(['ROLE_CLIENT']);
+    await attemptRegistration(request, user);
 
     // when
-    await loginPage.login(credentials);
+    await loginPage.login(user);
 
     // then
-    await expect(page).toHaveURL(loginPage.homepageUrl);
-    await expect(homePage.emailParagraph).toBeVisible();
-    await expect(homePage.emailParagraph).toHaveText('awesome@testing.com');
+    await expect(homePage.emailParagraph).toHaveText(user.email);
   });
 
   test('should show error for empty password', async ({ page }) => {
@@ -104,3 +102,7 @@ test.describe('Login UI tests', () => {
   });
 
 }); 
+
+function registerUser(user: UserRegisterDto) {
+  throw new Error('Function not implemented.');
+}

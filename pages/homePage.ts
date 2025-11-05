@@ -8,8 +8,8 @@ export class HomePage {
 
   constructor(page: Page) {
     this.page = page;
-    this.welcomeHeading = page.getByRole('heading', { level: 1 });
-    this.emailParagraph = page.getByRole('main').getByRole('paragraph').first();
+    this.welcomeHeading = page.getByTestId('home-welcome-title');
+    this.emailParagraph = page.getByTestId('home-user-email');
   }
 
   async goto() {
