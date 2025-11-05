@@ -1,8 +1,10 @@
-import { test as base } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import { generateUserData } from '../../generators/userGenerator';
 import { attemptRegistration } from '../../http/registrationClient';
 import { attemptLogin } from '../../http/loginClient';
 import type { UserRegisterDto, LoginResponseDto } from '../../types/auth';
+
+type Role = 'ROLE_CLIENT' | 'ROLE_ADMIN';
 
 type AuthenticatedUser = {
   token: string;
@@ -14,43 +16,25 @@ type AuthFixtures = {
   authenticatedAdmin: AuthenticatedUser;
 };
 
-export const test = base.extend<AuthFixtures>({
-  authenticatedClient: async ({ request }, use) => {
-    const userData = generateUserData(['ROLE_CLIENT']);
-    
-    await attemptRegistration(request, userData);
-    
-    const loginResponse = await attemptLogin(request, {
-      username: userData.username,
-      password: userData.password
-    });
-    
-    const loginData: LoginResponseDto = await loginResponse.json();
-    
-    await use({
-      token: loginData.token,
-      user: userData
-    });
-  },
+const makeAuthFixture = (role: Role) =>
+  async ({ request }, use: (value: AuthenticatedUser) => Promise<void>) => {
+    const user = generateUserData([role]);
 
-  authenticatedAdmin: async ({ request }, use) => {
-    const userData = generateUserData(['ROLE_ADMIN']);
-    
-    await attemptRegistration(request, userData);
-    
+    await attemptRegistration(request, user);
+
     const loginResponse = await attemptLogin(request, {
-      username: userData.username,
-      password: userData.password
+      username: user.username,
+      password: user.password,
     });
-    
-    const loginData: LoginResponseDto = await loginResponse.json();
-    
-    await use({
-      token: loginData.token,
-      user: userData
-    });
-  }
+
+    const { token } = (await loginResponse.json()) as LoginResponseDto;
+
+    await use({ token, user });
+  };
+
+export const test = base.extend<AuthFixtures>({
+  authenticatedClient: makeAuthFixture('ROLE_CLIENT'),
+  authenticatedAdmin: makeAuthFixture('ROLE_ADMIN'),
 });
 
-export { expect } from '@playwright/test';
-
+export { expect };
