@@ -1,4 +1,4 @@
-import { test, expect } from '../../fixtures/authFixtures';
+import { test, expect } from '../../fixtures/apiAuthFixtures';
 import { APIResponse } from '@playwright/test';
 import { getUsers, getUsersWithoutAuth } from '../../http/usersClient';
 import type { UserResponseDto } from '../../types/auth';

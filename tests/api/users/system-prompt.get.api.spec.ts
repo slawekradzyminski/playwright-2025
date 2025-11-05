@@ -1,4 +1,4 @@
-import { test, expect } from '../../../fixtures/authFixtures';
+import { test, expect } from '../../../fixtures/apiAuthFixtures';
 import { getSystemPrompt, getSystemPromptWithoutAuth } from '../../../http/users/systemPromptGetClient';
 import type { SystemPromptDto } from '../../../types/auth';
 
