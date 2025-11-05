@@ -1,4 +1,4 @@
-import { test, expect } from '../../../fixtures/authFixtures';
+import { test, expect } from '../../../fixtures/apiAuthFixtures';
 import {
   createProduct,
   createProductWithoutAuth,
@@ -6,10 +6,11 @@ import {
 import { generateProductCreateData, generateInvalidProductData } from '../../../generators/productGenerator';
 import type { ProductDto } from '../../../types/product';
 import { API_BASE_URL } from '../../../config/constants';
+import { APIRequestContext } from '@playwright/test';
 
 const PRODUCTS_ENDPOINT = `${API_BASE_URL}/api/products`;
 
-const deleteProductById = async (request: Parameters<typeof test.use>[0]['request'], token: string, id: number) => {
+const deleteProductById = async (request: APIRequestContext, token: string, id: number) => {
   await request.delete(`${PRODUCTS_ENDPOINT}/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,

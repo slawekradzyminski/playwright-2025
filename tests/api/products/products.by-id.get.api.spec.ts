@@ -1,4 +1,4 @@
-import { test, expect } from '../../../fixtures/authFixtures';
+import { test, expect } from '../../../fixtures/apiAuthFixtures';
 import { getProductById, getProductByIdWithoutAuth } from '../../../http/products/productsByIdGetClient';
 import type { ProductDto } from '../../../types/product';
 import { generateProductCreateData } from '../../../generators/productGenerator';
