@@ -1,15 +1,12 @@
-import { test, expect, APIResponse } from '@playwright/test';
+import { test, expect } from '../fixtures/authFixtures';
+import { APIResponse } from '@playwright/test';
 import { getUsers, getUsersWithoutAuth } from '../../http/usersClient';
-import { getAuthToken } from '../../helpers/authHelper';
 import type { UserResponseDto } from '../../types/auth';
 
 test.describe('/users API tests', () => {
-  test('should successfully retrieve all users with valid token - 200', async ({ request }) => {
-    // given
-    const token = await getAuthToken(request);
-
+  test('should successfully retrieve all users with valid token - 200', async ({ request, authenticatedUser }) => {
     // when
-    const response = await getUsers(request, token);
+    const response = await getUsers(request, authenticatedUser.token);
 
     // then
     expect(response.status()).toBe(200);
