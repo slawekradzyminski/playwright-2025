@@ -1,8 +1,6 @@
-import { test, expect } from '@playwright/test';
-import type { LoginDto, LoginResponseDto, ErrorResponse } from '../../types/auth';
-
-const API_BASE_URL = 'http://localhost:4001';
-const SIGNIN_ENDPOINT = '/users/signin';
+import { test, expect, APIResponse } from '@playwright/test';
+import type { LoginDto, LoginResponseDto } from '../../types/auth';
+import { attemptLogin } from '../../http/loginClient';
 
 test.describe('/users/signin API tests', () => {
   test('should successfully authenticate with valid credentials - 200', async ({ request }) => {
@@ -13,25 +11,11 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptLogin(request, loginData);
 
     // then
     expect(response.status()).toBe(200);
-    
-    const responseBody: LoginResponseDto = await response.json();
-    expect(responseBody.token).toBeDefined();
-    expect(responseBody.token).toMatch(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/);
-    expect(responseBody.username).toBe(loginData.username);
-    expect(responseBody.email).toBeDefined();
-    expect(responseBody.firstName).toBeDefined();
-    expect(responseBody.lastName).toBeDefined();
-    expect(responseBody.roles).toBeDefined();
-    expect(Array.isArray(responseBody.roles)).toBe(true);
+    await assertResponseBody(response, loginData);
   });
 
   test('should return validation error for empty username - 400', async ({ request }) => {
@@ -42,12 +26,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptLogin(request, loginData);
 
     // then
     expect(response.status()).toBe(400);
@@ -63,12 +42,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptLogin(request, loginData);
 
     // then
     expect(response.status()).toBe(400);
@@ -84,12 +58,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptLogin(request, loginData);
 
     // then
     expect(response.status()).toBe(400);
@@ -105,12 +74,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await attemptLogin(request, loginData);
 
     // then
     expect(response.status()).toBe(422);
@@ -118,3 +82,14 @@ test.describe('/users/signin API tests', () => {
     expect(responseBody.message).toBe('Invalid username/password supplied');
   });
 }); 
+
+const assertResponseBody = async (response: APIResponse, loginData: LoginDto) => {
+  const responseBody: LoginResponseDto = await response.json();
+  expect(responseBody.token).toMatch(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/);
+  expect(responseBody.username).toBe(loginData.username);
+  expect(responseBody.email).toBeDefined();
+  expect(responseBody.firstName).toBeDefined();
+  expect(responseBody.lastName).toBeDefined();
+  expect(responseBody.roles).toBeDefined();
+  expect(Array.isArray(responseBody.roles)).toBe(true);
+};
