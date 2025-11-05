@@ -23,8 +23,8 @@
 
 | Component | Files |
 |-----------|-------|
-| **Tests** | `login.api.spec.ts`, `registration.api.spec.ts`, `users.api.spec.ts` |
-| **Clients** | `loginClient.ts`, `registrationClient.ts`, `usersClient.ts` |
+| **Tests** | `login.api.spec.ts`, `registration.api.spec.ts`, `users.api.spec.ts`, `tests/api/users/users.username.get.api.spec.ts`, `tests/api/users/users.username.put.api.spec.ts`, `tests/api/users/users.username.delete.api.spec.ts`, `tests/api/users/users.me.get.api.spec.ts`, `tests/api/users/users.refresh.get.api.spec.ts`, `tests/api/users/system-prompt.get.api.spec.ts`, `tests/api/users/system-prompt.put.api.spec.ts` |
+| **Clients** | `loginClient.ts`, `registrationClient.ts`, `usersClient.ts`, `http/users/usersByUsernameGetClient.ts`, `http/users/usersByUsernamePutClient.ts`, `http/users/usersByUsernameDeleteClient.ts`, `http/users/usersMeClient.ts`, `http/users/usersRefreshClient.ts`, `http/users/systemPromptGetClient.ts`, `http/users/systemPromptPutClient.ts` |
 
 ---
 
@@ -36,13 +36,13 @@
 | `/users/signin` | POST | ✅ DONE | Login flow covered by `login.api.spec.ts` + `loginClient.ts` |
 | `/users/signup` | POST | ✅ DONE | Registration flow covered by `registration.api.spec.ts` + `registrationClient.ts` |
 | `/users` | GET | ✅ DONE | User listing handled by `users.api.spec.ts` + `usersClient.ts` |
-| `/users/{username}` | GET | ⏳ TODO | Get user by username (auth required) |
-| `/users/{username}` | PUT | ⏳ TODO | Update user by username (auth + roles required) |
-| `/users/{username}` | DELETE | ⏳ TODO | Delete user by username (auth + roles required) |
-| `/users/me` | GET | ⏳ TODO | Current user profile (auth required) |
-| `/users/refresh` | GET | ⏳ TODO | Refresh JWT token (auth required) |
-| `/users/system-prompt` | GET | ⏳ TODO | Get user's system prompt (auth required) |
-| `/users/system-prompt` | PUT | ⏳ TODO | Update user's system prompt (auth required) |
+| `/users/{username}` | GET | ✅ DONE | Covered by `tests/api/users/users.username.get.api.spec.ts` + `http/users/usersByUsernameGetClient.ts` |
+| `/users/{username}` | PUT | ✅ DONE | Covered by `tests/api/users/users.username.put.api.spec.ts` + `http/users/usersByUsernamePutClient.ts` |
+| `/users/{username}` | DELETE | ✅ DONE | Covered by `tests/api/users/users.username.delete.api.spec.ts` + `http/users/usersByUsernameDeleteClient.ts` |
+| `/users/me` | GET | ✅ DONE | Covered by `tests/api/users/users.me.get.api.spec.ts` + `http/users/usersMeClient.ts` |
+| `/users/refresh` | GET | ✅ DONE | Covered by `tests/api/users/users.refresh.get.api.spec.ts` + `http/users/usersRefreshClient.ts` |
+| `/users/system-prompt` | GET | ✅ DONE | Covered by `tests/api/users/system-prompt.get.api.spec.ts` + `http/users/systemPromptGetClient.ts` |
+| `/users/system-prompt` | PUT | ✅ DONE | Covered by `tests/api/users/system-prompt.put.api.spec.ts` + `http/users/systemPromptPutClient.ts` |
 
 ### Products Management
 | Endpoint | Method | Status | Notes |

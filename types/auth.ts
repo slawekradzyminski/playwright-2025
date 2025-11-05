@@ -33,4 +33,18 @@ export interface UserResponseDto {
 export interface ErrorResponse {
   message?: string;
   errors?: Record<string, string[]>;
-} 
+}
+
+export interface UserEditDto {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface UserEntity extends UserResponseDto {
+  systemPrompt?: string;
+}
+
+export interface SystemPromptDto {
+  systemPrompt: string | null;
+}

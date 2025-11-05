@@ -1,0 +1,6 @@
+---
+description: Use this rule for all test generation cases
+alwaysApply: false
+---
+
+Do not generate lengthy summaries. Keep them concise and to the point.
