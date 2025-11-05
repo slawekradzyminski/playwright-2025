@@ -102,7 +102,3 @@ test.describe('Login UI tests', () => {
   });
 
 }); 
-
-function registerUser(user: UserRegisterDto) {
-  throw new Error('Function not implemented.');
-}
