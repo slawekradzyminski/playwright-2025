@@ -1,8 +1,8 @@
 import { test as base, expect } from '@playwright/test';
-import { generateUserData } from '../../generators/userGenerator';
-import { attemptRegistration } from '../../http/registrationClient';
-import { attemptLogin } from '../../http/loginClient';
-import type { UserRegisterDto, LoginResponseDto } from '../../types/auth';
+import { generateUserData } from '../generators/userGenerator';
+import { attemptRegistration } from '../http/registerClient';
+import { attemptLogin } from '../http/loginClient';
+import type { UserRegisterDto, LoginResponseDto } from '../types/auth';
 
 type Role = 'ROLE_CLIENT' | 'ROLE_ADMIN';
 

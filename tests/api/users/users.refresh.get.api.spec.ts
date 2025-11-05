@@ -1,4 +1,4 @@
-import { test, expect } from '../../fixtures/authFixtures';
+import { test, expect } from '../../../fixtures/authFixtures';
 import { refreshToken, refreshTokenWithoutAuth } from '../../../http/users/usersRefreshClient';
 import { getCurrentUserProfile } from '../../../http/users/usersMeClient';
 

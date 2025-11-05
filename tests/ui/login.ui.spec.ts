@@ -1,9 +1,9 @@
-import { test, expect, request } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { generateUserData } from '../../generators/userGenerator';
 import { LoginPage } from '../../pages/loginPage';
 import { RegisterPage } from '../../pages/registerPage';
 import { HomePage } from '../../pages/homePage';
-import type { LoginDto, UserRegisterDto } from '../../types/auth';
+import type { LoginDto } from '../../types/auth';
 import { attemptRegistration } from '../../http/registerClient';
 
 test.describe('Login UI tests', () => {

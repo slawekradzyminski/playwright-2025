@@ -1,4 +1,4 @@
-import { test, expect } from '../../fixtures/authFixtures';
+import { test, expect } from '../../../fixtures/authFixtures';
 import {
   getAllProducts,
   getAllProductsWithoutAuth,
