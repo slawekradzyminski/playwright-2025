@@ -1,9 +1,9 @@
 import { Page, Locator } from '@playwright/test';
 import type { UserRegisterDto } from '../types/auth';
 import { UI_BASE_URL } from '../config/constants';
+import { BasePage } from './basePage';
 
-export class RegisterPage {
-  readonly page: Page;
+export class RegisterPage extends BasePage {
   readonly usernameInput: Locator;
   readonly emailInput: Locator;
   readonly passwordInput: Locator;
@@ -13,7 +13,7 @@ export class RegisterPage {
   readonly submitButton: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.usernameInput = page.getByTestId('register-username-input');
     this.emailInput = page.getByTestId('register-email-input');
     this.passwordInput = page.getByTestId('register-password-input');
@@ -21,10 +21,6 @@ export class RegisterPage {
     this.lastNameInput = page.getByTestId('register-lastname-input');
     this.rolesSelect = page.getByTestId('register-roles-select');
     this.submitButton = page.getByTestId('register-submit-button');
-  }
-
-  async goto() {
-    await this.page.goto(`${UI_BASE_URL}/register`);
   }
 
   async fillUsername(username: string) {

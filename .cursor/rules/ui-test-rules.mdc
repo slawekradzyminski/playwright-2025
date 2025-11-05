@@ -1,0 +1,8 @@
+---
+description: Use these rules for UI test creation
+alwaysApply: false
+---
+
+- Use Page Object Model (POM) for UI tests.
+- Use data-testid attributes for locating elements.
+- Use Playwright MCP in case you need to understand how UI works.

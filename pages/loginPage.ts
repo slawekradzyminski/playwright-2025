@@ -1,9 +1,9 @@
 import { Page, Locator } from '@playwright/test';
 import type { LoginDto } from '../types/auth';
 import { UI_BASE_URL } from '../config/constants';
+import { BasePage } from './basePage';
 
-export class LoginPage {
-  readonly page: Page;
+export class LoginPage extends BasePage {
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly submitButton: Locator;
@@ -11,10 +11,9 @@ export class LoginPage {
   readonly loginRegisterLink: Locator;
   readonly usernameErrorAlert: Locator;
   readonly passwordErrorAlert: Locator;
-  readonly toastNotification: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
     this.usernameInput = page.getByTestId('login-username-input');
     this.passwordInput = page.getByTestId('login-password-input');
     this.submitButton = page.getByTestId('login-submit-button');
@@ -22,11 +21,6 @@ export class LoginPage {
     this.loginRegisterLink = page.getByTestId('login-register-link');
     this.usernameErrorAlert = page.getByTestId('login-username-input').locator('..').getByRole('alert');
     this.passwordErrorAlert = page.getByTestId('login-password-input').locator('..').getByRole('alert');
-    this.toastNotification = page.getByRole('region', { name: 'Notifications (F8)' }).getByRole('listitem').last();
-  }
-
-  async goto() {
-    await this.page.goto(`${UI_BASE_URL}/login`);
   }
 
   async fillUsername(username: string) {
@@ -69,9 +63,5 @@ export class LoginPage {
 
   async getPasswordError() {
     return await this.passwordErrorAlert.textContent();
-  }
-
-  async getToastError() {
-    return await this.toastNotification.textContent();
   }
 }
