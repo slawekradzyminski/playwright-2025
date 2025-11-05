@@ -59,6 +59,21 @@ test.describe('/users/signup API tests', () => {
     // then
     expect(response.status()).toBe(400);
     const responseBody = await response.json();
-    expect(responseBody.email).toBeDefined();
+    expect(responseBody.email).toBe('Email should be valid');
+  });
+
+  // should fail to register a user which already exists
+  test('should fail to register a user which already exists - 400', async ({ request }) => {
+    // given
+    const registerData = generateUserData(['ROLE_CLIENT']);
+    await attemptRegistration(request, registerData);
+
+    // when
+    const response = await attemptRegistration(request, registerData);  
+
+    // then
+    expect(response.status()).toBe(400);
+    const responseBody = await response.json();
+    expect(responseBody.message).toContain('Username is already in use');
   });
 });
