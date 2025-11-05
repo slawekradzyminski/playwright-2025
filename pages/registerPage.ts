@@ -11,6 +11,8 @@ export class RegisterPage extends BasePage {
   readonly lastNameInput: Locator;
   readonly rolesSelect: Locator;
   readonly submitButton: Locator;
+  readonly loginLink: Locator;
+  readonly registerLoginLink: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -21,6 +23,8 @@ export class RegisterPage extends BasePage {
     this.lastNameInput = page.getByTestId('register-lastname-input');
     this.rolesSelect = page.getByTestId('register-roles-select');
     this.submitButton = page.getByTestId('register-submit-button');
+    this.loginLink = page.getByTestId('login-link');
+    this.registerLoginLink = page.getByTestId('register-login-link');
   }
 
   async fillUsername(username: string) {
@@ -43,12 +47,16 @@ export class RegisterPage extends BasePage {
     await this.lastNameInput.fill(lastName);
   }
 
-  async selectRoles(roles: string[]) {
-    await this.rolesSelect.selectOption(roles);
-  }
-
   async clickSubmit() {
     await this.submitButton.click();
+  }
+
+  async clickLoginLink() {
+    await this.loginLink.click();
+  }
+
+  async clickRegisterLoginLink() {
+    await this.registerLoginLink.click();
   }
 
   async register(registerData: UserRegisterDto) {
@@ -57,7 +65,6 @@ export class RegisterPage extends BasePage {
     await this.fillPassword(registerData.password);
     await this.fillFirstName(registerData.firstName);
     await this.fillLastName(registerData.lastName);
-    await this.selectRoles(registerData.roles);
     await this.clickSubmit();
   }
 

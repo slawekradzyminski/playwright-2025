@@ -6,7 +6,7 @@ export abstract class BasePage {
 
   constructor(page: Page) {
     this.page = page;
-    this.toastNotification = page.getByRole('region', { name: 'Notifications (F8)' }).getByRole('listitem').last();
+    this.toastNotification = page.getByTestId('toast-viewport').locator('li').last();
   }
 
   abstract get url(): string;
