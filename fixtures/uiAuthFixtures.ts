@@ -3,7 +3,7 @@ import { generateUserData } from '../generators/userGenerator';
 import { attemptRegistration } from '../http/registerClient';
 import { attemptLogin } from '../http/loginClient';
 import type { UserRegisterDto, LoginResponseDto } from '../types/auth';
-import { UI_BASE_URL } from '../config/constants';
+import { deleteUserByUsername } from '../http/users/usersByUsernameDeleteClient';
 
 type Role = 'ROLE_CLIENT' | 'ROLE_ADMIN';
 
@@ -35,6 +35,8 @@ const makeUiAuthFixture = (role: Role) =>
     }, token);
 
     await use({ token, user });
+    // user cleanup
+    await deleteUserByUsername(request, token, user.username);
   };
 
 export const test = base.extend<UiAuthFixtures>({
