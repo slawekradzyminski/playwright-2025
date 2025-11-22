@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto } from '../../types/auth';
-
+import { UI_BASE_URL } from '../../config/constants';
 const LOGIN_URL = 'http://localhost:8081/login';
 
 test.describe('Login UI tests', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(LOGIN_URL);
+    await page.goto(`${UI_BASE_URL}/login`);
   });
 
   test('should successfully login with valid credentials', async ({ page }) => {
