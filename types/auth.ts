@@ -30,6 +30,10 @@ export interface UserResponseDto {
   lastName: string;
 }
 
+export interface SystemPromptDto {
+  systemPrompt?: string;
+}
+
 export interface ErrorResponse {
   message?: string;
   errors?: Record<string, string[]>;
