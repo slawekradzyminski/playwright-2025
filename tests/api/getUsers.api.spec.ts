@@ -1,21 +1,11 @@
-import { test, expect } from '@playwright/test';
-import type { LoginDto, UserRegisterDto, UserResponseDto } from '../../types/auth';
-import { attemptLogin } from '../../http/loginRequest';
+import { test, expect } from '../../fixtures/apiAuthFixture';
+import type { UserResponseDto } from '../../types/auth';
 import { getUsers, getUsersWithoutAuth } from '../../http/getUsersRequest';
-import { attemptSignup } from '../../http/signupRequest';
-import { generateRandomClientUser } from '../../generators/userGenerator';
 
 test.describe('GET /users API tests', () => {
-  test('should successfully retrieve users with valid token - 200', async ({ request }) => {
+  test('should successfully retrieve users with valid token - 200', async ({ request, authenticatedClientUser }) => {
     // given
-    const userData = generateRandomClientUser();
-    await attemptSignup(request, userData);
-    const loginData: LoginDto = {
-      username: userData.username,
-      password: userData.password
-    };
-    const loginResponse = await attemptLogin(request, loginData);
-    const { token } = await loginResponse.json();
+    const { token } = authenticatedClientUser;
 
     // when
     const response = await getUsers(request, token);
