@@ -12,6 +12,15 @@ export interface LoginResponseDto {
   roles: string[];
 }
 
+export interface UserRegisterDto {
+  username: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  roles: string[];
+}
+
 export interface ErrorResponse {
   message?: string;
   errors?: Record<string, string[]>;
