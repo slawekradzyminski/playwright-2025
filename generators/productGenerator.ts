@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import type { ProductCreateDto } from '../types/product';
+import type { ProductCreateDto, ProductUpdateDto } from '../types/product';
 
 const MAX_ATTEMPTS = 20;
 
@@ -93,3 +93,13 @@ export const generateRandomProductWithoutOptionalFields = (): ProductCreateDto =
   };
 };
 
+export const generateRandomProductUpdate = (): ProductUpdateDto => {
+  return {
+    name: generateValidProductName(),
+    description: generateProductDescription(),
+    price: generatePrice(),
+    stockQuantity: generateStockQuantity(),
+    category: generateCategory(),
+    imageUrl: generateImageUrl(),
+  };
+};

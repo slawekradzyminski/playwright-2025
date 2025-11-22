@@ -7,6 +7,15 @@ export interface ProductCreateDto {
   imageUrl?: string;
 }
 
+export interface ProductUpdateDto {
+  name?: string;
+  description?: string;
+  price?: number;
+  stockQuantity?: number;
+  category?: string;
+  imageUrl?: string;
+}
+
 export interface ProductDto {
   id: number;
   name: string;
@@ -18,4 +27,3 @@ export interface ProductDto {
   createdAt: string;
   updatedAt: string;
 }
-
