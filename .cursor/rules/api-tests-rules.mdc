@@ -7,5 +7,6 @@ alwaysApply: false
 - order API tests by response code ascending (200 -> 400 -> 401 -> 403 -> 404 -> etc.)
 - use faker.js for generating random data
 - use dedicated http clients (request objects): see http/loginRequest.ts and http/signupRequest.ts as examples
+- **one endpoint per file pattern**: each API endpoint should have its own dedicated request file in the http/ folder and its own test file in tests/api/. If a single URL path has multiple HTTP methods (GET, POST, PUT, DELETE), split each method into its own file (e.g., http/getSystemPromptRequest.ts and http/updateSystemPromptRequest.ts for GET and PUT on /users/system-prompt). Similarly, create separate test files (e.g., tests/api/getSystemPrompt.api.spec.ts and tests/api/updateSystemPrompt.api.spec.ts). Never combine multiple endpoints or HTTP methods in a single file.
 - do not create too many tests for validatione errors (400). Assume sufficient unit tests coverage for these cases.
 - Once you create new tests run them via Playwright. Make sure they pass, iterate with fixes if needed. If you believe there is a bug in application leave the test as failing and let me know about it.

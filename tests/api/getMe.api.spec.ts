@@ -1,6 +1,6 @@
 import { test, expect } from '../../fixtures/apiAuthFixture';
 import type { UserResponseDto } from '../../types/auth';
-import { getMe, getMeWithoutAuth } from '../../http/userEndpointsRequest';
+import { getMe, getMeWithoutAuth } from '../../http/getMeRequest';
 
 test.describe('GET /users/me API tests', () => {
   test('should successfully get current user information with valid token - 200', async ({ request, authenticatedClientUser }) => {

@@ -1,5 +1,5 @@
 import { test, expect } from '../../fixtures/apiAuthFixture';
-import { refreshToken, refreshTokenWithoutAuth } from '../../http/userEndpointsRequest';
+import { refreshToken, refreshTokenWithoutAuth } from '../../http/refreshTokenRequest';
 
 test.describe('GET /users/refresh API tests', () => {
   test('should successfully refresh JWT token with valid token - 200', async ({ request, authenticatedClientUser }) => {
