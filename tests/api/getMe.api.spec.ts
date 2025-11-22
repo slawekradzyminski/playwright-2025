@@ -1,6 +1,7 @@
 import { test, expect } from '../../fixtures/apiAuthFixture';
-import type { UserResponseDto } from '../../types/auth';
+import type { UserRegisterDto, UserResponseDto } from '../../types/auth';
 import { getMe, getMeWithoutAuth } from '../../http/getMeRequest';
+import { APIResponse } from '@playwright/test';
 
 test.describe('GET /users/me API tests', () => {
   test('should successfully get current user information with valid token - 200', async ({ request, authenticatedClientUser }) => {
@@ -12,15 +13,7 @@ test.describe('GET /users/me API tests', () => {
     
     // then
     expect(response.status()).toBe(200);
-    const responseBody: UserResponseDto = await response.json();
-    expect(responseBody.id).toBeDefined();
-    expect(responseBody.username).toBe(userData.username);
-    expect(responseBody.email).toBe(userData.email);
-    expect(responseBody.firstName).toBe(userData.firstName);
-    expect(responseBody.lastName).toBe(userData.lastName);
-    expect(responseBody.roles).toBeDefined();
-    expect(Array.isArray(responseBody.roles)).toBe(true);
-    expect(responseBody.roles).toContain('ROLE_CLIENT');
+    await validateResponse(response, userData);
   });
 
   test('should return unauthorized error when no token provided - 401', async ({ request }) => {
@@ -43,3 +36,14 @@ test.describe('GET /users/me API tests', () => {
   });
 });
 
+const validateResponse = async (response: APIResponse, userData: UserRegisterDto) => {
+  const responseBody: UserResponseDto = await response.json();
+  expect(responseBody.id).toBeDefined();
+  expect(responseBody.username).toBe(userData.username);
+  expect(responseBody.email).toBe(userData.email);
+  expect(responseBody.firstName).toBe(userData.firstName);
+  expect(responseBody.lastName).toBe(userData.lastName);
+  expect(responseBody.roles).toBeDefined();
+  expect(Array.isArray(responseBody.roles)).toBe(true);
+  expect(responseBody.roles).toContain('ROLE_CLIENT');
+};
