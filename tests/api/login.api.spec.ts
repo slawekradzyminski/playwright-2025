@@ -81,6 +81,23 @@ test.describe('/users/signin API tests', () => {
     const responseBody = await response.json();
     expect(responseBody.message).toBe('Invalid username/password supplied');
   });
+
+  test.fail('should return validation error for empty credentials - 400', async ({ request }) => {
+    // given
+    const loginData: LoginDto = {
+      username: '',
+      password: ''
+    };
+
+    // when
+    const response = await attemptLogin(request, loginData);
+
+    // then
+    expect(response.status()).toBe(400);
+    const responseBody = await response.json();
+    expect(responseBody.username).toBe('Minimum username length: 4 characters');
+    expect(responseBody.password).toBe('Minimum password length: 8 characters');
+  });
 }); 
 
 const validateResponse = async (response: APIResponse, loginData: LoginDto) => {
