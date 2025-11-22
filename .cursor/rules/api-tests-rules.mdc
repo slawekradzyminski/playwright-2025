@@ -1,0 +1,10 @@
+---
+description: Use these rules for API tests tasks
+alwaysApply: false
+---
+
+- Use given (test setup) / when (tested action) / then (assertions) in tests provided as comments // given, // when, // then
+- order API tests by response code ascending (200 -> 400 -> 401 -> 403 -> 404 -> etc.)
+- use faker.js for generating random data
+- use dedicated http clients (request objects): see http/loginRequest.ts and http/signupRequest.ts as examples
+- do not create too many tests for validatione errors (400). Assume sufficient unit tests coverage for these cases.
