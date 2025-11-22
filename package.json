@@ -5,7 +5,9 @@
   "scripts": {
     "test": "playwright test",
     "test:api": "playwright test tests/api/",
-    "test:ui": "playwright test tests/ui/"
+    "test:ui": "playwright test tests/ui/",
+    "proxy": "node proxy/proxy-server.js",
+    "proxy:bg": "node proxy/proxy-server.js &"
   },
   "keywords": ["playwright", "testing", "typescript", "automation"],
   "author": "",

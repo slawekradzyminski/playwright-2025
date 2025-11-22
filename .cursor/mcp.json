@@ -3,7 +3,9 @@
       "playwright": {
         "command": "npx",
         "args": [
-          "@playwright/mcp@latest"
+          "@playwright/mcp@latest",
+          "--secrets=./secrets.env",
+          "--proxy-server=http://localhost:3128"
         ]
       }
     }

@@ -12,11 +12,15 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 - **UI Testing**: Ensures the login interface behaves correctly, covering form validations, navigation, and accessibility.
 - **TypeScript Support**: Utilizes TypeScript for type safety and better developer experience with dedicated types in `/types` folder.
 - **Dockerized Environment**: Tests are designed to run against services provided by the awesome-localstack Docker setup.
+- **🔒 Secure Network Proxy**: Built-in proxy server that restricts browser access to only localhost services, preventing external domain access during testing.
 
 ## 🗂️ Project Structure
 
 ```
 .
+├── proxy/
+│   ├── proxy-server.js              # Secure network proxy server
+│   ├── PROXY_README.md             # Proxy documentation
 ├── tests/
 │   ├── api/
 │   │   └── login.api.spec.ts       # API tests for /users/signin endpoint
