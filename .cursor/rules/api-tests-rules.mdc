@@ -8,3 +8,4 @@ alwaysApply: false
 - use faker.js for generating random data
 - use dedicated http clients (request objects): see http/loginRequest.ts and http/signupRequest.ts as examples
 - do not create too many tests for validatione errors (400). Assume sufficient unit tests coverage for these cases.
+- Once you create new tests run them via Playwright. Make sure they pass, iterate with fixes if needed. If you believe there is a bug in application leave the test as failing and let me know about it.
