@@ -1,10 +1,12 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { UI_BASE_URL } from '../config/constants';
 import { LoggedInHeaderComponent } from './components/LoggedInHeader';
+import { ToastComponent } from './components/Toast';
 
 export class ProductsPage {
   readonly page: Page;
   readonly header: LoggedInHeaderComponent;
+  readonly toast: ToastComponent;
   readonly pageHeading: Locator;
   readonly categoriesHeading: Locator;
   readonly searchInput: Locator;
@@ -23,6 +25,7 @@ export class ProductsPage {
   constructor(page: Page) {
     this.page = page;
     this.header = new LoggedInHeaderComponent(page);
+    this.toast = new ToastComponent(page);
     this.pageHeading = page.locator('main h1');
     this.categoriesHeading = page.locator('h2').filter({ hasText: 'Categories' });
     this.searchInput = page.getByTestId('product-search');
@@ -201,19 +204,4 @@ export class ProductsPage {
     expect(prices).toEqual(sortedPrices);
   }
 
-  async expectToastMessage(message: string) {
-    const toast = this.page.locator('[role="status"]').filter({ hasText: message }).last();
-    await expect(toast).toBeVisible();
-  }
-
-  async expectCartCount(count: number) {
-    const cartLink = this.page.locator('nav a[href="/cart"]');
-    await expect(cartLink).toContainText(count.toString());
-  }
-
-  async expectCartEmpty() {
-    const cartLink = this.page.locator('nav a[href="/cart"]');
-    const text = await cartLink.textContent();
-    expect(text).not.toMatch(/\d+/);
-  }
 }

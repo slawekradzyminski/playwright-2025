@@ -23,5 +23,10 @@ export class ToastComponent {
     await expect(this.description).toHaveText(description);
   }
 
+  async expectToastWithText(text: string) {
+    const toast = this.page.locator('[role="status"]').filter({ hasText: text }).last();
+    await expect(toast).toBeVisible();
+  }
+
 }
 

@@ -80,9 +80,9 @@ test.describe('Products page UI tests', () => {
     await productsPage.addToCart(firstProduct);
 
     // then
-    await productsPage.expectToastMessage('Added to cart');
-    await productsPage.expectToastMessage(productName || '');
-    await productsPage.expectCartCount(2);
+    await productsPage.toast.expectToastWithText('Added to cart');
+    await productsPage.toast.expectToastWithText(productName || '');
+    await productsPage.header.expectCartCount(2);
     await productsPage.expectInCartText(firstProduct, 2);
     await productsPage.expectUpdateCartButton(firstProduct);
     await productsPage.expectRemoveFromCartButton(firstProduct);
@@ -94,7 +94,7 @@ test.describe('Products page UI tests', () => {
 
     // when
     await productsPage.addToCart(firstProduct);
-    await productsPage.expectCartCount(1);
+    await productsPage.header.expectCartCount(1);
 
     // when
     await productsPage.increaseQuantity(firstProduct);
@@ -102,8 +102,8 @@ test.describe('Products page UI tests', () => {
 
     // when
     await productsPage.updateCart(firstProduct);
-    await productsPage.expectToastMessage('Cart updated');
-    await productsPage.expectCartCount(3);
+    await productsPage.toast.expectToastWithText('Cart updated');
+    await productsPage.header.expectCartCount(3);
     await productsPage.expectInCartText(firstProduct, 3);
   });
 
@@ -116,15 +116,15 @@ test.describe('Products page UI tests', () => {
     await productsPage.addToCart(firstProduct);
 
     // then
-    await productsPage.expectCartCount(1);
+    await productsPage.header.expectCartCount(1);
 
     // when
     await productsPage.removeFromCart(firstProduct);
 
     // then
-    await productsPage.expectToastMessage('Removed from cart');
-    await productsPage.expectToastMessage(productName || '');
-    await productsPage.expectCartEmpty();
+    await productsPage.toast.expectToastWithText('Removed from cart');
+    await productsPage.toast.expectToastWithText(productName || '');
+    await productsPage.header.expectCartEmpty();
     await productsPage.expectAddToCartButton(firstProduct);
   });
 

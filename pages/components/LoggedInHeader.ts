@@ -20,7 +20,7 @@ export class LoggedInHeaderComponent {
     this.qrCodeLink = page.getByTestId('nav-qr-link');
     this.llmLink = page.getByTestId('nav-llm-link');
     this.trafficMonitorLink = page.getByTestId('nav-traffic-link');
-    this.cartLink = page.getByTestId('cart-link');
+    this.cartLink = page.getByTestId('desktop-cart-icon');
     this.userProfileLink = page.getByTestId('username-profile-link');
     this.logoutButton = page.getByTestId('logout-button');
   }
@@ -63,6 +63,15 @@ export class LoggedInHeaderComponent {
 
   async clickCartLink() {
     await this.cartLink.click();
+  }
+
+  async expectCartCount(count: number) {
+    await expect(this.cartLink).toContainText(count.toString());
+  }
+
+  async expectCartEmpty() {
+    const text = await this.cartLink.textContent();
+    expect(text).not.toMatch(/\d+/);
   }
 }
 
