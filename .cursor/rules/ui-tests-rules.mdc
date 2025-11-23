@@ -1,0 +1,11 @@
+---
+description: Use these rules for UI tests tasks
+alwaysApply: false
+---
+
+- Use given (test setup) / when (tested action) / then (assertions) in tests provided as comments // given, // when, // then
+- use faker.js for generating random data
+- use dedicated pages (objects): see pages/LoginPage.ts and pages/HomePage.ts as examples
+- use data-testid attributes for locating elements
+- use can use http client to perform test setup if needed
+- Once you create new tests run them via Playwright. Make sure they pass, iterate with fixes if needed. If you believe there is a bug in application leave the test as failing and let me know about it.
