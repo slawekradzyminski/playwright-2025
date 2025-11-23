@@ -1,8 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { UserRegisterDto } from '../types/auth';
 import { UI_BASE_URL } from '../config/constants';
-import { ToastComponent } from './components/ToastComponent';
-import { LoggedOutHeaderComponent } from './components/LoggedOutHeaderComponent';
+import { ToastComponent } from './components/Toast';
+import { LoggedOutHeaderComponent } from './components/LoggedOutHeader';
 
 export class RegisterPage {
   readonly page: Page;

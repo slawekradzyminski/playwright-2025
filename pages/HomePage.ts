@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { UI_BASE_URL } from '../config/constants';
-import { LoggedInHeaderComponent } from './components/LoggedInHeaderComponent';
+import { LoggedInHeaderComponent } from './components/LoggedInHeader';
 
 export class HomePage {
   readonly page: Page;
