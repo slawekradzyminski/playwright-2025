@@ -30,7 +30,7 @@ test.describe('Login UI tests', () => {
     // then
     await homePage.expectToBeOnHomePage();
     await homePage.expectWelcomeMessage();
-    await homePage.expectLogoutButtonVisible();
+    await homePage.header.expectLogoutButtonVisible();
   });
 
   test('should show error for empty password', async ({ page }) => {
