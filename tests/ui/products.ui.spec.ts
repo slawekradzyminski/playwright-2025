@@ -1,11 +1,18 @@
 import { test, expect } from '../../fixtures/uiAuthFixture';
 import { ProductsPage } from '../../pages/ProductsPage';
 import { ProductDetailPage } from '../../pages/ProductDetailPage';
+import type { AuthenticatedUser } from '../../fixtures/helpers/authHelper';
+import { getAllProducts } from '../../http/products/getAllProductsRequest';
+import type { ProductCreateDto, ProductDto } from '../../types/product';
+import { generateRandomProduct } from '../../generators/productGenerator';
+import { createProduct } from '../../http/products/createProductRequest';
 
 test.describe('Products page UI tests', () => {
+  let authenticatedUser: AuthenticatedUser;
   let productsPage: ProductsPage;
 
   test.beforeEach(async ({ page, authenticatedUiClientUser }) => {
+    authenticatedUser = authenticatedUiClientUser;
     productsPage = new ProductsPage(page);
     await productsPage.goto();
   });
@@ -39,12 +46,21 @@ test.describe('Products page UI tests', () => {
     await productsPage.expectMinimumProductCards(5);
   });
 
-  test('should search for products', async () => {
+  test('should search for products', async ({ request }) => {
+    // given
+    const suffix = Math.random().toString(36).substring(2, 15);
+    const productData: ProductCreateDto = { ...generateRandomProduct(), name: `iPhone ${suffix}` };
+    await createProduct(request, authenticatedUser.token, productData);
+    
+    const response = await getAllProducts(request, authenticatedUser.token);
+    const products = await response.json();
+    const numberOfProducts = products.filter((p: ProductDto) => p.name.toLowerCase().includes('iphone')).length;
+
     // when
     await productsPage.search('iPhone');
 
     // then
-    await productsPage.expectMinimumProductCards(1);
+    await productsPage.expectProductCardCount(numberOfProducts);
     const firstProduct = await productsPage.getProductCard(0);
     const productName = await productsPage.getProductName(firstProduct);
     expect(productName).toContain('iPhone');
