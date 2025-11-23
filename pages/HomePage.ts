@@ -26,5 +26,10 @@ export class HomePage {
   async expectLogoutButtonVisible() {
     await expect(this.logoutButton).toBeVisible();
   }
+
+  async expectUserEmail(email: string) {
+    await expect(this.userEmail).toBeVisible();
+    await expect(this.userEmail).toHaveText(email);
+  }
 }
 

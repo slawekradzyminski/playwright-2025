@@ -1,4 +1,4 @@
-import { test, expect, request } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import type { LoginDto } from '../../types/auth';
 import { UI_BASE_URL } from '../../config/constants';
 import { LoginPage } from '../../pages/LoginPage';
