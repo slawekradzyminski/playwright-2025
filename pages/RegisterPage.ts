@@ -1,9 +1,11 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { UserRegisterDto } from '../types/auth';
 import { UI_BASE_URL } from '../config/constants';
+import { ToastComponent } from './components/ToastComponent';
 
 export class RegisterPage {
   readonly page: Page;
+  readonly toast: ToastComponent;
   readonly usernameInput: Locator;
   readonly emailInput: Locator;
   readonly passwordInput: Locator;
@@ -16,11 +18,10 @@ export class RegisterPage {
   readonly passwordError: Locator;
   readonly firstNameError: Locator;
   readonly lastNameError: Locator;
-  readonly toastTitle: Locator;
-  readonly toastDescription: Locator;
 
   constructor(page: Page) {
     this.page = page;
+    this.toast = new ToastComponent(page);
     this.usernameInput = page.getByTestId('register-username-input');
     this.emailInput = page.getByTestId('register-email-input');
     this.passwordInput = page.getByTestId('register-password-input');
@@ -33,8 +34,6 @@ export class RegisterPage {
     this.passwordError = page.getByTestId('register-password-error');
     this.firstNameError = page.getByTestId('register-firstname-error');
     this.lastNameError = page.getByTestId('register-lastname-error');
-    this.toastTitle = page.getByTestId('toast-title');
-    this.toastDescription = page.getByTestId('toast-description');
   }
 
   async goto() {
@@ -75,20 +74,7 @@ export class RegisterPage {
     await expect(this.lastNameError).toHaveText(message);
   }
 
-  async expectToastError(title: string, description: string) {
-    await expect(this.toastTitle).toBeVisible();
-    await expect(this.toastTitle).toHaveText(title);
-    await expect(this.toastDescription).toHaveText(description);
-  }
-
-  async expectToastSuccess(title: string, description: string) {
-    await expect(this.toastTitle).toBeVisible();
-    await expect(this.toastTitle).toHaveText(title);
-    await expect(this.toastDescription).toHaveText(description);
-  }
-
   async clickLoginLink() {
     await this.loginLink.click();
   }
 }
-

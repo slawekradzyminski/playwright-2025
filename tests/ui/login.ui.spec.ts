@@ -60,7 +60,7 @@ test.describe('Login UI tests', () => {
 
     // then
     await expect(page).toHaveURL(`${UI_BASE_URL}/login`);
-    await loginPage.expectToastError('Error', 'Invalid username/password');
+    await loginPage.toast.expectError('Error', 'Invalid username/password');
   });
 
 

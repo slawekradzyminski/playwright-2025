@@ -21,7 +21,7 @@ test.describe('Register UI tests', () => {
 
     // then
     await expect(page).toHaveURL(`${UI_BASE_URL}/login`);
-    await registerPage.expectToastSuccess('Success', 'Registration successful! You can now log in.');
+    await registerPage.toast.expectSuccess('Success', 'Registration successful! You can now log in.');
   });
 
   test('should show errors for empty fields', async ({ page }) => {
@@ -56,7 +56,7 @@ test.describe('Register UI tests', () => {
 
     // then
     await expect(page).toHaveURL(`${UI_BASE_URL}/register`);
-    await registerPage.expectToastError('Error', 'Username already exists');
+    await registerPage.toast.expectError('Error', 'Username already exists');
   });
 
   test('should show error for invalid email format', async ({ page }) => {

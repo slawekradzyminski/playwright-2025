@@ -1,9 +1,11 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { LoginDto } from '../types/auth';
 import { UI_BASE_URL } from '../config/constants';
+import { ToastComponent } from './components/ToastComponent';
 
 export class LoginPage {
   readonly page: Page;
+  readonly toast: ToastComponent;
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly submitButton: Locator;
@@ -11,11 +13,10 @@ export class LoginPage {
   readonly registerLink: Locator;
   readonly passwordError: Locator;
   readonly usernameError: Locator;
-  readonly toastTitle: Locator;
-  readonly toastDescription: Locator;
 
   constructor(page: Page) {
     this.page = page;
+    this.toast = new ToastComponent(page);
     this.usernameInput = page.getByTestId('login-username-input');
     this.passwordInput = page.getByTestId('login-password-input');
     this.submitButton = page.getByTestId('login-submit-button');
@@ -23,8 +24,6 @@ export class LoginPage {
     this.registerLink = page.getByTestId('register-link');
     this.passwordError = page.getByTestId('login-password-error');
     this.usernameError = page.getByTestId('login-username-error');
-    this.toastTitle = page.getByTestId('toast-title');
-    this.toastDescription = page.getByTestId('toast-description');
   }
 
   async goto() {
@@ -45,12 +44,6 @@ export class LoginPage {
   async expectUsernameError(message: string) {
     await expect(this.usernameError).toBeVisible();
     await expect(this.usernameError).toHaveText(message);
-  }
-
-  async expectToastError(title: string, description: string) {
-    await expect(this.toastTitle).toBeVisible();
-    await expect(this.toastTitle).toHaveText(title);
-    await expect(this.toastDescription).toHaveText(description);
   }
 
   async clickRegisterButton() {
