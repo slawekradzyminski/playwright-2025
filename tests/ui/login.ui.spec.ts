@@ -1,31 +1,36 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import type { LoginDto } from '../../types/auth';
 import { UI_BASE_URL } from '../../config/constants';
-
-const LOGIN_URL = `${UI_BASE_URL}/login`;
+import { LoginPage } from '../../pages/LoginPage';
+import { HomePage } from '../../pages/HomePage';
+import { generateRandomClientUser } from '../../generators/userGenerator';
+import { attemptSignup } from '../../http/users/signupRequest';
 
 test.describe('Login UI tests', () => {
+  let loginPage: LoginPage;
+
   test.beforeEach(async ({ page }) => {
-    await page.goto(LOGIN_URL);
+    loginPage = new LoginPage(page);
+    await loginPage.goto();
   });
 
-  test('should successfully login with valid credentials', async ({ page }) => {
+  test('should successfully login with valid credentials', async ({ page, request }) => {
     // given
+    const randomUser = generateRandomClientUser();  
+    await attemptSignup(request, randomUser);
     const credentials: LoginDto = {
-      username: 'admin',
-      password: 'admin'
+      username: randomUser.username,
+      password: randomUser.password
     };
+    const homePage = new HomePage(page);
 
     // when
-    await page.getByTestId('login-username-input').fill(credentials.username);
-    await page.getByTestId('login-password-input').fill(credentials.password);
-    await page.getByTestId('login-submit-button').click();
+    await loginPage.login(credentials);
 
     // then
-    await expect(page).toHaveURL(`${UI_BASE_URL}/`);
-    await expect(page.getByTestId('home-welcome-title')).toBeVisible();
-    await expect(page.getByTestId('home-welcome-title')).toContainText('Welcome');
-    await expect(page.getByTestId('logout-button')).toBeVisible();
+    await homePage.expectToBeOnHomePage();
+    await homePage.expectWelcomeMessage();
+    await homePage.expectLogoutButtonVisible();
   });
 
   test('should show error for empty password', async ({ page }) => {
@@ -36,14 +41,11 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByTestId('login-username-input').fill(credentials.username);
-    await page.getByTestId('login-password-input').fill(credentials.password);
-    await page.getByTestId('login-submit-button').click();
+    await loginPage.login(credentials);
 
     // then
-    await expect(page).toHaveURL(LOGIN_URL);
-    await expect(page.getByTestId('login-password-error')).toBeVisible();
-    await expect(page.getByTestId('login-password-error')).toHaveText('Password is required');
+    await expect(page).toHaveURL(`${UI_BASE_URL}/login`);
+    await loginPage.expectPasswordError('Password is required');
   });
 
   test('should show error for invalid credentials', async ({ page }) => {
@@ -53,15 +55,12 @@ test.describe('Login UI tests', () => {
       password: 'invalidpassword'
     };
 
-    await page.getByTestId('login-username-input').fill(credentials.username);
-    await page.getByTestId('login-password-input').fill(credentials.password);
-    await page.getByTestId('login-submit-button').click();
+    // when
+    await loginPage.login(credentials);
 
     // then
-    await expect(page).toHaveURL(LOGIN_URL);
-    await expect(page.getByTestId('toast-title')).toBeVisible();
-    await expect(page.getByTestId('toast-title')).toHaveText('Error');
-    await expect(page.getByTestId('toast-description')).toHaveText('Invalid username/password');
+    await expect(page).toHaveURL(`${UI_BASE_URL}/login`);
+    await loginPage.expectToastError('Error', 'Invalid username/password');
   });
 
 
@@ -73,30 +72,27 @@ test.describe('Login UI tests', () => {
     };
 
     // when
-    await page.getByTestId('login-username-input').fill(credentials.username);
-    await page.getByTestId('login-password-input').fill(credentials.password);
-    await page.getByTestId('login-submit-button').click();
+    await loginPage.login(credentials);
 
     // then
-    await expect(page).toHaveURL(LOGIN_URL);
-    await expect(page.getByTestId('login-username-error')).toBeVisible();
-    await expect(page.getByTestId('login-username-error')).toHaveText('Username must be at least 4 characters');
+    await expect(page).toHaveURL(`${UI_BASE_URL}/login`);
+    await loginPage.expectUsernameError('Username must be at least 4 characters');
   });
 
   test('should navigate to register page when register button is clicked', async ({ page }) => {
     // when
-    await page.getByTestId('login-register-link').click();
+    await loginPage.clickRegisterButton();
 
     // then
+
     await expect(page).toHaveURL(`${UI_BASE_URL}/register`);
   });
 
   test('should navigate to register page when register link is clicked', async ({ page }) => {
     // when
-    await page.getByTestId('register-link').click();
+    await loginPage.clickRegisterLink();
 
     // then
     await expect(page).toHaveURL(`${UI_BASE_URL}/register`);
   });
-
 }); 
