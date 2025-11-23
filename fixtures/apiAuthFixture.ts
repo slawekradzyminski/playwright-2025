@@ -1,7 +1,7 @@
 import { test as base } from '@playwright/test';
 import type { UserRegisterDto } from '../types/auth';
-import { attemptSignup } from '../http/signupRequest';
-import { attemptLogin } from '../http/loginRequest';
+import { attemptSignup } from '../http/users/signupRequest';
+import { attemptLogin } from '../http/users/loginRequest';
 import { generateRandomClientUser, generateRandomAdminUser } from '../generators/userGenerator';
 
 interface AuthenticatedUser {
@@ -46,4 +46,3 @@ export const test = base.extend<AuthFixtures>({
 });
 
 export { expect } from '@playwright/test';
-
