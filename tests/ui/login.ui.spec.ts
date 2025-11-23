@@ -88,9 +88,9 @@ test.describe('Login UI tests', () => {
     await expect(page).toHaveURL(`${UI_BASE_URL}/register`);
   });
 
-  test('should navigate to register page when register link is clicked', async ({ page }) => {
+  test('should navigate to register page when register link in header is clicked', async ({ page }) => {
     // when
-    await loginPage.clickRegisterLink();
+    await loginPage.header.clickRegisterLink();
 
     // then
     await expect(page).toHaveURL(`${UI_BASE_URL}/register`);

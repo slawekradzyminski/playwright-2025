@@ -2,9 +2,11 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import type { UserRegisterDto } from '../types/auth';
 import { UI_BASE_URL } from '../config/constants';
 import { ToastComponent } from './components/ToastComponent';
+import { LoggedOutHeaderComponent } from './components/LoggedOutHeaderComponent';
 
 export class RegisterPage {
   readonly page: Page;
+  readonly header: LoggedOutHeaderComponent;
   readonly toast: ToastComponent;
   readonly usernameInput: Locator;
   readonly emailInput: Locator;
@@ -12,7 +14,7 @@ export class RegisterPage {
   readonly firstNameInput: Locator;
   readonly lastNameInput: Locator;
   readonly submitButton: Locator;
-  readonly loginLink: Locator;
+  readonly loginButton: Locator;
   readonly usernameError: Locator;
   readonly emailError: Locator;
   readonly passwordError: Locator;
@@ -21,6 +23,7 @@ export class RegisterPage {
 
   constructor(page: Page) {
     this.page = page;
+    this.header = new LoggedOutHeaderComponent(page);
     this.toast = new ToastComponent(page);
     this.usernameInput = page.getByTestId('register-username-input');
     this.emailInput = page.getByTestId('register-email-input');
@@ -28,7 +31,7 @@ export class RegisterPage {
     this.firstNameInput = page.getByTestId('register-firstname-input');
     this.lastNameInput = page.getByTestId('register-lastname-input');
     this.submitButton = page.getByTestId('register-submit-button');
-    this.loginLink = page.getByTestId('register-login-link');
+    this.loginButton = page.getByTestId('register-login-link');
     this.usernameError = page.getByTestId('register-username-error');
     this.emailError = page.getByTestId('register-email-error');
     this.passwordError = page.getByTestId('register-password-error');
@@ -74,7 +77,7 @@ export class RegisterPage {
     await expect(this.lastNameError).toHaveText(message);
   }
 
-  async clickLoginLink() {
-    await this.loginLink.click();
+  async clickLoginButton() {
+    await this.loginButton.click();
   }
 }

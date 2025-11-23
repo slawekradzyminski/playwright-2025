@@ -71,9 +71,9 @@ test.describe('Register UI tests', () => {
     await registerPage.expectEmailError('Invalid email format');
   });
 
-  test('should navigate to login page when login link is clicked', async ({ page }) => {
+  test('should navigate to login page when login link in header is clicked', async ({ page }) => {
     // when
-    await registerPage.clickLoginLink();
+    await registerPage.header.clickLoginLink();
 
     // then
     await expect(page).toHaveURL(`${UI_BASE_URL}/login`);
