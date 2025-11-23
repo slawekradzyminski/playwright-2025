@@ -20,15 +20,15 @@ export class ProductDetailPage {
     this.page = page;
     this.header = new LoggedInHeaderComponent(page);
     this.backToProductsLink = page.getByTestId('product-back-link');
-    this.productImage = page.locator('main img');
-    this.productName = page.locator('main h1');
-    this.productPrice = page.locator('main').locator('p').first();
-    this.productDescription = page.locator('h2:has-text("Description")').locator('..').locator('p');
-    this.productCategory = page.locator('h2:has-text("Category")').locator('..').locator('p');
-    this.productStock = page.locator('h2:has-text("Availability")').locator('..').locator('p');
-    this.increaseQuantityButton = page.getByTestId('product-increase-quantity');
-    this.decreaseQuantityButton = page.getByTestId('product-decrease-quantity');
-    this.addToCartButton = page.getByTestId('product-add-button');
+    this.productImage = page.getByTestId('product-image');
+    this.productName = page.getByTestId('product-title');
+    this.productPrice = page.getByTestId('product-price');
+    this.productDescription = page.getByTestId('product-description');
+    this.productCategory = page.getByTestId('product-category');
+    this.productStock = page.getByTestId('product-stock');
+    this.increaseQuantityButton = page.getByTestId('increase-quantity');
+    this.decreaseQuantityButton = page.getByTestId('decrease-quantity');
+    this.addToCartButton = page.getByTestId('add-to-cart');
   }
 
   async expectToBeOnProductDetailPage(productId?: string) {

@@ -26,8 +26,8 @@ export class ProductsPage {
     this.page = page;
     this.header = new LoggedInHeaderComponent(page);
     this.toast = new ToastComponent(page);
-    this.pageHeading = page.locator('main h1');
-    this.categoriesHeading = page.locator('h2').filter({ hasText: 'Categories' });
+    this.pageHeading = page.getByTestId('products-title');
+    this.categoriesHeading = page.getByTestId('products-categories-title');
     this.searchInput = page.getByTestId('product-search');
     this.clearSearchButton = page.getByTestId('clear-search');
     this.sortDropdown = page.getByTestId('product-sort');
@@ -55,8 +55,8 @@ export class ProductsPage {
   }
 
   async expectProductsHeading(text: string) {
-    const productsHeading = this.page.locator('main').locator('h2').filter({ hasText: text });
-    await expect(productsHeading).toBeVisible();
+    const productsHeading = this.page.getByTestId('product-list-title');
+    await expect(productsHeading).toHaveText(text);
   }
 
   async expectProductCardCount(count: number) {
@@ -103,22 +103,22 @@ export class ProductsPage {
   }
 
   async getProductName(productCard: Locator) {
-    return productCard.locator('h3').textContent();
+    return productCard.getByTestId('product-name').textContent();
   }
 
   async getProductPrice(productCard: Locator) {
-    const priceText = await productCard.locator('p').first().textContent();
+    const priceText = await productCard.getByTestId('product-price').textContent();
     return parseFloat(priceText?.replace('$', '') || '0');
   }
 
   async getProductCategory(productCard: Locator) {
-    return productCard.locator('p').nth(1).textContent();
+    return productCard.getByTestId('product-category').textContent();
   }
 
   async expectProductHasElements(productCard: Locator) {
-    await expect(productCard.locator('img')).toBeVisible();
-    await expect(productCard.locator('h3')).toBeVisible();
-    await expect(productCard.locator('p').first()).toBeVisible();
+    await expect(productCard.getByTestId('product-image')).toBeVisible();
+    await expect(productCard.getByTestId('product-name')).toBeVisible();
+    await expect(productCard.getByTestId('product-price')).toBeVisible();
   }
 
   async increaseQuantity(productCard: Locator) {
@@ -130,8 +130,7 @@ export class ProductsPage {
   }
 
   async getQuantity(productCard: Locator) {
-    const quantityElement = productCard.locator('[data-testid="product-increase-quantity"]').locator('..').locator('div').nth(1);
-    const text = await quantityElement.textContent();
+    const text = await productCard.getByTestId('product-quantity-value').textContent();
     return parseInt(text || '1');
   }
 
