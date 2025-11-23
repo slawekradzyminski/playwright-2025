@@ -1,55 +1,36 @@
 import { test as base } from '@playwright/test';
-import type { UserRegisterDto } from '../types/auth';
-import { attemptSignup } from '../http/users/signupRequest';
-import { attemptLogin } from '../http/users/loginRequest';
 import { generateRandomClientUser, generateRandomAdminUser } from '../generators/userGenerator';
 import { UI_BASE_URL } from '../config/constants';
-
-interface AuthenticatedUser {
-  token: string;
-  userData: UserRegisterDto;
-}
+import { createAndAuthenticateUser, type AuthenticatedUser } from './helpers/authHelper';
 
 interface UiAuthFixtures {
-  authenticatedClientUser: AuthenticatedUser;
-  authenticatedAdminUser: AuthenticatedUser;
+  authenticatedUiClientUser: AuthenticatedUser;
+  authenticatedUiAdminUser: AuthenticatedUser;
 }
 
-const createAuthenticatedUser = async (
-  page: any,
-  request: any,
-  userGenerator: () => UserRegisterDto,
-  use: (value: AuthenticatedUser) => Promise<void>
+const createAuthenticatedUiFixture = async (
+  { page, request }: { page: any; request: any },
+  userGenerator: () => any,
+  use: (user: AuthenticatedUser) => Promise<void>
 ) => {
-  const userData = userGenerator();
-  await attemptSignup(request, userData);
-
-  const loginResponse = await attemptLogin(request, {
-    username: userData.username,
-    password: userData.password
-  });
-
-  const { token } = await loginResponse.json();
+  const authenticatedUser = await createAndAuthenticateUser(request, userGenerator);
 
   await page.addInitScript((token: string) => {
     localStorage.setItem('token', token);
-  }, token);
+  }, authenticatedUser.token);
 
   await page.goto(UI_BASE_URL);
 
-  await use({
-    token,
-    userData,
-  });
+  await use(authenticatedUser);
 };
 
 export const test = base.extend<UiAuthFixtures>({
-  authenticatedClientUser: async ({ page, request }, use) => {
-    await createAuthenticatedUser(page, request, generateRandomClientUser, use);
+  authenticatedUiClientUser: async ({ page, request }, use) => {
+    await createAuthenticatedUiFixture({ page, request }, generateRandomClientUser, use);
   },
 
-  authenticatedAdminUser: async ({ page, request }, use) => {
-    await createAuthenticatedUser(page, request, generateRandomAdminUser, use);
+  authenticatedUiAdminUser: async ({ page, request }, use) => {
+    await createAuthenticatedUiFixture({ page, request }, generateRandomAdminUser, use);
   },
 });
 

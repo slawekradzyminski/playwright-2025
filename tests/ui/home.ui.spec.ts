@@ -2,7 +2,7 @@ import { test, expect } from '../../fixtures/uiAuthFixture';
 import { HomePage } from '../../pages/HomePage';
 
 test.describe('Home page UI tests', () => {
-  test('should display correct email on homepage for logged in user', async ({ page, authenticatedClientUser }) => {
+  test('should display correct email on homepage for logged in user', async ({ page, authenticatedUiClientUser }) => {
     // given
     const homePage = new HomePage(page);
 
@@ -10,7 +10,7 @@ test.describe('Home page UI tests', () => {
 
     // then
     await homePage.expectToBeOnHomePage();
-    await homePage.expectUserEmail(authenticatedClientUser.userData.email);
+    await homePage.expectUserEmail(authenticatedUiClientUser.userData.email);
   });
 });
 
