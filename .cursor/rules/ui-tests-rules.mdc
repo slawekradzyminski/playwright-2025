@@ -7,5 +7,6 @@ alwaysApply: false
 - use faker.js for generating random data
 - use dedicated pages (objects): see pages/LoginPage.ts and pages/HomePage.ts as examples
 - use data-testid attributes for locating elements
-- use can use http client to perform test setup if needed
+- you can use http clients to perform test setup if needed (see http/users/signupRequest.ts and http/users/loginRequest.ts as examples)
+- do not create too many tests for validatione errors. Assume sufficient unit tests coverage for these cases.
 - Once you create new tests run them via Playwright. Make sure they pass, iterate with fixes if needed. If you believe there is a bug in application leave the test as failing and let me know about it.
