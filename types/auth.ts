@@ -30,6 +30,22 @@ export interface UserResponseDto {
   lastName: string;
 }
 
+export interface UserEditDto {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface UserEntity {
+  id: number;
+  username: string;
+  email: string;
+  roles: string[];
+  firstName?: string;
+  lastName?: string;
+  systemPrompt?: string;
+}
+
 export interface ErrorResponse {
   message?: string;
   errors?: Record<string, string[]>;

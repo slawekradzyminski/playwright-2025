@@ -10,5 +10,6 @@ alwaysApply: false
 - Example HTTP Clients are in the `http` directory.
 - Do not add comments explaining the code
 - Order tests by status code ascending (1xx, 2xx, 3xx, 4xx, 5xx)
-- Do not create too many tests for input validation (http 400 bad request). Assume sufficient test coverage on unit test level.
+- Do not create too many tests for input validation (http 400 bad request). Make it 1-3 max. Assume sufficient test coverage on unit test level.
 - Once you complete a test, run the tests to verify they work as expected. In case of application bugs let me know about it.
+- Each endpoint should have its own test file and HTTP client file. Name them based on the operation (e.g., `users.api.spec.ts` for GET /users, `updateUser.api.spec.ts` for PUT /users/{username}, `loginRequest.ts` for POST /users/signin).
