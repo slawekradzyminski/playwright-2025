@@ -124,7 +124,6 @@ test.describe('/users/signup API tests', () => {
     const response = await attemptSignup(request, userData);
 
     // then
-
     expect(response.status()).toBe(400);
     const responseBody = await response.json();
     expect(responseBody.email).toBe('Email should be valid');

@@ -6,7 +6,9 @@ alwaysApply: false
 - You have API documentation in the `api-docs.json` file.
 - Use Faker to generate random data for the tests.
 - Use // given (test setup), // when (tested action), // then (test verification) comments to structure the tests.
+- Example tests are in the `tests/api` directory.
+- Example HTTP Clients are in the `http` directory.
 - Do not add comments explaining the code
 - Order tests by status code ascending (1xx, 2xx, 3xx, 4xx, 5xx)
 - Do not create too many tests for input validation (http 400 bad request). Assume sufficient test coverage on unit test level.
-
+- Once you complete a test, run the tests to verify they work as expected. In case of application bugs let me know about it.
