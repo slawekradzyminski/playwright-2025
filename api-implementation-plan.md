@@ -11,26 +11,26 @@ This plan covers every endpoint listed in `api-docs.json`, records what already 
 | 1 | `POST /users/signup` | DONE | Exercised by `tests/api/signup.api.spec.ts`; covers happy path, duplicate data, and validation branches. |
 | 2 | `POST /users/signin` | DONE | Exercised by `tests/api/login.api.spec.ts`; validates token issuance and error states. |
 | 3 | `GET /users` | DONE | Exercised by `tests/api/users.api.spec.ts`; verifies auth and payload schema. |
-| 4 | `GET /users/me` | TODO | Add test ensuring both client/admin tokens return the authenticated profile and that missing tokens are rejected (per `UsersController#getCurrentUser`). |
-| 5 | `GET /users/refresh` | TODO | Validate that a valid refresh token returns a new JWT and that expired/invalid tokens fail with 401. |
+| 4 | `GET /users/me` | DONE | Exercised by `tests/api/getUsersMe.api.spec.ts`; validates both client/admin tokens and 401 paths. |
+| 5 | `GET /users/refresh` | DONE | Exercised by `tests/api/getUsersRefresh.api.spec.ts`; ensures refreshed JWT is returned and 401 errors. |
 | 6 | `GET /users/system-prompt` | DONE | Exercised by `tests/api/getSystemPrompt.api.spec.ts`; covers null and existing prompts plus 401 cases. |
 | 7 | `PUT /users/system-prompt` | DONE | Exercised by `tests/api/updateSystemPrompt.api.spec.ts`; covers happy path and 401 cases. |
-| 8 | `GET /users/{username}` | TODO | Cover admin-only lookup of arbitrary users plus 404 for unknown usernames; reuse signup helper for setup. |
+| 8 | `GET /users/{username}` | DONE | Exercised by `tests/api/getUserByUsername.api.spec.ts`; covers own-profile, admin lookup, and 401/404 paths. |
 | 9 | `PUT /users/{username}` | DONE | Exercised by `tests/api/updateUser.api.spec.ts`; checks client self-edit, admin edit, and error branches. |
-| 10 | `DELETE /users/{username}` | TODO | Verify admin can delete arbitrary users, client can delete self (if allowed), and proper 401/403/404 responses. |
+| 10 | `DELETE /users/{username}` | DONE | Exercised by `tests/api/deleteUser.api.spec.ts`; covers admin deletes plus 401/403/404 cases. |
 | 11 | `POST /email` | TODO | Draft tests that send a basic templated payload, assert success per spec, and check validation for missing recipients. |
 | 12 | `POST /qr/create` | TODO | Add coverage that posts the documented payload and asserts the QR artifact URL or bytes are returned, plus validation failure for malformed content. |
 | 13 | `GET /api/traffic/info` | TODO | Simple auth-only fetch verifying structure of `TrafficInfoDto` (requests, errors, timestamp) and 401 behavior. |
-| 14 | `GET /api/products` | TODO | Add coverage for pagination parameters and ensure 200 payload matches `ProductDto` array; include 401 for missing token if required. |
+| 14 | `GET /api/products` | DONE | Exercised by `tests/api/getProducts.api.spec.ts`; seeds catalog via admin and validates 200 plus 401 cases. |
 | 15 | `POST /api/products` | DONE | Exercised by `tests/api/createProduct.api.spec.ts`; covers happy path, validation, and auth failures. |
-| 16 | `GET /api/products/{id}` | TODO | Create a product, then verify retrieval works for clients/admins and returns 404 for invalid IDs. |
-| 17 | `PUT /api/products/{id}` | TODO | Ensure admin can update mutable fields, include validation errors (price, stock), and assert 403 for client token. |
-| 18 | `DELETE /api/products/{id}` | TODO | Verify only admins can delete and that deleting removes the product (follow-up GET returns 404). |
-| 19 | `GET /api/cart` | TODO | Assert client token returns cart contents reflecting previously added items and that unauthenticated requests fail. |
-| 20 | `DELETE /api/cart` | TODO | After seeding cart items, ensure clearing the cart empties item list and total, and returns 200. |
-| 21 | `POST /api/cart/items` | TODO | Add coverage for adding an item (requires existing product), handling duplicates by increasing qty, and invalid quantities. |
-| 22 | `PUT /api/cart/items/{productId}` | TODO | Verify updating quantity adjusts totals, includes 404 for missing product in cart, and 400 for invalid qty. |
-| 23 | `DELETE /api/cart/items/{productId}` | TODO | Ensure removing a specific item leaves others intact; include 404 for not-in-cart product. |
+| 16 | `GET /api/products/{id}` | DONE | Exercised by `tests/api/getProductById.api.spec.ts`; verifies retrieval, 401 paths, and 404 missing product. |
+| 17 | `PUT /api/products/{id}` | DONE | Exercised by `tests/api/updateProduct.api.spec.ts`; covers admin update, validation error, auth, and forbidden cases. |
+| 18 | `DELETE /api/products/{id}` | DONE | Exercised by `tests/api/deleteProduct.api.spec.ts`; ensures admin delete plus 401/403/404 flows. |
+| 19 | `GET /api/cart` | DONE | Exercised by `tests/api/getCart.api.spec.ts`; confirms empty cart response plus 401 cases. |
+| 20 | `DELETE /api/cart` | DONE | Exercised by `tests/api/deleteCart.api.spec.ts`; seeds items, clears cart, and checks 401 paths. |
+| 21 | `POST /api/cart/items` | DONE | Exercised by `tests/api/postCartItems.api.spec.ts`; covers add, quantity merge, validation, and auth errors. |
+| 22 | `PUT /api/cart/items/{productId}` | DONE | Exercised by `tests/api/updateCartItem.api.spec.ts`; verifies quantity updates plus 400/401/404 cases. |
+| 23 | `DELETE /api/cart/items/{productId}` | DONE | Exercised by `tests/api/deleteCartItem.api.spec.ts`; ensures removal behavior and auth/not-found handling. |
 | 24 | `POST /api/orders` | TODO | Seed cart then submit `AddressDto`; verify 201 with order number and 400 for empty cart. |
 | 25 | `GET /api/orders` | TODO | Assert paginated list returns only the caller's orders and supports status filter; include 401 case. |
 | 26 | `GET /api/orders/{id}` | TODO | Validate owner (or admin) can fetch order details and others receive 403/404. |
