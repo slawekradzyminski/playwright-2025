@@ -7,11 +7,17 @@
     "test:api": "playwright test tests/api/",
     "test:ui": "playwright test tests/ui/"
   },
-  "keywords": ["playwright", "testing", "typescript", "automation"],
+  "keywords": [
+    "playwright",
+    "testing",
+    "typescript",
+    "automation"
+  ],
   "author": "",
   "license": "ISC",
   "description": "A modern TypeScript-based test suite for validating both API and UI layers of a Dockerized AWS-like application stack",
   "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
     "@playwright/test": "^1.56.0",
     "@types/node": "^24.7.1"
   }
