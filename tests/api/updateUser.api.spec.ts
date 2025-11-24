@@ -1,50 +1,33 @@
-import { test, expect, APIResponse } from '@playwright/test';
-import type { UserEditDto, UserEntity, UserRegisterDto } from '../../types/auth';
-import { attemptLogin } from '../../http/loginRequest';
-import { attemptSignup } from '../../http/signupRequest';
+import { test, expect } from '../../fixtures/apiAuthFixture';
+import { APIResponse } from '@playwright/test';
+import type { UserEditDto, UserEntity } from '../../types/auth';
 import { updateUser } from '../../http/updateUserRequest';
 import { generateClientUser, generateValidEditUserBody } from '../../generators/userGenerator';
-import { faker } from '@faker-js/faker';
 import { INVALID_TOKEN } from '../../config/constants';
+import { attemptSignup } from '../../http/signupRequest';
 
 test.describe('/users/{username} PUT API tests', () => {
-  test('should successfully update user with valid data - 200', async ({ request }) => {
+  test('client should be able to edit own user - 200', async ({ request, clientAuth }) => {
     // given
-    const userData: UserRegisterDto = generateClientUser();
-    const signupResponse = await attemptSignup(request, userData);
-    expect(signupResponse.status()).toBe(201);
-    
-    const loginResponse = await attemptLogin(request, { username: userData.username, password: userData.password });
-    const loginBody = await loginResponse.json();
-    const token = loginBody.token;
     const updateData = generateValidEditUserBody();
 
     // when
-    const response = await updateUser(request, userData.username, updateData, token);
+    const response = await updateUser(request, clientAuth.userData.username, updateData, clientAuth.token);
 
     // then
     expect(response.status()).toBe(200);
     await validateUserEntityResponse(response, updateData);
   });
 
-  test('should allow admin to update any user - 200', async ({ request }) => {
+  test('admin should be able to edit any user - 200', async ({ request, adminAuth }) => {
     // given
-    const clientUser: UserRegisterDto = generateClientUser();
+    const clientUser = generateClientUser();
     const signupResponse = await attemptSignup(request, clientUser);
     expect(signupResponse.status()).toBe(201);
-    
-    const adminLoginResponse = await attemptLogin(request, { username: 'admin', password: 'admin' });
-    const adminLoginBody = await adminLoginResponse.json();
-    const adminToken = adminLoginBody.token;
-
-    const updateData: UserEditDto = {
-      email: faker.internet.email(),
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName()
-    };
+    const updateData = generateValidEditUserBody();
 
     // when
-    const response = await updateUser(request, clientUser.username, updateData, adminToken);
+    const response = await updateUser(request, clientUser.username, updateData, adminAuth.token);
 
     // then
     expect(response.status()).toBe(200);
@@ -53,12 +36,13 @@ test.describe('/users/{username} PUT API tests', () => {
 
   test('should return unauthorized for missing token - 401', async ({ request }) => {
     // given
-    const updateData: UserEditDto = {
-      email: faker.internet.email()
-    };
+    const clientUser = generateClientUser();
+    const signupResponse = await attemptSignup(request, clientUser);
+    expect(signupResponse.status()).toBe(201);
+    const updateData = generateValidEditUserBody();
 
     // when
-    const response = await updateUser(request, 'admin', updateData);
+    const response = await updateUser(request, clientUser.username, updateData);
 
     // then
     expect(response.status()).toBe(401);
@@ -66,50 +50,38 @@ test.describe('/users/{username} PUT API tests', () => {
 
   test('should return unauthorized for invalid token - 401', async ({ request }) => {
     // given
-    const updateData: UserEditDto = {
-      email: faker.internet.email()
-    };
+    const clientUser = generateClientUser();
+    const signupResponse = await attemptSignup(request, clientUser);
+    expect(signupResponse.status()).toBe(201);
+    const updateData = generateValidEditUserBody();
 
     // when
-    const response = await updateUser(request, 'admin', updateData, INVALID_TOKEN);
+    const response = await updateUser(request, clientUser.username, updateData, INVALID_TOKEN);
 
     // then
     expect(response.status()).toBe(401);
   });
 
-  test('should return forbidden when client updates another user - 403', async ({ request }) => {
+  test('should return forbidden when client updates another user - 403', async ({ request, clientAuth }) => {
     // given
-    const clientUser: UserRegisterDto = generateClientUser();
+    const clientUser = generateClientUser();
     const signupResponse = await attemptSignup(request, clientUser);
     expect(signupResponse.status()).toBe(201);
-    
-    const loginResponse = await attemptLogin(request, { username: clientUser.username, password: clientUser.password });
-    const loginBody = await loginResponse.json();
-    const token = loginBody.token;
-
-    const updateData: UserEditDto = {
-      email: faker.internet.email()
-    };
+    const updateData = generateValidEditUserBody();
 
     // when
-    const response = await updateUser(request, 'admin', updateData, token);
+    const response = await updateUser(request, clientUser.username, updateData, clientAuth.token);
 
     // then
     expect(response.status()).toBe(403);
   });
 
-  test('should return not found for non-existent user - 404', async ({ request }) => {
+  test('should return not found for non-existent user - 404', async ({ request, adminAuth }) => {
     // given
-    const loginResponse = await attemptLogin(request, { username: 'admin', password: 'admin' });
-    const loginBody = await loginResponse.json();
-    const token = loginBody.token;
-
-    const updateData: UserEditDto = {
-      email: faker.internet.email()
-    };
+    const updateData = generateValidEditUserBody();
 
     // when
-    const response = await updateUser(request, 'nonexistentuser123456', updateData, token);
+    const response = await updateUser(request, 'nonexistentuser123456', updateData, adminAuth.token);
 
     // then
     expect(response.status()).toBe(404);

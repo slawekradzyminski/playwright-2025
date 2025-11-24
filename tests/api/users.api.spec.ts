@@ -1,27 +1,13 @@
-import { test, expect, APIResponse } from '@playwright/test';
-import type { LoginDto, UserRegisterDto, UserResponseDto } from '../../types/auth';
-import { attemptLogin } from '../../http/loginRequest';
+import { test, expect } from '../../fixtures/apiAuthFixture';
+import type { UserResponseDto } from '../../types/auth';
+import { APIResponse } from '@playwright/test';
 import { getUsers } from '../../http/usersRequest';
 import { INVALID_TOKEN } from '../../config/constants';
-import { generateClientUser } from '../../generators/userGenerator';
-import { attemptSignup } from '../../http/signupRequest';
 
 test.describe('/users GET API tests', () => {
-  test('should successfully get users with valid token - 200', async ({ request }) => {
-    // given
-    const user: UserRegisterDto = generateClientUser();
-    const signupResponse = await attemptSignup(request, user);
-    expect(signupResponse.status()).toBe(201);
-    const loginData: LoginDto = {
-      username: user.username,
-      password: user.password
-    };
-    const loginResponse = await attemptLogin(request, loginData);
-    const loginBody = await loginResponse.json();
-    const token = loginBody.token;
-
+  test('should successfully get users with valid token - 200', async ({ request, clientAuth }) => {
     // when
-    const response = await getUsers(request, token);
+    const response = await getUsers(request, clientAuth.token);
 
     // then
     expect(response.status()).toBe(200);
