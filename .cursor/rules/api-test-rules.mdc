@@ -12,4 +12,23 @@ alwaysApply: false
 - Order tests by status code ascending (1xx, 2xx, 3xx, 4xx, 5xx)
 - Do not create too many tests for input validation (http 400 bad request). Make it 1-3 max. Assume sufficient test coverage on unit test level.
 - Once you complete a test, run the tests to verify they work as expected. In case of application bugs let me know about it.
-- Each endpoint should have its own test file and HTTP client file. Name them based on the operation (e.g., `users.api.spec.ts` for GET /users, `updateUser.api.spec.ts` for PUT /users/{username}, `loginRequest.ts` for POST /users/signin).
+
+## File Organization Rules
+
+### Test Files - One HTTP Method Per File
+- Each HTTP method for an endpoint MUST have its own separate test file
+- Test files MUST be named using the pattern: `{httpMethod}{ResourceName}.api.spec.ts`
+- Examples:
+  - GET /users → `getUsers.api.spec.ts` or `users.api.spec.ts`
+  - POST /users/signin → `login.api.spec.ts`
+
+### HTTP Client Files - One HTTP Method Per File
+- Each HTTP method for an endpoint MUST have its own separate HTTP client file
+- HTTP client files MUST be named using the pattern: `{httpMethod}{ResourceName}Request.ts`
+- Examples:
+  - GET /users → `getUsersRequest.ts` or `usersRequest.ts`
+  - POST /users/signin → `loginRequest.ts`
+
+### Key Principles
+- NEVER combine multiple HTTP methods (GET, POST, PUT, DELETE, etc.) in the same test file
+- NEVER combine multiple HTTP methods in the same HTTP client file

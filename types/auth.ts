@@ -46,6 +46,10 @@ export interface UserEntity {
   systemPrompt?: string;
 }
 
+export interface SystemPromptDto {
+  systemPrompt?: string;
+}
+
 export interface ErrorResponse {
   message?: string;
   errors?: Record<string, string[]>;
