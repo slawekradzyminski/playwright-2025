@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import type { UserRegisterDto } from '../types/auth';
+import type { UserEditDto, UserRegisterDto } from '../types/auth';
 
 const MIN_FIELD_LENGTH = 5;
 const MIN_PASSWORD_LENGTH = 8;
@@ -38,6 +38,14 @@ const buildUser = (
     ...overrides,
   };
 };
+
+export const generateValidEditUserBody = (): UserEditDto => {
+  return {
+    email: drawWithMinLength(() => faker.internet.email(), MIN_FIELD_LENGTH),
+    firstName: drawWithMinLength(() => faker.person.firstName(), MIN_FIELD_LENGTH),
+    lastName: drawWithMinLength(() => faker.person.lastName(), MIN_FIELD_LENGTH)
+  };
+}
 
 export const generateClientUser = (
   overrides?: Partial<UserRegisterDto>

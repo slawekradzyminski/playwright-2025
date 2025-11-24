@@ -1,15 +1,20 @@
 import { test, expect, APIResponse } from '@playwright/test';
-import type { LoginDto, UserResponseDto } from '../../types/auth';
+import type { LoginDto, UserRegisterDto, UserResponseDto } from '../../types/auth';
 import { attemptLogin } from '../../http/loginRequest';
 import { getUsers } from '../../http/usersRequest';
 import { INVALID_TOKEN } from '../../config/constants';
+import { generateClientUser } from '../../generators/userGenerator';
+import { attemptSignup } from '../../http/signupRequest';
 
 test.describe('/users GET API tests', () => {
   test('should successfully get users with valid token - 200', async ({ request }) => {
     // given
+    const user: UserRegisterDto = generateClientUser();
+    const signupResponse = await attemptSignup(request, user);
+    expect(signupResponse.status()).toBe(201);
     const loginData: LoginDto = {
-      username: 'admin',
-      password: 'admin'
+      username: user.username,
+      password: user.password
     };
     const loginResponse = await attemptLogin(request, loginData);
     const loginBody = await loginResponse.json();

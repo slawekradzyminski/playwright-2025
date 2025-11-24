@@ -3,7 +3,7 @@ import type { UserEditDto, UserEntity, UserRegisterDto } from '../../types/auth'
 import { attemptLogin } from '../../http/loginRequest';
 import { attemptSignup } from '../../http/signupRequest';
 import { updateUser } from '../../http/updateUserRequest';
-import { generateClientUser } from '../../generators/userGenerator';
+import { generateClientUser, generateValidEditUserBody } from '../../generators/userGenerator';
 import { faker } from '@faker-js/faker';
 import { INVALID_TOKEN } from '../../config/constants';
 
@@ -17,12 +17,7 @@ test.describe('/users/{username} PUT API tests', () => {
     const loginResponse = await attemptLogin(request, { username: userData.username, password: userData.password });
     const loginBody = await loginResponse.json();
     const token = loginBody.token;
-
-    const updateData: UserEditDto = {
-      email: faker.internet.email(),
-      firstName: faker.person.firstName(),
-      lastName: faker.person.lastName()
-    };
+    const updateData = generateValidEditUserBody();
 
     // when
     const response = await updateUser(request, userData.username, updateData, token);
