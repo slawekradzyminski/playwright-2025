@@ -1,10 +1,11 @@
 import { test, expect, APIResponse } from '@playwright/test';
-import type { LoginDto, UserEditDto, UserEntity, UserRegisterDto } from '../../types/auth';
+import type { UserEditDto, UserEntity, UserRegisterDto } from '../../types/auth';
 import { attemptLogin } from '../../http/loginRequest';
 import { attemptSignup } from '../../http/signupRequest';
 import { updateUser } from '../../http/updateUserRequest';
-import { generateClientUser, generateAdminUser } from '../../generators/userGenerator';
+import { generateClientUser } from '../../generators/userGenerator';
 import { faker } from '@faker-js/faker';
+import { INVALID_TOKEN } from '../../config/constants';
 
 test.describe('/users/{username} PUT API tests', () => {
   test('should successfully update user with valid data - 200', async ({ request }) => {
@@ -70,13 +71,12 @@ test.describe('/users/{username} PUT API tests', () => {
 
   test('should return unauthorized for invalid token - 401', async ({ request }) => {
     // given
-    const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
     const updateData: UserEditDto = {
       email: faker.internet.email()
     };
 
     // when
-    const response = await updateUser(request, 'admin', updateData, invalidToken);
+    const response = await updateUser(request, 'admin', updateData, INVALID_TOKEN);
 
     // then
     expect(response.status()).toBe(401);

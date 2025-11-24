@@ -2,6 +2,7 @@ import { test, expect, APIResponse } from '@playwright/test';
 import type { LoginDto, UserResponseDto } from '../../types/auth';
 import { attemptLogin } from '../../http/loginRequest';
 import { getUsers } from '../../http/usersRequest';
+import { INVALID_TOKEN } from '../../config/constants';
 
 test.describe('/users GET API tests', () => {
   test('should successfully get users with valid token - 200', async ({ request }) => {
@@ -31,11 +32,8 @@ test.describe('/users GET API tests', () => {
   });
 
   test('should return unauthorized for invalid token - 401', async ({ request }) => {
-    // given invalid token which adheres to JWT format
-    const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
-
     // when
-    const response = await getUsers(request, invalidToken);
+    const response = await getUsers(request, INVALID_TOKEN);
 
     // then
     expect(response.status()).toBe(401);
