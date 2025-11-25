@@ -7,6 +7,7 @@ alwaysApply: false
 - Frontend is running on `FRONTEND_URL` from `config/constants.ts`
 - Always use `data-testid` based selectors (e.g., `page.getByTestId('login-submit-button')`)
 - Once you complete a test, run the tests to verify they work as expected. In case of application bugs let me know about it.
+- Do not generate too many tests for input validation (frontend validation). Make it 1-3 tests max. Assume sufficient test coverage on unit test level.
 
 ## Page Object Model (POM)
 
