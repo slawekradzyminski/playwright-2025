@@ -1,7 +1,7 @@
 import { test, expect } from '../../../fixtures/apiAuthFixture';
 import { getOrders } from '../../../http/orders/getOrdersRequest';
 import { updateOrderStatus } from '../../../http/orders/updateOrderStatusRequest';
-import type { PageDtoOrderDto, OrderDto } from '../../../types/orders';
+import type { PageDtoOrderDto } from '../../../types/orders';
 import { placeOrderForClient } from './helpers/orderTestUtils';
 
 test.describe('GET /api/orders API tests', () => {

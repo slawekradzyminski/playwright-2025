@@ -7,7 +7,7 @@ const ORDER_STATUS_ENDPOINT = '/api/orders';
 export const updateOrderStatus = async (
   request: APIRequestContext,
   orderId: number,
-  status: OrderStatus,
+  status: OrderStatus | string,
   token?: string
 ): Promise<APIResponse> => {
   const headers: Record<string, string> = {

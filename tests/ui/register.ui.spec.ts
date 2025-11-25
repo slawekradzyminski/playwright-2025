@@ -35,7 +35,8 @@ test.describe('Register UI tests', () => {
     await registerPage.register({...existingUser, email: 'different@email.com'});
 
     // then
-    await registerPage.toast.expectError('Username already exists');
+    await expect(registerPage.toast.title).toHaveText('Error');
+    await expect(registerPage.toast.description).toHaveText('Username already exists');
   });
 
   test('should show validation errors for empty form', async () => {
@@ -66,4 +67,3 @@ test.describe('Register UI tests', () => {
     await expect(page).toHaveURL(LoginPage.URL);
   });
 });
-

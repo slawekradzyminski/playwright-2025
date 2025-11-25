@@ -56,7 +56,8 @@ test.describe('Login UI tests', () => {
     await loginPage.login(credentials.username, credentials.password);
 
     // then
-    await loginPage.toast.expectError('Invalid username/password');
+    await expect(loginPage.toast.title).toHaveText('Error');
+    await expect(loginPage.toast.description).toHaveText('Invalid username/password');
   });
 
   test('should navigate to register page when register button is clicked', async ({ page }) => {

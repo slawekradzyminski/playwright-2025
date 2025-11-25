@@ -19,7 +19,7 @@ test.describe('PUT /api/orders/{id}/status API tests', () => {
     const { order } = await placeOrderForClient(request, adminAuth.token, clientAuth.token);
 
     // when
-    const response = await updateOrderStatus(request, order.id, 'INVALID_STATUS' as any, adminAuth.token);
+    const response = await updateOrderStatus(request, order.id, 'INVALID_STATUS', adminAuth.token);
 
     // then
     expect(response.status()).toBe(400);

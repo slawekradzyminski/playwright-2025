@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
+    "lint": "eslint . --ext .ts",
     "test:api": "playwright test tests/api/",
     "test:ui": "playwright test tests/ui/"
   },
@@ -17,8 +18,14 @@
   "license": "ISC",
   "description": "A modern TypeScript-based test suite for validating both API and UI layers of a Dockerized AWS-like application stack",
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
     "@faker-js/faker": "^10.1.0",
     "@playwright/test": "^1.56.0",
-    "@types/node": "^24.7.1"
+    "@types/node": "^24.7.1",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
+    "eslint": "^9.39.1",
+    "eslint-plugin-playwright": "^2.3.0",
+    "globals": "^16.5.0"
   }
 }

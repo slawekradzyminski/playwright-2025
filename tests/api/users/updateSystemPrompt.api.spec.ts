@@ -1,6 +1,5 @@
 import { test, expect } from '../../../fixtures/apiAuthFixture';
 import { faker } from '@faker-js/faker';
-import { getSystemPrompt } from '../../../http/users/getSystemPromptRequest';
 import { updateSystemPrompt } from '../../../http/users/updateSystemPromptRequest';
 import type { SystemPromptDto } from '../../../types/auth';
 import { INVALID_TOKEN } from '../../../config/constants';
@@ -45,4 +44,3 @@ test.describe('PUT /users/system-prompt API tests', () => {
     expect(response.status()).toBe(401);
   });
 });
-
