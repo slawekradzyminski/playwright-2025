@@ -8,3 +8,16 @@ alwaysApply: false
 - Always use `data-testid` based selectors (e.g., `page.getByTestId('login-submit-button')`)
 - Once you complete a test, run the tests to verify they work as expected. In case of application bugs let me know about it.
 
+## Page Object Model (POM)
+
+- Use Page Object Model pattern for UI tests
+- Page classes are located in `/pages` folder
+- Reusable components are located in `/components` folder
+- Use composition (not inheritance) to include components in page classes
+- Example: `LoginPage` has `toast: Toast` and `header: LoggedOutHeader` as properties
+
+## File Organization
+
+- Page classes: `/pages/{PageName}Page.ts`
+- Component classes: `/components/{ComponentName}.ts`
+- UI test files: `/tests/ui/{feature}.ui.spec.ts`
