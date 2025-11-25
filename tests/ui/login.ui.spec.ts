@@ -22,7 +22,9 @@ test.describe('Login UI tests', () => {
     await page.getByTestId('login-submit-button').click();
 
     // then
-    await expect(page).not.toHaveURL(LOGIN_URL);
+    await expect(page).toHaveURL(FRONTEND_URL + '/');
+    await expect(page.getByTestId('home-page')).toBeVisible();
+    await expect(page.getByTestId('home-welcome-title')).toBeVisible();
   });
 
   test('should show error for empty password', async ({ page }) => {
@@ -38,7 +40,7 @@ test.describe('Login UI tests', () => {
     await page.getByTestId('login-submit-button').click();
 
     // then
-    await expect(page).toHaveURL(LOGIN_URL);
+    await expect(page.getByTestId('login-password-error')).toHaveText('Password is required');
   });
 
   test('should show error for invalid credentials', async ({ page }) => {
@@ -54,11 +56,11 @@ test.describe('Login UI tests', () => {
     await page.getByTestId('login-submit-button').click();
 
     // then
-    await expect(page).toHaveURL(LOGIN_URL);
+    await expect(page.getByTestId('toast-title')).toHaveText('Error');
+    await expect(page.getByTestId('toast-description')).toHaveText('Invalid username/password');
   });
 
   test('should navigate to register page when register button is clicked', async ({ page }) => {
-    // given
     // when
     await page.getByTestId('login-register-link').click();
 
@@ -67,7 +69,6 @@ test.describe('Login UI tests', () => {
   });
 
   test('should navigate to register page when register link is clicked', async ({ page }) => {
-    // given
     // when
     await page.getByTestId('register-link').click();
 
@@ -88,7 +89,7 @@ test.describe('Login UI tests', () => {
     await page.getByTestId('login-submit-button').click();
 
     // then
-    await expect(page).toHaveURL(LOGIN_URL);
+    await expect(page.getByTestId('login-username-error')).toHaveText('Username must be at least 4 characters');
   });
 
 }); 
