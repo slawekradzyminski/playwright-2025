@@ -1,0 +1,10 @@
+---
+description: Use these rules whenever you create or edit UI tests
+alwaysApply: false
+---
+
+- Playwright MCP is available for browser automation and inspection
+- Frontend is running on `FRONTEND_URL` from `config/constants.ts`
+- Always use `data-testid` based selectors (e.g., `page.getByTestId('login-submit-button')`)
+- Once you complete a test, run the tests to verify they work as expected. In case of application bugs let me know about it.
+
