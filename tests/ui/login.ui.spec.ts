@@ -3,6 +3,8 @@ import type { LoginDto } from '../../types/auth';
 import { FRONTEND_URL } from '../../config/constants';
 import { LoginPage } from '../../pages/LoginPage';
 import { HomePage } from '../../pages/HomePage';
+import { generateClientUser } from '../../generators/userGenerator';
+import { attemptSignup } from '../../http/users/signupRequest';
 
 test.describe('Login UI tests', () => {
 
@@ -13,16 +15,15 @@ test.describe('Login UI tests', () => {
     await loginPage.goto();
   });
 
-  test('should successfully login with valid credentials', async ({ page }) => {
+  test('should successfully login with valid credentials', async ({ page, request }) => {
     // given
+    const client = generateClientUser();
+    const signupResponse = await attemptSignup(request, client);
+    expect(signupResponse.status()).toBe(201);
     const homePage = new HomePage(page);
-    const credentials: LoginDto = {
-      username: 'admin',
-      password: 'admin'
-    };
 
     // when
-    await loginPage.login(credentials.username, credentials.password);
+    await loginPage.login(client.username, client.password);
 
     // then
     await expect(page).toHaveURL(HomePage.URL);
