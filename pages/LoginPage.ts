@@ -1,7 +1,7 @@
 import type { Page, Locator } from '@playwright/test';
 import { FRONTEND_URL } from '../config/constants';
-import { Toast } from '../components/Toast';
-import { LoggedOutHeader } from '../components/LoggedOutHeader';
+import { Toast } from './components/Toast';
+import { LoggedOutHeader } from './components/LoggedOutHeader';
 
 export class LoginPage {
   readonly page: Page;

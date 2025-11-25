@@ -1,6 +1,6 @@
 import type { Page, Locator } from '@playwright/test';
 import { FRONTEND_URL } from '../config/constants';
-import { Toast } from '../components/Toast';
+import { Toast } from './components/Toast';
 
 export class HomePage {
   readonly page: Page;
