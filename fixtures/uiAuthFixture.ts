@@ -1,46 +1,24 @@
-import { test as base, APIRequestContext } from '@playwright/test';
+import { test as base } from '@playwright/test';
+import type { APIRequestContext, Page } from '@playwright/test';
+import type { UserRegisterDto } from '../types/auth';
 import type { AuthFixture } from '../types/fixtures';
-import type { LoginDto, LoginResponseDto, UserRegisterDto } from '../types/auth';
-import { generateClientUser } from '../generators/userGenerator';
-import { attemptSignup } from '../http/users/signupRequest';
-import { attemptLogin } from '../http/users/loginRequest';
+import { generateClientUser, generateAdminUser } from '../generators/userGenerator';
 import { HomePage } from '../pages/HomePage';
+import { createAuthFixture } from './createAuthFixture';
 
 interface UiAuthFixtures {
   clientUiAuth: AuthFixture;
+  adminUiAuth: AuthFixture;
 }
 
-const registerAndLoginUser = async (
-  request: APIRequestContext,
-  userGenerator: () => UserRegisterDto
-): Promise<AuthFixture> => {
-  const user = userGenerator();
-  const signupResponse = await attemptSignup(request, user);
-  if (signupResponse.status() !== 201) {
-    throw new Error(`Signup failed with status ${signupResponse.status()}`);
-  }
+type FixtureBuilder = (
+  args: { page: Page; request: APIRequestContext },
+  use: (fixture: AuthFixture) => Promise<void>
+) => Promise<void>;
 
-  const loginData: LoginDto = {
-    username: user.username,
-    password: user.password
-  };
-
-  const loginResponse = await attemptLogin(request, loginData);
-  if (loginResponse.status() !== 200) {
-    throw new Error(`Login failed with status ${loginResponse.status()}`);
-  }
-
-  const loginBody: LoginResponseDto = await loginResponse.json();
-
-  return {
-    token: loginBody.token,
-    userData: user
-  };
-};
-
-export const test = base.extend<UiAuthFixtures>({
-  clientUiAuth: async ({ page, request }, use) => {
-    const authFixture = await registerAndLoginUser(request, generateClientUser);
+const buildUiAuthFixture = (userGenerator: () => UserRegisterDto): FixtureBuilder => {
+  return async ({ page, request }, use) => {
+    const authFixture = await createAuthFixture(request, userGenerator);
 
     await page.addInitScript(
       ({ tokenKey, tokenValue }) => {
@@ -51,7 +29,12 @@ export const test = base.extend<UiAuthFixtures>({
 
     await page.goto(HomePage.URL);
     await use(authFixture);
-  }
+  };
+};
+
+export const test = base.extend<UiAuthFixtures>({
+  clientUiAuth: buildUiAuthFixture(generateClientUser),
+  adminUiAuth: buildUiAuthFixture(generateAdminUser)
 });
 
 export { expect } from '@playwright/test';
