@@ -6,6 +6,9 @@ This plan covers every endpoint listed in `api-docs.json`, records what already 
 - `TODO` – coverage missing; notes describe the next verifiable behavior to implement
 - `LATE` – intentionally deferred complex scenarios to finish after everything else
 
+
+## Completed Endpoints
+
 | Order | Method & Endpoint | Status | Coverage / Next Step |
 | --- | --- | --- | --- |
 | 1 | `POST /users/signup` | DONE | Exercised by `tests/api/signup.api.spec.ts`; covers happy path, duplicate data, and validation branches. |
@@ -18,9 +21,6 @@ This plan covers every endpoint listed in `api-docs.json`, records what already 
 | 8 | `GET /users/{username}` | DONE | Exercised by `tests/api/getUserByUsername.api.spec.ts`; covers own-profile, admin lookup, and 401/404 paths. |
 | 9 | `PUT /users/{username}` | DONE | Exercised by `tests/api/updateUser.api.spec.ts`; checks client self-edit, admin edit, and error branches. |
 | 10 | `DELETE /users/{username}` | DONE | Exercised by `tests/api/deleteUser.api.spec.ts`; covers admin deletes plus 401/403/404 cases. |
-| 11 | `POST /email` | TODO | Draft tests that send a basic templated payload, assert success per spec, and check validation for missing recipients. |
-| 12 | `POST /qr/create` | TODO | Add coverage that posts the documented payload and asserts the QR artifact URL or bytes are returned, plus validation failure for malformed content. |
-| 13 | `GET /api/traffic/info` | TODO | Simple auth-only fetch verifying structure of `TrafficInfoDto` (requests, errors, timestamp) and 401 behavior. |
 | 14 | `GET /api/products` | DONE | Exercised by `tests/api/getProducts.api.spec.ts`; seeds catalog via admin and validates 200 plus 401 cases. |
 | 15 | `POST /api/products` | DONE | Exercised by `tests/api/createProduct.api.spec.ts`; covers happy path, validation, and auth failures. |
 | 16 | `GET /api/products/{id}` | DONE | Exercised by `tests/api/getProductById.api.spec.ts`; verifies retrieval, 401 paths, and 404 missing product. |
@@ -31,11 +31,19 @@ This plan covers every endpoint listed in `api-docs.json`, records what already 
 | 21 | `POST /api/cart/items` | DONE | Exercised by `tests/api/postCartItems.api.spec.ts`; covers add, quantity merge, validation, and auth errors. |
 | 22 | `PUT /api/cart/items/{productId}` | DONE | Exercised by `tests/api/updateCartItem.api.spec.ts`; verifies quantity updates plus 400/401/404 cases. |
 | 23 | `DELETE /api/cart/items/{productId}` | DONE | Exercised by `tests/api/deleteCartItem.api.spec.ts`; ensures removal behavior and auth/not-found handling. |
-| 24 | `POST /api/orders` | TODO | Seed cart then submit `AddressDto`; verify 201 with order number and 400 for empty cart. |
-| 25 | `GET /api/orders` | TODO | Assert paginated list returns only the caller's orders and supports status filter; include 401 case. |
-| 26 | `GET /api/orders/{id}` | TODO | Validate owner (or admin) can fetch order details and others receive 403/404. |
-| 27 | `GET /api/orders/admin` | TODO | Admin-only view of all orders; include 403 when using client token. |
-| 28 | `POST /api/orders/{id}/cancel` | TODO | After creating order in PENDING status, verify client can cancel once, cannot cancel twice, and receives 403 for others. |
-| 29 | `PUT /api/orders/{id}/status` | TODO | Admin workflow to transition statuses (e.g., PENDING→PAID); cover invalid transitions returning 400. |
+| 24 | `POST /api/orders` | DONE | Covered by `tests/api/createOrder.api.spec.ts`; seeds cart, asserts 201 payload, empty cart 400, and missing token 401. |
+| 25 | `GET /api/orders` | DONE | Covered by `tests/api/getOrders.api.spec.ts`; validates own order listing, status filter, and 401 when unauthenticated. |
+| 26 | `GET /api/orders/{id}` | DONE | Covered by `tests/api/getOrderById.api.spec.ts`; owner/admin happy paths plus 401, cross-user 404, and missing order 404. |
+| 27 | `GET /api/orders/admin` | DONE | Covered by `tests/api/getAdminOrders.api.spec.ts`; admin listing, filtering, and 401/403 failures. |
+| 28 | `POST /api/orders/{id}/cancel` | DONE | Covered by `tests/api/cancelOrder.api.spec.ts`; happy path, double cancel 400, 401, 404, and fixme documenting missing 403 protection. |
+| 29 | `PUT /api/orders/{id}/status` | DONE | Covered by `tests/api/updateOrderStatus.api.spec.ts`; admin update, invalid status 400, 401/403 cases, and missing order 404. |
+
+## Remaining Endpoints (TODO / LATE)
+
+| Order | Method & Endpoint | Status | Coverage / Next Step |
+| --- | --- | --- | --- |
+| 11 | `POST /email` | TODO | Draft tests that send a basic templated payload, assert success per spec, and check validation for missing recipients. |
+| 12 | `POST /qr/create` | TODO | Add coverage that posts the documented payload and asserts the QR artifact URL or bytes are returned, plus validation failure for malformed content. |
+| 13 | `GET /api/traffic/info` | TODO | Simple auth-only fetch verifying structure of `TrafficInfoDto` (requests, errors, timestamp) and 401 behavior. |
 | 30 | `POST /api/ollama/chat` | LATE | Hardest: responses may be long/async. Plan to stabilize by capturing deterministic prompt/response pairs or by mocking upstream service before adding assertions. |
 | 31 | `POST /api/ollama/generate` | LATE | Hardest: streaming/generative output. Approach similarly to chat endpoint and run last once mocking strategy is defined. |
