@@ -2,8 +2,8 @@ import { test as base, APIRequestContext } from '@playwright/test';
 import type { UserRegisterDto, LoginDto, LoginResponseDto } from '../types/auth';
 import type { AuthFixture } from '../types/fixtures';
 import { generateClientUser, generateAdminUser } from '../generators/userGenerator';
-import { attemptSignup } from '../http/signupRequest';
-import { attemptLogin } from '../http/loginRequest';
+import { attemptSignup } from '../http/users/signupRequest';
+import { attemptLogin } from '../http/users/loginRequest';
 
 interface AuthFixtures {
   clientAuth: AuthFixture;

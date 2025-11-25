@@ -17,9 +17,17 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 
 ```
 .
+├── http/
+│   ├── cart/                    # HTTP clients for cart endpoints
+│   ├── orders/                  # HTTP clients for order endpoints
+│   ├── products/                # HTTP clients for product endpoints
+│   └── users/                   # HTTP clients for user endpoints
 ├── tests/
 │   ├── api/
-│   │   └── login.api.spec.ts       # API tests for /users/signin endpoint
+│   │   ├── cart/                # Cart-focused API specs (deleteCart, postCartItems, etc.)
+│   │   ├── orders/              # Order specs + helpers
+│   │   ├── products/            # Product specs
+│   │   └── users/               # User/auth specs (login, signup, profile, etc.)
 │   └── ui/
 │       └── login.ui.spec.ts        # UI tests for the login page
 ├── types/
@@ -98,7 +106,7 @@ The `playwright.config.ts` file is configured to:
 
 ## 🧪 Test Details
 
-### API Tests (`tests/api/login.api.spec.ts`)
+### API Tests (`tests/api/users/login.api.spec.ts`)
 
 These tests cover various scenarios for the `/users/signin` endpoint, ordered by response code:
 
