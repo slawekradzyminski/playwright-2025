@@ -17,6 +17,7 @@ Page objects should live under `pages/` and specs under `tests/ui/`, following t
 | 1 | `Login` – `GET /login` | DONE | Covered by existing Playwright login spec in `tests/ui/login.ui.spec.ts` using a `LoginPage` page object. Verifies happy-path login, invalid credentials toast, required fields, and redirect to `/`. |
 | 2 | `Register` – `GET /register` | DONE | Covered by existing registration spec in `tests/ui/register.ui.spec.ts` using a `RegisterPage` page object. Verifies successful signup, validation errors (password mismatch, invalid email, required fields) and navigation back to login. |
 | 3 | `Home` – `GET /` (authenticated) | DONE | Covered by `tests/ui/home.ui.spec.ts` using `uiAuthFixture.ts`. Verifies welcome banner, logged-in navigation (header links, cart/profile actions), CTA cards routing (Products, Users, Profile, Traffic, LLM, QR, Email), and enforces redirect-to-login when the auth token disappears. |
+| 4 | `Products list` – `GET /products` | DONE | Covered by `tests/ui/products.ui.spec.ts` using `productsPage` page object. Verifies product grid/list rendering, empty state, basic pagination/sorting if present, and that clicking a product navigates to `/products/:id`. Cross-check with backend seed data where possible. |
 
 > Update the notes above with exact filenames once you settle on final spec names.
 
@@ -26,7 +27,6 @@ Page objects should live under `pages/` and specs under `tests/ui/`, following t
 
 | Order | View / Route | Status | Coverage / Next Step |
 | --- | --- | --- | --- |
-| 4 | `Products list` – `GET /products` | TODO | Add `ProductsPage` object and `products.spec.ts`. From an authenticated context: verify product grid/list rendering, empty state, basic pagination/sorting if present, and that clicking a product navigates to `/products/:id`. Cross-check with backend seed data where possible. |
 | 5 | `Product details` – `GET /products/:id` | TODO | In `product-details.spec.ts`: navigate via the products list, assert name/description/price/stock, and that “Add to cart” integrates correctly (cart badge increments, cart page reflects item). Include 404 handling if user manually navigates to a non-existent `id` (whatever the UI currently does). |
 | 6 | `Cart` – `GET /cart` | TODO | Add `CartPage` object and `cart.spec.ts`. Seed cart via UI (or directly via API + page refresh) and verify line items, per-item totals, grand total, and empty-state behaviour. Cover increment/decrement/removal actions and their impact on totals. |
 | 7 | `Checkout` – `GET /checkout` | TODO | Add `CheckoutPage` object and `checkout.spec.ts`. Starting from a non-empty cart, walk through address form, validation errors, and successful order creation. Assert redirect to order details or profile order list and cart being cleared afterwards. |
