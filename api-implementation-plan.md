@@ -37,13 +37,13 @@ This plan covers every endpoint listed in `api-docs.json`, records what already 
 | 27 | `GET /api/orders/admin` | DONE | Covered by `tests/api/orders/getAdminOrders.api.spec.ts`; admin listing, filtering, and 401/403 failures. |
 | 28 | `POST /api/orders/{id}/cancel` | DONE | Covered by `tests/api/orders/cancelOrder.api.spec.ts`; happy path, double cancel 400, 401, 404, and fixme documenting missing 403 protection. |
 | 29 | `PUT /api/orders/{id}/status` | DONE | Covered by `tests/api/orders/updateOrderStatus.api.spec.ts`; admin update, invalid status 400, 401/403 cases, and missing order 404. |
+| 12 | `POST /qr/create` | DONE | Covered by `tests/api/qr/createQrCode.api.spec.ts`; covers happy path, validation, and auth errors. |
 
 ## Remaining Endpoints (TODO / LATE)
 
 | Order | Method & Endpoint | Status | Coverage / Next Step |
 | --- | --- | --- | --- |
 | 11 | `POST /email` | TODO | Draft tests that send a basic templated payload, assert success per spec, and check validation for missing recipients. |
-| 12 | `POST /qr/create` | TODO | Add coverage that posts the documented payload and asserts the QR artifact URL or bytes are returned, plus validation failure for malformed content. |
 | 13 | `GET /api/traffic/info` | TODO | Simple auth-only fetch verifying structure of `TrafficInfoDto` (requests, errors, timestamp) and 401 behavior. |
 | 30 | `POST /api/ollama/chat` | LATE | Hardest: responses may be long/async. Plan to stabilize by capturing deterministic prompt/response pairs or by mocking upstream service before adding assertions. |
 | 31 | `POST /api/ollama/generate` | LATE | Hardest: streaming/generative output. Approach similarly to chat endpoint and run last once mocking strategy is defined. |
