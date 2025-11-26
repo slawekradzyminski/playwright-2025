@@ -19,6 +19,7 @@ Page objects should live under `pages/` and specs under `tests/ui/`, following t
 | 3 | `Home` – `GET /` (authenticated) | DONE | Covered by `tests/ui/home.ui.spec.ts` using `uiAuthFixture.ts`. Verifies welcome banner, logged-in navigation (header links, cart/profile actions), CTA cards routing (Products, Users, Profile, Traffic, LLM, QR, Email), and enforces redirect-to-login when the auth token disappears. |
 | 4 | `Products list` – `GET /products` | DONE | Covered by `tests/ui/products.ui.spec.ts` using `productsPage` page object. Verifies product grid/list rendering, empty state, basic pagination/sorting if present, and that clicking a product navigates to `/products/:id`. Cross-check with backend seed data where possible. |
 | 5 | `Product details` – `GET /products/:id` | DONE | Covered by `tests/ui/product-details.ui.spec.ts` using `productDetailsPage` page object. Verifies product details rendering, quantity selection, and add to cart integration (cart badge increments, cart page reflects item). Includes 404 handling if user manually navigates to a non-existent `id`. |
+| 6 | `Cart` – `GET /cart` | DONE | Covered by `tests/ui/cart.ui.spec.ts` using `cartPage` page object. Verifies empty cart message, item addition, quantity management, removal, and total price updates. Ensures navigation to product details works when clicking product names. |
 
 > Update the notes above with exact filenames once you settle on final spec names.
 
@@ -28,7 +29,6 @@ Page objects should live under `pages/` and specs under `tests/ui/`, following t
 
 | Order | View / Route | Status | Coverage / Next Step |
 | --- | --- | --- | --- |
-| 6 | `Cart` – `GET /cart` | TODO | Add `CartPage` object and `cart.spec.ts`. Seed cart via UI (or directly via API + page refresh) and verify line items, per-item totals, grand total, and empty-state behaviour. Cover increment/decrement/removal actions and their impact on totals. |
 | 7 | `Checkout` – `GET /checkout` | TODO | Add `CheckoutPage` object and `checkout.spec.ts`. Starting from a non-empty cart, walk through address form, validation errors, and successful order creation. Assert redirect to order details or profile order list and cart being cleared afterwards. |
 | 8 | `Order details` – `GET /orders/:id` | TODO | Add `OrderDetailsPage` object and `order-details.spec.ts`. As a normal user: create an order, then visit `/orders/:id`; verify items, status badge, totals, shipping address. Assert cancel button exists only for `PENDING` orders and updates UI state after cancellation. |
 | 9 | `Profile` – `GET /profile` | TODO | Create `ProfilePage` object and `profile.spec.ts`. Cover two concerns: (1) editing basic profile data (first/last name etc.) and (2) managing system prompt (max-length validation, error display, persistence). Also verify the embedded order history section (pagination, status badges, click-through to `/orders/:id`). |
