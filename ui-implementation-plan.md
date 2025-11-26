@@ -18,6 +18,7 @@ Page objects should live under `pages/` and specs under `tests/ui/`, following t
 | 2 | `Register` – `GET /register` | DONE | Covered by existing registration spec in `tests/ui/register.ui.spec.ts` using a `RegisterPage` page object. Verifies successful signup, validation errors (password mismatch, invalid email, required fields) and navigation back to login. |
 | 3 | `Home` – `GET /` (authenticated) | DONE | Covered by `tests/ui/home.ui.spec.ts` using `uiAuthFixture.ts`. Verifies welcome banner, logged-in navigation (header links, cart/profile actions), CTA cards routing (Products, Users, Profile, Traffic, LLM, QR, Email), and enforces redirect-to-login when the auth token disappears. |
 | 4 | `Products list` – `GET /products` | DONE | Covered by `tests/ui/products.ui.spec.ts` using `productsPage` page object. Verifies product grid/list rendering, empty state, basic pagination/sorting if present, and that clicking a product navigates to `/products/:id`. Cross-check with backend seed data where possible. |
+| 5 | `Product details` – `GET /products/:id` | DONE | Covered by `tests/ui/product-details.ui.spec.ts` using `productDetailsPage` page object. Verifies product details rendering, quantity selection, and add to cart integration (cart badge increments, cart page reflects item). Includes 404 handling if user manually navigates to a non-existent `id`. |
 
 > Update the notes above with exact filenames once you settle on final spec names.
 
@@ -27,7 +28,6 @@ Page objects should live under `pages/` and specs under `tests/ui/`, following t
 
 | Order | View / Route | Status | Coverage / Next Step |
 | --- | --- | --- | --- |
-| 5 | `Product details` – `GET /products/:id` | TODO | In `product-details.spec.ts`: navigate via the products list, assert name/description/price/stock, and that “Add to cart” integrates correctly (cart badge increments, cart page reflects item). Include 404 handling if user manually navigates to a non-existent `id` (whatever the UI currently does). |
 | 6 | `Cart` – `GET /cart` | TODO | Add `CartPage` object and `cart.spec.ts`. Seed cart via UI (or directly via API + page refresh) and verify line items, per-item totals, grand total, and empty-state behaviour. Cover increment/decrement/removal actions and their impact on totals. |
 | 7 | `Checkout` – `GET /checkout` | TODO | Add `CheckoutPage` object and `checkout.spec.ts`. Starting from a non-empty cart, walk through address form, validation errors, and successful order creation. Assert redirect to order details or profile order list and cart being cleared afterwards. |
 | 8 | `Order details` – `GET /orders/:id` | TODO | Add `OrderDetailsPage` object and `order-details.spec.ts`. As a normal user: create an order, then visit `/orders/:id`; verify items, status badge, totals, shipping address. Assert cancel button exists only for `PENDING` orders and updates UI state after cancellation. |
