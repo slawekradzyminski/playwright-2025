@@ -12,6 +12,7 @@ alwaysApply: false
 - Use // given (test setup), // when (tested action), // then (test verification) comments to structure the tests.
 - Use Faker to generate random data for the tests.
 - Use API clients defined in the `http` folder to generate data for the tests.
+- ALWAYS explore the application via Playwright MCP to find out `test-testid` selectors and to build understanding of how the application works.
 
 ## Shared Test Helpers
 
