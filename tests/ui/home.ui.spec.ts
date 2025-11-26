@@ -87,10 +87,9 @@ test.describe('Home UI - client user', () => {
 
 test.describe('Home UI - admin user', () => {
   let homePage: HomePage;
-  let user: UserRegisterDto;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   test.beforeEach(async ({ page, adminUiAuth }) => {
-    user = adminUiAuth.userData;
     homePage = new HomePage(page);
   });
 
