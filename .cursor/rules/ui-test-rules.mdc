@@ -9,6 +9,9 @@ alwaysApply: false
 - Once you complete a test, run the tests to verify they work as expected. In case of application bugs let me know about it.
 - Do not generate too many tests for input validation (frontend validation). Make it 1-3 tests max. Assume sufficient test coverage on unit test level.
 - Make sure that `npm run lint` passes after each incremental change. 
+- Use // given (test setup), // when (tested action), // then (test verification) comments to structure the tests.
+- Use Faker to generate random data for the tests.
+- Use API clients defined in the `http` folder to generate data for the tests.
 
 ## Page Object Model (POM)
 
