@@ -69,12 +69,20 @@ export class CartPage {
     return this.page.getByTestId(`cart-item-total-${productId}`);
   }
 
+  getCartItemUpdateButton(productId: number) {
+    return this.page.getByTestId(`cart-item-update-${productId}`);
+  }
+
   async increaseQuantity(productId: number) {
     await this.getCartItemIncreaseButton(productId).click();
   }
 
   async decreaseQuantity(productId: number) {
     await this.getCartItemDecreaseButton(productId).click();
+  }
+
+  async updateQuantity(productId: number) {
+    await this.getCartItemUpdateButton(productId).click();
   }
 
   async removeItem(productId: number) {
