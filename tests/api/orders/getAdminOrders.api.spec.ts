@@ -2,7 +2,7 @@ import { test, expect } from '../../../fixtures/apiAuthFixture';
 import { getAdminOrders } from '../../../http/orders/getAdminOrdersRequest';
 import { updateOrderStatus } from '../../../http/orders/updateOrderStatusRequest';
 import type { PageDtoOrderDto } from '../../../types/orders';
-import { placeOrderForClient } from './helpers/orderTestUtils';
+import { placeOrderForClient } from '../../helpers';
 
 test.describe('GET /api/orders/admin API tests', () => {
   test('admin should retrieve all orders - 200', async ({ request, adminAuth, clientAuth }) => {

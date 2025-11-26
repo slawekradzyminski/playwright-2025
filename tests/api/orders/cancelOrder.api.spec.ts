@@ -1,7 +1,7 @@
 import type { APIRequestContext } from '@playwright/test';
 import { test, expect } from '../../../fixtures/apiAuthFixture';
 import { cancelOrder } from '../../../http/orders/cancelOrderRequest';
-import { placeOrderForClient } from './helpers/orderTestUtils';
+import { placeOrderForClient } from '../../helpers';
 import { attemptSignup } from '../../../http/users/signupRequest';
 import { attemptLogin } from '../../../http/users/loginRequest';
 import { generateClientUser } from '../../../generators/userGenerator';

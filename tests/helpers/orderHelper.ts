@@ -5,11 +5,12 @@ import { generateAddress } from '../../generators/addressGenerator';
 import { createTestProduct, type TestProduct } from './productHelper';
 import { addToCart, resetCart } from './cartHelper';
 import type { AddressDto, OrderDto } from '../../types/orders';
+import type { ProductDto } from '../../types/products';
 
-export interface TestOrder {
+export interface PlacedOrder {
   order: OrderDto;
   address: AddressDto;
-  product: TestProduct;
+  product: ProductDto;
 }
 
 export interface CreateOrderOptions {
@@ -28,15 +29,15 @@ export const seedCartWithProduct = async (
   return product;
 };
 
-export const placeOrder = async (
+export const placeOrderForClient = async (
   request: APIRequestContext,
   adminToken: string,
   clientToken: string,
   options?: CreateOrderOptions
-): Promise<TestOrder> => {
+): Promise<PlacedOrder> => {
   await resetCart(request, clientToken);
 
-  const product = await seedCartWithProduct(
+  const testProduct = await seedCartWithProduct(
     request,
     adminToken,
     clientToken,
@@ -48,6 +49,5 @@ export const placeOrder = async (
   expect(response.status()).toBe(201);
   const order: OrderDto = await response.json();
 
-  return { order, address, product };
+  return { order, address, product: testProduct.created };
 };
-

@@ -1,6 +1,6 @@
 import { test, expect } from '../../../fixtures/apiAuthFixture';
 import { updateOrderStatus } from '../../../http/orders/updateOrderStatusRequest';
-import { placeOrderForClient } from './helpers/orderTestUtils';
+import { placeOrderForClient } from '../../helpers';
 
 test.describe('PUT /api/orders/{id}/status API tests', () => {
   test('admin should update order status - 200', async ({ request, adminAuth, clientAuth }) => {

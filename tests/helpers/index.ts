@@ -6,5 +6,9 @@ export {
   assertCartState,
   assertCartEmpty
 } from './cartHelper';
-export { seedCartWithProduct, placeOrder, type TestOrder, type CreateOrderOptions } from './orderHelper';
-
+export {
+  seedCartWithProduct,
+  placeOrderForClient,
+  type PlacedOrder,
+  type CreateOrderOptions
+} from './orderHelper';
