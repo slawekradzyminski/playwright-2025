@@ -14,6 +14,16 @@ alwaysApply: false
 - Once you complete a test, run the tests to verify they work as expected. In case of application bugs let me know about it.
 - Make sure that `npm run lint` passes after each incremental change. 
 
+## Shared Test Helpers
+
+Use reusable helpers from `tests/helpers/` for common operations:
+
+### Product Helpers (`tests/helpers/productHelper.ts`)
+### Cart Helpers (`tests/helpers/cartHelper.ts`)
+### Order Helpers (`tests/helpers/orderHelper.ts`)
+
+Add new helpers if necessary.
+
 ## File Organization Rules
 
 ### Test Files - One HTTP Method Per File
@@ -33,3 +43,5 @@ alwaysApply: false
 ### Key Principles
 - NEVER combine multiple HTTP methods (GET, POST, PUT, DELETE, etc.) in the same test file
 - NEVER combine multiple HTTP methods in the same HTTP client file
+- ALWAYS use shared helpers for common test setup patterns (product creation, cart operations, etc.)
+- NEVER duplicate helper functions across test files - add new helpers to `tests/helpers/` instead

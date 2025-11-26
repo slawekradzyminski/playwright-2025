@@ -1,7 +1,7 @@
 import { test, expect } from '../../fixtures/productsUiFixture';
 import { ProductsPage } from '../../pages/ProductsPage';
 import { getProducts } from '../../http/products/getProductsRequest';
-import { resetCart } from './helpers/productTestUtils';
+import { resetCart } from '../helpers';
 import type { ProductDto } from '../../types/products';
 
 test.describe('Products UI', () => {

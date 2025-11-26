@@ -1,9 +1,8 @@
 import { test as uiAuthTest, expect } from './uiAuthFixture';
-import type { APIRequestContext, Page } from '@playwright/test';
 import type { ProductCreateDto } from '../types/products';
-import { createTestProduct, resetCart, assertCartState, type TestProduct } from '../tests/ui/helpers/productTestUtils';
-import { ProductsPage } from '../pages/ProductsPage';
 import type { CartDto } from '../types/cart';
+import { createTestProduct, assertCartState, type TestProduct } from '../tests/helpers';
+import { ProductsPage } from '../pages/ProductsPage';
 
 interface ProductsUiFixtures {
   productsPage: ProductsPage;
@@ -46,14 +45,3 @@ export const test = uiAuthTest.extend<ProductsUiFixtures>({
 });
 
 export { expect };
-
-export const setupProductsTest = async (
-  request: APIRequestContext,
-  token: string,
-  page: Page
-): Promise<{ productsPage: ProductsPage }> => {
-  await resetCart(request, token);
-  await page.goto(ProductsPage.URL);
-  return { productsPage: new ProductsPage(page) };
-};
-

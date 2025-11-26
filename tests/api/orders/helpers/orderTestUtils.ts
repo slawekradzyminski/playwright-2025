@@ -1,23 +1,11 @@
 import type { APIRequestContext } from '@playwright/test';
-import { expect } from '@playwright/test';
-import { createProduct } from '../../../../http/products/createProductRequest';
-import { addCartItem } from '../../../../http/cart/addCartItemRequest';
-import { createOrder } from '../../../../http/orders/createOrderRequest';
-import { clearCart } from '../../../../http/cart/clearCartRequest';
-import { generateProduct } from '../../../../generators/productGenerator';
-import { generateAddress } from '../../../../generators/addressGenerator';
-import type { ProductCreateDto, ProductDto } from '../../../../types/products';
-import type { AddressDto, OrderDto } from '../../../../types/orders';
-import type { CartItemDto } from '../../../../types/cart';
+import type { ProductCreateDto } from '../../../../types/products';
+import type { AddressDto } from '../../../../types/orders';
+import { placeOrder, type TestOrder, type CreateOrderOptions } from '../../../helpers';
 
-const buildCartItem = (productId: number, quantity: number): CartItemDto => ({
-  productId,
-  quantity
-});
+export type { TestOrder, CreateOrderOptions };
 
-export interface CreateOrderOptions {
-  quantity?: number;
-  addressOverrides?: Partial<AddressDto>;
+export interface PlaceOrderOptions extends CreateOrderOptions {
   productOverrides?: Partial<ProductCreateDto>;
 }
 
@@ -25,22 +13,12 @@ export const placeOrderForClient = async (
   request: APIRequestContext,
   adminToken: string,
   clientToken: string,
-  options?: CreateOrderOptions
-): Promise<{ order: OrderDto; address: AddressDto; product: ProductDto }> => {
-  await clearCart(request, clientToken);
-
-  const productData: ProductCreateDto = generateProduct(options?.productOverrides);
-  const createProductResponse = await createProduct(request, productData, adminToken);
-  expect(createProductResponse.status()).toBe(201);
-  const product: ProductDto = await createProductResponse.json();
-
-  const addResponse = await addCartItem(request, buildCartItem(product.id, options?.quantity ?? 1), clientToken);
-  expect(addResponse.status()).toBe(200);
-
-  const address: AddressDto = generateAddress(options?.addressOverrides);
-  const createOrderResponse = await createOrder(request, address, clientToken);
-  expect(createOrderResponse.status()).toBe(201);
-  const order: OrderDto = await createOrderResponse.json();
-
-  return { order, address, product };
+  options?: PlaceOrderOptions
+): Promise<{ order: TestOrder['order']; address: AddressDto; product: TestOrder['product']['created'] }> => {
+  const result = await placeOrder(request, adminToken, clientToken, options);
+  return {
+    order: result.order,
+    address: result.address,
+    product: result.product.created
+  };
 };

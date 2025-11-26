@@ -1,32 +1,20 @@
 import { test, expect } from '../../../fixtures/apiAuthFixture';
-import { createProduct } from '../../../http/products/createProductRequest';
-import { addCartItem } from '../../../http/cart/addCartItemRequest';
 import { clearCart } from '../../../http/cart/clearCartRequest';
-import { getCart } from '../../../http/cart/getCartRequest';
-import { generateProduct } from '../../../generators/productGenerator';
-import type { ProductCreateDto, ProductDto } from '../../../types/products';
+import { createTestProduct, addToCart, assertCartEmpty } from '../../helpers';
 import { INVALID_TOKEN } from '../../../config/constants';
-import type { CartDto } from '../../../types/cart';
 
 test.describe('DELETE /api/cart API tests', () => {
   test('client should clear cart - 200', async ({ request, adminAuth, clientAuth }) => {
     // given
-    const productData: ProductCreateDto = generateProduct();
-    const createResponse = await createProduct(request, productData, adminAuth.token);
-    expect(createResponse.status()).toBe(201);
-    const createdProduct: ProductDto = await createResponse.json();
-    const addResponse = await addCartItem(request, { productId: createdProduct.id, quantity: 2 }, clientAuth.token);
-    expect(addResponse.status()).toBe(200);
+    const { created: product } = await createTestProduct(request, adminAuth.token);
+    await addToCart(request, product.id, clientAuth.token, 2);
 
     // when
     const response = await clearCart(request, clientAuth.token);
 
     // then
     expect(response.status()).toBe(200);
-    const getResponse = await getCart(request, clientAuth.token);
-    const cart: CartDto = await getResponse.json();
-    expect(cart.items.length).toBe(0);
-    expect(cart.totalItems).toBe(0);
+    await assertCartEmpty(request, clientAuth.token);
   });
 
   test('should return unauthorized for missing token - 401', async ({ request }) => {

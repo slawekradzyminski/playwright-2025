@@ -13,6 +13,16 @@ alwaysApply: false
 - Use Faker to generate random data for the tests.
 - Use API clients defined in the `http` folder to generate data for the tests.
 
+## Shared Test Helpers
+
+Use reusable helpers from `tests/helpers/` for common operations:
+
+### Product Helpers (`tests/helpers/productHelper.ts`)
+### Cart Helpers (`tests/helpers/cartHelper.ts`)
+### Order Helpers (`tests/helpers/orderHelper.ts`)
+
+Add new helpers if necessary.
+
 ## Page Object Model (POM)
 
 - Use Page Object Model pattern for UI tests
@@ -26,3 +36,9 @@ alwaysApply: false
 - Page classes: `/pages/{PageName}Page.ts`
 - Component classes: `/pages/components/{ComponentName}.ts`
 - UI test files: `/tests/ui/{feature}.ui.spec.ts`
+- Shared helpers: `/tests/helpers/` (shared between API and UI tests)
+
+## Key Principles
+- ALWAYS use shared helpers for common test setup patterns
+- NEVER duplicate helper functions - add new helpers to `tests/helpers/` instead
+- Use custom fixtures when a test suite needs consistent setup (e.g., `productsUiFixture.ts`)

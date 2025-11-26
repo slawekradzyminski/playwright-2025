@@ -1,35 +1,8 @@
-import type { APIRequestContext } from '@playwright/test';
 import { test, expect } from '../../../fixtures/apiAuthFixture';
-import { createProduct } from '../../../http/products/createProductRequest';
-import { addCartItem } from '../../../http/cart/addCartItemRequest';
 import { createOrder } from '../../../http/orders/createOrderRequest';
-import { clearCart } from '../../../http/cart/clearCartRequest';
-import { generateProduct } from '../../../generators/productGenerator';
 import { generateAddress } from '../../../generators/addressGenerator';
-import type { ProductCreateDto, ProductDto } from '../../../types/products';
-import type { CartItemDto } from '../../../types/cart';
+import { seedCartWithProduct, resetCart } from '../../helpers';
 import type { AddressDto, OrderDto } from '../../../types/orders';
-
-const buildCartItem = (productId: number, quantity = 1): CartItemDto => ({
-  productId,
-  quantity
-});
-
-const seedCartWithProduct = async (
-  request: APIRequestContext,
-  adminToken: string,
-  clientToken: string
-): Promise<ProductDto> => {
-  const productData: ProductCreateDto = generateProduct();
-  const createProductResponse = await createProduct(request, productData, adminToken);
-  expect(createProductResponse.status()).toBe(201);
-  const createdProduct: ProductDto = await createProductResponse.json();
-
-  const addResponse = await addCartItem(request, buildCartItem(createdProduct.id), clientToken);
-  expect(addResponse.status()).toBe(200);
-
-  return createdProduct;
-};
 
 test.describe('POST /api/orders API tests', () => {
   test('client should create an order from cart - 201', async ({ request, adminAuth, clientAuth }) => {
@@ -58,7 +31,7 @@ test.describe('POST /api/orders API tests', () => {
   test('should return bad request when cart is empty - 400', async ({ request, clientAuth }) => {
     // given
     const shippingAddress: AddressDto = generateAddress();
-    await clearCart(request, clientAuth.token);
+    await resetCart(request, clientAuth.token);
 
     // when
     const response = await createOrder(request, shippingAddress, clientAuth.token);
