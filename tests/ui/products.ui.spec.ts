@@ -1,27 +1,17 @@
-import { test, expect } from '../../fixtures/uiAuthFixture';
+import { test, expect } from '../../fixtures/productsUiFixture';
 import { ProductsPage } from '../../pages/ProductsPage';
 import { getProducts } from '../../http/products/getProductsRequest';
-import { getCart } from '../../http/cart/getCartRequest';
-import { clearCart } from '../../http/cart/clearCartRequest';
-import type { ProductCreateDto, ProductDto } from '../../types/products';
-import type { CartDto } from '../../types/cart';
-import { generateProduct } from '../../generators/productGenerator';
-import { createProduct } from '../../http/products/createProductRequest';
+import { resetCart } from './helpers/productTestUtils';
+import type { ProductDto } from '../../types/products';
 
 test.describe('Products UI', () => {
-  let productsPage: ProductsPage;
-  let token: string;
-
   test.beforeEach(async ({ page, adminUiAuth, request }) => {
-    token = adminUiAuth.token;
-    productsPage = new ProductsPage(page);
-
-    // clear cart before each test
-    await clearCart(request, token);
+    // given - clear cart before each test
+    await resetCart(request, adminUiAuth.token);
     await page.goto(ProductsPage.URL);
   });
 
-  test('should display products page with product grid', async () => {
+  test('should display products page with product grid', async ({ productsPage }) => {
     // then
     await expect(productsPage.page).toHaveURL(ProductsPage.URL);
     await expect(productsPage.pageTitle).toHaveText('Products');
@@ -31,18 +21,16 @@ test.describe('Products UI', () => {
     await expect(productsPage.productItems.first()).toBeVisible();
   });
 
-  test('should display products matching API data', async ({ request }) => {
+  test('should display products matching API data', async ({ productsPage, request, adminUiAuth }) => {
     // given
-    const response = await getProducts(request, token);
+    const response = await getProducts(request, adminUiAuth.token);
     const products: ProductDto[] = await response.json();
 
     // then
     await expect(productsPage.productItems).toHaveCount(products.length);
   });
 
-  // There is a small risk that this test will be flaky if all products are in 'Electronics' category.
-  // To make it stable create a new product with a different category first
-  test('should filter products by category', async () => {
+  test('should filter products by category', async ({ productsPage }) => {
     // given
     await expect(productsPage.productItems.first()).toBeVisible();
     const initialCount = await productsPage.productItems.count();
@@ -56,27 +44,27 @@ test.describe('Products UI', () => {
     expect(filteredCount).toBeLessThan(initialCount);
   });
 
-  test('should search products by name', async ({ request }) => {
+  test('should search products by name', async ({ productsPage, request, adminUiAuth }) => {
     // given
-    const response = await getProducts(request, token);
+    const response = await getProducts(request, adminUiAuth.token);
     const products: ProductDto[] = await response.json();
     const firstProductName = products[0].name;
-    const firstProductCount = products.filter((product) => product.name.includes(firstProductName)).length;
+    const matchingProductsCount = products.filter((p) => p.name.includes(firstProductName)).length;
 
     // when
     await productsPage.searchProducts(firstProductName);
 
     // then
-    await expect(productsPage.productItems).toHaveCount(firstProductCount);
+    await expect(productsPage.productItems).toHaveCount(matchingProductsCount);
     for (const product of await productsPage.productItems.all()) {
       await expect(product).toContainText(firstProductName);
     }
   });
 
-  test('should allow clearing the search', async ({ request }) => {
-    // given - wait for products to load first
+  test('should allow clearing the search', async ({ productsPage, request, adminUiAuth }) => {
+    // given
     await expect(productsPage.productItems.first()).toBeVisible();
-    const response = await getProducts(request, token);
+    const response = await getProducts(request, adminUiAuth.token);
     const products: ProductDto[] = await response.json();
     const firstProductName = products[0].name;
     const productCountBeforeSearch = await productsPage.productItems.count();
@@ -91,7 +79,7 @@ test.describe('Products UI', () => {
     await expect(productsPage.productItems).toHaveCount(productCountBeforeSearch);
   });
 
-  test('should sort products by price low to high', async () => {
+  test('should sort products by price low to high', async ({ productsPage }) => {
     // when
     await productsPage.sortBy('Price (Low to High)');
 
@@ -108,7 +96,7 @@ test.describe('Products UI', () => {
     expect(firstPrice).toBeLessThanOrEqual(lastPrice);
   });
 
-  test('should navigate to product details when clicking a product card', async ({ page }) => {
+  test('should navigate to product details when clicking a product card', async ({ page, productsPage }) => {
     // given
     const firstProduct = productsPage.productItems.first();
     const productName = await firstProduct.getByTestId('product-name').textContent();
@@ -120,53 +108,52 @@ test.describe('Products UI', () => {
     await expect(page).toHaveURL(/\/products\/\d+/);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(productName!);
   });
+});
 
-  test('should add product to cart and show toast notification', async ({ request, page }) => {
-    // given
-    const productData: ProductCreateDto = generateProduct();
-    const createResponse = await createProduct(request, productData, token);
-    const product: ProductDto = await createResponse.json();
-    await page.reload();
+test.describe('Products UI - Cart Integration', () => {
+  test.beforeEach(async ({ page, adminUiAuth, request }) => {
+    await resetCart(request, adminUiAuth.token);
+    await page.goto(ProductsPage.URL);
+  });
 
+  test('should add product to cart and show toast notification', async ({
+    productsPage,
+    testProduct,
+    verifyCart
+  }) => {
     // when
-    await productsPage.addProductToCart(product.name);
+    await productsPage.addProductToCart(testProduct.created.name);
 
     // then - verify toast notification
     await expect(productsPage.toast.title).toHaveText('Added to cart');
-    await expect(productsPage.toast.description).toContainText(`${product.name} added to your cart`);
+    await expect(productsPage.toast.description).toContainText(
+      `${testProduct.created.name} added to your cart`
+    );
 
     // then - verify cart badge in header
     await expect(productsPage.header.cartLink).toContainText('1');
 
     // then - verify cart via API
-    const cartResponse = await getCart(request, token);
-    const cart: CartDto = await cartResponse.json();
-    expect(cart.totalItems).toBe(1);
+    await verifyCart(1);
   });
 
-  test('should show "in cart" state after adding product', async ({ request, page }) => {
-    // given
-    const productData: ProductCreateDto = generateProduct();
-    const createResponse = await createProduct(request, productData, token);
-    const product: ProductDto = await createResponse.json();
-    await page.reload();
-
+  test('should show "in cart" state after adding product', async ({ productsPage, testProduct }) => {
     // when
-    await productsPage.addProductToCart(product.name);
+    await productsPage.addProductToCart(testProduct.created.name);
 
     // then
-    const productLocator = productsPage.getProductByName(product.name);
+    const productLocator = productsPage.getProductByName(testProduct.created.name);
     await expect(productsPage.getProductInCartDisplay(productLocator)).toContainText('in cart');
     await expect(productsPage.getProductRemoveButton(productLocator)).toBeVisible();
   });
 
-  test('should increase quantity before adding to cart', async ({ request, page }) => {
-    // given        
-    const productData: ProductCreateDto = generateProduct();
-    const createResponse = await createProduct(request, productData, token);
-    const product: ProductDto = await createResponse.json();
-    await page.reload();
-    const productLocator = productsPage.getProductByName(product.name);
+  test('should increase quantity before adding to cart', async ({
+    productsPage,
+    testProduct,
+    verifyCart
+  }) => {
+    // given
+    const productLocator = productsPage.getProductByName(testProduct.created.name);
 
     // when
     await productsPage.getProductIncreaseButton(productLocator).click();
@@ -174,22 +161,16 @@ test.describe('Products UI', () => {
     await productsPage.getProductAddButton(productLocator).click();
 
     // then - verify toast shows correct quantity
-    await expect(productsPage.toast.description).toContainText(`3 × ${product.name}`);
+    await expect(productsPage.toast.description).toContainText(`3 × ${testProduct.created.name}`);
 
     // then - verify cart via API
-    const cartResponse = await getCart(request, token);
-    const cart: CartDto = await cartResponse.json();
-    expect(cart.totalItems).toBe(3);
+    await verifyCart(3);
   });
 
-  test('should remove product from cart', async ({ request, page }) => {
+  test('should remove product from cart', async ({ page, productsPage, testProduct, verifyCart }) => {
     // given
-    const productData: ProductCreateDto = generateProduct();
-    const createResponse = await createProduct(request, productData, token);
-    const product: ProductDto = await createResponse.json();
-    await page.reload();
-    const productLocator = productsPage.getProductByName(product.name);
-    await productsPage.addProductToCart(product.name);
+    const productLocator = productsPage.getProductByName(testProduct.created.name);
+    await productsPage.addProductToCart(testProduct.created.name);
     await expect(productsPage.getProductRemoveButton(productLocator)).toBeVisible();
 
     // when
@@ -203,9 +184,6 @@ test.describe('Products UI', () => {
     await expect(productsPage.getProductAddButton(productLocator)).toBeVisible();
 
     // then - verify cart is empty via API
-    const cartResponse = await getCart(request, token);
-    const cart: CartDto = await cartResponse.json();
-    expect(cart.totalItems).toBe(0);
+    await verifyCart(0);
   });
-
 });
