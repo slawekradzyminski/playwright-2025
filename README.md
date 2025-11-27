@@ -33,7 +33,7 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 
 ### Prerequisites
 
-- Node.js LTS, Recommended `v22.16.0`
+- Node.js LTS, Recommended `v24.11.0`
 - Docker
 
 ### Setup
