@@ -8,6 +8,9 @@ export class LoginPage {
   readonly signInButton: Locator;
   readonly registerButton: Locator;
   readonly registerLink: Locator;
+  readonly usernameError: Locator;
+  readonly passwordError: Locator;
+  readonly toastError: Locator;
   readonly loginUrl: string;
   readonly registerUrl: string;
 
@@ -15,11 +18,14 @@ export class LoginPage {
     this.page = page;
     this.loginUrl = `${process.env.FRONTEND_URL}/login`;
     this.registerUrl = `${process.env.FRONTEND_URL}/register`;
-    this.usernameInput = page.getByRole('textbox', { name: 'Username' });
-    this.passwordInput = page.getByRole('textbox', { name: 'Password' });
-    this.signInButton = page.getByRole('button', { name: 'Sign in' });
-    this.registerButton = page.getByRole('button', { name: 'Register' });
-    this.registerLink = page.getByRole('link', { name: 'Register' });
+    this.usernameInput = page.getByTestId('login-username-input');
+    this.passwordInput = page.getByTestId('login-password-input');
+    this.signInButton = page.getByTestId('login-submit-button');
+    this.registerButton = page.getByTestId('login-register-link');
+    this.registerLink = page.getByTestId('register-link');
+    this.usernameError = page.getByTestId('login-username-error');
+    this.passwordError = page.getByTestId('login-password-error');
+    this.toastError = page.getByTestId('toast-description');
   }
 
   async goto() {
@@ -30,6 +36,7 @@ export class LoginPage {
     await this.usernameInput.fill(credentials.username);
     await this.passwordInput.fill(credentials.password);
     await this.signInButton.click();
+    await this.page.waitForLoadState('networkidle', { timeout: 2000 }).catch(() => {});
   }
 
   async clickRegisterButton() {
@@ -50,5 +57,20 @@ export class LoginPage {
 
   async expectNotToBeOnLoginPage() {
     await expect(this.page).not.toHaveURL(this.loginUrl);
+  }
+
+  async expectUsernameError(message: string) {
+    await expect(this.usernameError).toBeVisible();
+    await expect(this.usernameError).toHaveText(message);
+  }
+
+  async expectPasswordError(message: string) {
+    await expect(this.passwordError).toBeVisible();
+    await expect(this.passwordError).toHaveText(message);
+  }
+
+  async expectToastError(message: string) {
+    await expect(this.toastError).toBeVisible();
+    await expect(this.toastError).toHaveText(message);
   }
 }

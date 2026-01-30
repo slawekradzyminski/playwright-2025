@@ -1,0 +1,2 @@
+- use data-testid for all selectors if possible
+- always run tests after making changes to these tests (prefer npx run test:ui or npx run test:api)

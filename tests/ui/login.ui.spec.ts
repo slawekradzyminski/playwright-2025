@@ -33,6 +33,7 @@ test.describe('Login UI tests', () => {
     await loginPage.login(credentials);
 
     await loginPage.expectToBeOnLoginPage();
+    await loginPage.expectPasswordError('Password is required');
   });
 
   test('should show error for invalid credentials', async () => {
@@ -44,6 +45,7 @@ test.describe('Login UI tests', () => {
     await loginPage.login(credentials);
 
     await loginPage.expectToBeOnLoginPage();
+    await loginPage.expectToastError('Invalid username/password');
   });
 
   test('should navigate to register page when register button is clicked', async () => {
@@ -67,6 +69,7 @@ test.describe('Login UI tests', () => {
     await loginPage.login(credentials);
 
     await loginPage.expectToBeOnLoginPage();
+    await loginPage.expectUsernameError('Username must be at least 4 characters');
   });
 
 }); 
