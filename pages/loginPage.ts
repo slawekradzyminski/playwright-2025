@@ -13,8 +13,8 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.loginUrl = process.env.LOGIN_URL || 'http://localhost:8081/login';
-    this.registerUrl = process.env.REGISTER_URL || 'http://localhost:8081/register';
+    this.loginUrl = `${process.env.FRONTEND_URL}/login`;
+    this.registerUrl = `${process.env.FRONTEND_URL}/register`;
     this.usernameInput = page.getByRole('textbox', { name: 'Username' });
     this.passwordInput = page.getByRole('textbox', { name: 'Password' });
     this.signInButton = page.getByRole('button', { name: 'Sign in' });
