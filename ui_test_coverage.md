@@ -54,11 +54,6 @@ Legend: [x] covered, [~] partial, [ ] not covered
 - [ ] `/admin/orders` Manage orders
 
 ## Implementation plan (trackable)
-### P0: Authentication + recovery
-- [ ] Add `forgotPassword.ui.spec.ts` covering `/forgot-password`
-  - Input validation, success toast, back-to-login navigation
-- [ ] Add `resetPassword.ui.spec.ts` covering `/reset`
-  - Required field validation, mismatched password error, success path
 
 ### P0: Core commerce flow
 - [ ] Add `products.ui.spec.ts` for `/products`
@@ -103,6 +98,12 @@ Legend: [x] covered, [~] partial, [ ] not covered
   - Prompt required, generate disabled when empty
 - [ ] Add `llmTools.ui.spec.ts` for `/llm/tools`
   - Tools list visible, send disabled when empty
+
+### P3: Authentication + recovery
+- [ ] Add `forgotPassword.ui.spec.ts` covering `/forgot-password`
+  - Input validation, success toast, back-to-login navigation
+- [ ] Add `resetPassword.ui.spec.ts` covering `/reset`
+  - Required field validation, mismatched password error, success path
 
 ## Selector hygiene
 - Prefer `data-testid` for all selectors.
