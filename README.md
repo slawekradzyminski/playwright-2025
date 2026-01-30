@@ -5,6 +5,7 @@ A modern TypeScript-based test suite for validating both API and UI layers of a 
 ## 📦 Project Overview
 
 This repository contains a comprehensive suite of automated tests using Playwright to validate the functionality of a full-stack application running in a local AWS-like environment provided by awesome-localstack.
+The E2E product under test is described in `docs/e2e_product_summary.md`.
 
 ## 🔧 Features
 
@@ -124,96 +125,7 @@ These tests validate the login page's functionality and user experience:
 
 ## Playwright MCP
 
-The Playwright MCP (Model Context Protocol) server enables browser automation capabilities, allowing AI coding assistants to interact with web pages through structured accessibility snapshots.
-
 Read more about Playwright MCP here: https://github.com/microsoft/playwright-mcp
-
-### Prerequisites
-
-- Node.js 18 or newer
-- Playwright installed
-
-### Cursor
-
-1. Navigate to `Cursor Settings` → `MCP` → `Add new MCP Server`
-2. Name it "playwright" and set the command to `npx @playwright/mcp@latest`
-3. Save the configuration
-
-### VS Code (GitHub Copilot)
-
-**Option 1: Using CLI**
-
-```bash
-code --add-mcp '{"name":"playwright","command":"npx","args":["@playwright/mcp@latest"]}'
-```
-
-**Option 2: Manual Configuration**
-
-Open your MCP configuration file:
-- macOS: `~/Library/Application Support/Code/User/mcp.json`
-- Windows: `%APPDATA%\Code\User\mcp.json`
-
-Add the following configuration:
-
-```json
-{
-  "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": ["@playwright/mcp@latest"]
-    }
-  }
-}
-```
-
-Restart VS Code or reload the window.
-
-### Codex
-
-**Option 1: Using CLI**
-
-```bash
-codex mcp add playwright npx "@playwright/mcp@latest"
-```
-
-**Option 2: Manual Configuration**
-
-Edit the configuration file `~/.codex/config.toml` and add:
-
-```toml
-[mcp_servers.playwright]
-command = "npx"
-args = ["@playwright/mcp@latest"]
-```
-
-### Claude Code
-
-Use the Claude Code CLI to add the Playwright MCP server:
-
-```bash
-claude mcp add playwright npx @playwright/mcp@latest
-```
-
-### Claude Desktop
-
-Open the configuration file:
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-
-Add the following configuration:
-
-```json
-{
-  "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": ["@playwright/mcp@latest"]
-    }
-  }
-}
-```
-
-Restart Claude Desktop.
 
 ## 📝 License
 

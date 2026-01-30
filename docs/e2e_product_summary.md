@@ -1,0 +1,5 @@
+# E2E Product Summary
+
+Our test target is a full-stack commerce and operations platform that combines customer shopping, account management, and admin workflows with several productivity utilities. The product supports end-user flows such as authentication, browsing and purchasing products, profile management, and order tracking. It also includes admin capabilities for managing products and orders, plus operational tools like email delivery, QR code generation, traffic monitoring, and LLM-assisted workflows (chat, generate, and tool-based assistants).
+
+From a business perspective, this platform represents a single, unified experience that spans customer acquisition (signup/login), revenue generation (catalog, cart, checkout), fulfillment oversight (orders and status management), and internal efficiency tools (admin dashboards and AI-assisted utilities). The E2E test suite validates these user journeys across the UI and API layers to protect revenue-critical paths and operational visibility.
