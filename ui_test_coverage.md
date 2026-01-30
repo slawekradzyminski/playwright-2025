@@ -12,6 +12,7 @@ Source of truth:
   - `/` Home (tests/ui/home.ui.spec.ts)
   - `/admin` Admin Dashboard (tests/ui/adminDashboard.ui.spec.ts)
   - `/admin/products` Admin Products (tests/ui/adminProducts.ui.spec.ts)
+  - `/cart` Cart (tests/ui/cart.ui.spec.ts)
 
 ## Screen inventory + coverage status
 Legend: [x] covered, [~] partial, [ ] not covered
@@ -26,7 +27,7 @@ Legend: [x] covered, [~] partial, [ ] not covered
 - [x] `/` Home page
 - [x] `/products` Products listing
 - [x] `/products/:id` Product details
-- [ ] `/cart` Cart (empty vs with items)
+- [x] `/cart` Cart (empty vs with items) (tests/ui/cart.ui.spec.ts)
 - [ ] `/checkout` Checkout (redirects to `/cart` when empty)
 - [ ] `/profile` Profile + prompts + orders summary
 - [ ] `/orders/:id` Order details
@@ -60,7 +61,7 @@ Legend: [x] covered, [~] partial, [ ] not covered
   - Categories filter, search, sort, add-to-cart quantity controls
 - [x] Add `productDetails.ui.spec.ts` for `/products/:id`
   - Details render, stock display, quantity, add-to-cart
-- [ ] Add `cart.ui.spec.ts` for `/cart`
+- [x] Add `cart.ui.spec.ts` for `/cart`
   - Empty state, item list, quantity update, remove item, totals
 - [ ] Add `checkout.ui.spec.ts` for `/checkout`
   - Redirect when empty, form validation, successful submit path
