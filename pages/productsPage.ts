@@ -10,6 +10,7 @@ export class ProductsPage {
   readonly productListHeading: Locator;
   readonly sortSelect: Locator;
   readonly sortOptions: Locator;
+  readonly productItems: Locator;
   readonly productTitles: Locator;
   readonly addToCartButtons: Locator;
   readonly quantityControls: Locator;
@@ -26,6 +27,7 @@ export class ProductsPage {
     this.searchInput = page.getByPlaceholder('Search products...');
     this.sortSelect = page.getByRole('combobox', { name: 'Sort by:' });
     this.sortOptions = this.sortSelect.locator('option');
+    this.productItems = page.getByTestId('product-item');
     this.productTitles = page.getByRole('heading', { level: 3 });
     this.addToCartButtons = page.getByRole('button', { name: 'Add to Cart' });
     this.quantityControls = page.getByRole('button', { name: '-' }).locator('..');
@@ -84,6 +86,12 @@ export class ProductsPage {
 
   async addFirstProductToCart() {
     await this.firstProductAddToCartButton().click();
+  }
+
+  async openFirstProductDetails() {
+    const firstItem = this.productItems.first();
+    const itemTitle = firstItem.getByRole('heading', { level: 3 });
+    await itemTitle.click();
   }
 
   async expectFirstProductQuantityValue(value: string) {

@@ -25,7 +25,7 @@ Legend: [x] covered, [~] partial, [ ] not covered
 ### Core (protected)
 - [x] `/` Home page
 - [x] `/products` Products listing
-- [ ] `/products/:id` Product details
+- [x] `/products/:id` Product details
 - [ ] `/cart` Cart (empty vs with items)
 - [ ] `/checkout` Checkout (redirects to `/cart` when empty)
 - [ ] `/profile` Profile + prompts + orders summary
@@ -58,7 +58,7 @@ Legend: [x] covered, [~] partial, [ ] not covered
 ### P0: Core commerce flow
 - [x] Add `products.ui.spec.ts` for `/products`
   - Categories filter, search, sort, add-to-cart quantity controls
-- [ ] Add `productDetails.ui.spec.ts` for `/products/:id`
+- [x] Add `productDetails.ui.spec.ts` for `/products/:id`
   - Details render, stock display, quantity, add-to-cart
 - [ ] Add `cart.ui.spec.ts` for `/cart`
   - Empty state, item list, quantity update, remove item, totals
