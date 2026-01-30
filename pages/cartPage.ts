@@ -99,8 +99,9 @@ export class CartPage {
   }
 
   async clearCart() {
+    this.page.once('dialog', dialog => dialog.accept());
     await this.clearCartButton.click();
-    this.page.on('dialog', dialog => dialog.accept());
+    await this.page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => {});
   }
 
   async clickCheckout() {

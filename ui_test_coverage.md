@@ -13,6 +13,7 @@ Source of truth:
   - `/admin` Admin Dashboard (tests/ui/adminDashboard.ui.spec.ts)
   - `/admin/products` Admin Products (tests/ui/adminProducts.ui.spec.ts)
   - `/cart` Cart (tests/ui/cart.ui.spec.ts)
+  - `/users` Users list (tests/ui/users.ui.spec.ts)
 
 ## Screen inventory + coverage status
 Legend: [x] covered, [~] partial, [ ] not covered
@@ -33,7 +34,7 @@ Legend: [x] covered, [~] partial, [ ] not covered
 - [ ] `/orders/:id` Order details
 
 ### Users (protected)
-- [ ] `/users` Users list
+- [x] `/users` Users list (tests/ui/users.ui.spec.ts)
 - [ ] `/users/:username/edit` Edit user
 
 ### Utilities (protected)
@@ -73,7 +74,7 @@ Legend: [x] covered, [~] partial, [ ] not covered
   - Items summary, status, address, cancel/update actions
 
 ### P1: Users management
-- [ ] Add `users.ui.spec.ts` for `/users`
+- [x] Add `users.ui.spec.ts` for `/users`
   - Users list renders, edit/delete buttons visible, back-to-home
 - [ ] Add `editUser.ui.spec.ts` for `/users/:username/edit`
   - Prefilled data, save/cancel flows
