@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { config } from 'dotenv';
-import type { LoginDto, LoginResponseDto, ErrorResponse } from '../../types/auth';
+import type { LoginDto, LoginResponseDto } from '../../types/auth';
 
 config();
 
-const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:4001';
+const API_BASE_URL = process.env.API_BASE_URL
 const SIGNIN_ENDPOINT = '/users/signin';
 
 test.describe('/users/signin API tests', () => {
