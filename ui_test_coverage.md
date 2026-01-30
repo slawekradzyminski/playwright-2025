@@ -24,7 +24,7 @@ Legend: [x] covered, [~] partial, [ ] not covered
 
 ### Core (protected)
 - [x] `/` Home page
-- [ ] `/products` Products listing
+- [x] `/products` Products listing
 - [ ] `/products/:id` Product details
 - [ ] `/cart` Cart (empty vs with items)
 - [ ] `/checkout` Checkout (redirects to `/cart` when empty)
@@ -56,7 +56,7 @@ Legend: [x] covered, [~] partial, [ ] not covered
 ## Implementation plan (trackable)
 
 ### P0: Core commerce flow
-- [ ] Add `products.ui.spec.ts` for `/products`
+- [x] Add `products.ui.spec.ts` for `/products`
   - Categories filter, search, sort, add-to-cart quantity controls
 - [ ] Add `productDetails.ui.spec.ts` for `/products/:id`
   - Details render, stock display, quantity, add-to-cart
@@ -114,4 +114,3 @@ Legend: [x] covered, [~] partial, [ ] not covered
 - Admin credentials in `/Users/admin/IdeaProjects/playwright-2025/.env` (admin/admin).
 - Product catalog and orders seeded; order dates currently show 29/01/2026.
 - `/checkout` redirects to `/cart` when cart is empty.
-
