@@ -1,15 +1,17 @@
 import { test, expect } from '@playwright/test';
+import { config } from 'dotenv';
 import type { LoginDto, LoginResponseDto, ErrorResponse } from '../../types/auth';
 
-const API_BASE_URL = 'http://localhost:4001';
+config();
+
+const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:4001';
 const SIGNIN_ENDPOINT = '/users/signin';
 
 test.describe('/users/signin API tests', () => {
   test('should successfully authenticate with valid credentials - 200', async ({ request }) => {
-    // given
     const loginData: LoginDto = {
-      username: 'admin',
-      password: 'admin'
+      username: process.env.TEST_USERNAME!,
+      password: process.env.TEST_PASSWORD!
     };
 
     // when
@@ -35,10 +37,9 @@ test.describe('/users/signin API tests', () => {
   });
 
   test('should return validation error for empty username - 400', async ({ request }) => {
-    // given
     const loginData: LoginDto = {
       username: '',
-      password: 'admin'
+      password: process.env.TEST_PASSWORD!
     };
 
     // when
@@ -56,10 +57,9 @@ test.describe('/users/signin API tests', () => {
   });
 
   test('should return validation error for username too short - 400', async ({ request }) => {
-    // given
     const loginData: LoginDto = {
       username: 'abc',
-      password: 'admin'
+      password: process.env.TEST_PASSWORD!
     };
 
     // when
@@ -77,9 +77,8 @@ test.describe('/users/signin API tests', () => {
   });
 
   test('should return validation error for password too short - 400', async ({ request }) => {
-    // given
     const loginData: LoginDto = {
-      username: 'admin',
+      username: process.env.TEST_USERNAME!,
       password: 'abc'
     };
 

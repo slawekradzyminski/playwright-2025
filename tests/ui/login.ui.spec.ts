@@ -1,93 +1,72 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
+import { config } from 'dotenv';
 import type { LoginDto } from '../../types/auth';
+import { LoginPage } from '../../pages/loginPage';
 
-const LOGIN_URL = 'http://localhost:8081/login';
+config();
 
 test.describe('Login UI tests', () => {
+  let loginPage: LoginPage;
+
   test.beforeEach(async ({ page }) => {
-    await page.goto(LOGIN_URL);
+    loginPage = new LoginPage(page);
+    await loginPage.goto();
   });
 
-  test('should successfully login with valid credentials', async ({ page }) => {
-    // given
+  test('should successfully login with valid credentials', async () => {
     const credentials: LoginDto = {
-      username: 'admin',
-      password: 'admin'
+      username: process.env.TEST_USERNAME!,
+      password: process.env.TEST_PASSWORD!
     };
 
-    // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await loginPage.login(credentials);
 
-    // then
-    await expect(page).not.toHaveURL(LOGIN_URL);
+    await loginPage.expectNotToBeOnLoginPage();
   });
 
-  test('should show error for empty password', async ({ page }) => {
-    // given
+  test('should show error for empty password', async () => {
     const credentials = {
-      username: 'admin',
+      username: process.env.TEST_USERNAME!,
       password: ''
     };
 
-    // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await loginPage.login(credentials);
 
-    // then
-    await expect(page).toHaveURL(LOGIN_URL);
+    await loginPage.expectToBeOnLoginPage();
   });
 
-  test('should show error for invalid credentials', async ({ page }) => {
-    // given
+  test('should show error for invalid credentials', async () => {
     const credentials: LoginDto = {
       username: 'invaliduser',
       password: 'invalidpassword'
     };
 
-    // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await loginPage.login(credentials);
 
-    // then
-    await expect(page).toHaveURL(LOGIN_URL);
+    await loginPage.expectToBeOnLoginPage();
   });
 
-  test('should navigate to register page when register button is clicked', async ({ page }) => {
-    // given
-    // when
-    await page.getByRole('button', { name: 'Register' }).click();
+  test('should navigate to register page when register button is clicked', async () => {
+    await loginPage.clickRegisterButton();
 
-    // then
-    await expect(page).toHaveURL('http://localhost:8081/register');
+    await loginPage.expectToBeOnRegisterPage();
   });
 
-  test('should navigate to register page when register link is clicked', async ({ page }) => {
-    // given
-    // when
-    await page.getByRole('link', { name: 'Register' }).click();
+  test('should navigate to register page when register link is clicked', async () => {
+    await loginPage.clickRegisterLink();
 
-    // then
-    await expect(page).toHaveURL('http://localhost:8081/register');
+    await loginPage.expectToBeOnRegisterPage();
   });
 
-  test('should have proper form validation for short username', async ({ page }) => {
-    // given
+  test('should have proper form validation for short username', async () => {
     const credentials = {
       username: 'abc',
-      password: 'admin'
+      password: process.env.TEST_PASSWORD!
     };
 
-    // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await loginPage.login(credentials);
 
-    // then
-    await expect(page).toHaveURL(LOGIN_URL);
+    await loginPage.expectToBeOnLoginPage();
   });
 
 }); 
