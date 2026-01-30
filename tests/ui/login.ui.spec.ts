@@ -5,6 +5,8 @@ import { LoginPage } from '../../pages/loginPage';
 
 config();
 
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test.describe('Login UI tests', () => {
   let loginPage: LoginPage;
 

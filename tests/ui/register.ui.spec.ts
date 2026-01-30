@@ -5,6 +5,8 @@ import { generateUser } from '../../generators/userGenerator';
 
 config();
 
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test.describe('Register UI tests', () => {
   let registerPage: RegisterPage;
 
