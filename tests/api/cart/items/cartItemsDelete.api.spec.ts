@@ -6,13 +6,13 @@ import { test } from '../../../fixtures/auth.fixture';
 import { getExistingProductId } from '../../helpers/productTestUtils';
 
 test.describe('/api/cart/items/{productId} DELETE API tests', () => {
-  test('should remove item from cart - 200', async ({ request, authenticatedUser }) => {
+  test('should remove item from cart - 200', async ({ request, clientAuth }) => {
     // given
-    const productId = await getExistingProductId(request, authenticatedUser.jwtToken);
-    await addCartItem(request, authenticatedUser.jwtToken, { productId, quantity: 1 });
+    const productId = await getExistingProductId(request, clientAuth.jwtToken);
+    await addCartItem(request, clientAuth.jwtToken, { productId, quantity: 1 });
 
     // when
-    const response = await deleteCartItem(request, authenticatedUser.jwtToken, productId);
+    const response = await deleteCartItem(request, clientAuth.jwtToken, productId);
 
     // then
     expect(response.status()).toBe(200);
@@ -33,11 +33,11 @@ test.describe('/api/cart/items/{productId} DELETE API tests', () => {
 
   test('should return not found for cart item that does not exist - 404', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     // when
-    const response = await deleteCartItem(request, authenticatedUser.jwtToken, 999999999);
+    const response = await deleteCartItem(request, clientAuth.jwtToken, 999999999);
 
     // then
     expect(response.status()).toBe(404);

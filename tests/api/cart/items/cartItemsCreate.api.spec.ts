@@ -6,12 +6,12 @@ import { test } from '../../../fixtures/auth.fixture';
 import { getExistingProductId } from '../../helpers/productTestUtils';
 
 test.describe('/api/cart/items POST API tests', () => {
-  test('should add item to cart - 200', async ({ request, authenticatedUser }) => {
+  test('should add item to cart - 200', async ({ request, clientAuth }) => {
     // given
-    const productId = await getExistingProductId(request, authenticatedUser.jwtToken);
+    const productId = await getExistingProductId(request, clientAuth.jwtToken);
 
     // when
-    const response = await addCartItem(request, authenticatedUser.jwtToken, {
+    const response = await addCartItem(request, clientAuth.jwtToken, {
       productId,
       quantity: 1
     });
@@ -26,13 +26,13 @@ test.describe('/api/cart/items POST API tests', () => {
 
   test('should return validation error for invalid quantity - 400', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
-    const productId = await getExistingProductId(request, authenticatedUser.jwtToken);
+    const productId = await getExistingProductId(request, clientAuth.jwtToken);
 
     // when
-    const response = await addCartItem(request, authenticatedUser.jwtToken, {
+    const response = await addCartItem(request, clientAuth.jwtToken, {
       productId,
       quantity: 0
     });
@@ -58,11 +58,11 @@ test.describe('/api/cart/items POST API tests', () => {
 
   test('should return not found for product that does not exist - 404', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     // when
-    const response = await addCartItem(request, authenticatedUser.jwtToken, {
+    const response = await addCartItem(request, clientAuth.jwtToken, {
       productId: 999999999,
       quantity: 1
     });

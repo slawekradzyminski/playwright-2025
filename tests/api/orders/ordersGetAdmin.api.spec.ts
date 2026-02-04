@@ -30,11 +30,11 @@ test.describe('/api/orders/admin GET API tests', () => {
 
   test('should return forbidden for non-admin admin orders request - 403', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     // when
-    const response = await getAdminOrders(request, authenticatedUser.jwtToken);
+    const response = await getAdminOrders(request, clientAuth.jwtToken);
 
     // then
     expect(response.status()).toBe(403);

@@ -5,15 +5,15 @@ import type { CartDto } from '../../../types/cart';
 import { test } from '../../fixtures/auth.fixture';
 
 test.describe('/api/cart GET API tests', () => {
-  test('should return current user cart - 200', async ({ request, authenticatedUser }) => {
+  test('should return current user cart - 200', async ({ request, clientAuth }) => {
     // given
     // when
-    const response = await getCart(request, authenticatedUser.jwtToken);
+    const response = await getCart(request, clientAuth.jwtToken);
 
     // then
     expect(response.status()).toBe(200);
     const responseBody: CartDto = await response.json();
-    expect(responseBody.username).toBe(authenticatedUser.user.username);
+    expect(responseBody.username).toBe(clientAuth.user.username);
     expect(Array.isArray(responseBody.items)).toBe(true);
   });
 

@@ -4,9 +4,9 @@ import type { UserResponseDto } from '../../../../types/auth';
 import { test, expect } from '../../../fixtures/auth.fixture';
 
 test.describe('/users API tests', () => {
-  test('should return all users for authenticated request - 200', async ({ request, authenticatedUser }) => {
+  test('should return all users for authenticated request - 200', async ({ request, clientAuth }) => {
     // given
-    const { jwtToken, user } = authenticatedUser;
+    const { jwtToken, user } = clientAuth;
 
     // when
     const response = await getUsers(request, jwtToken);

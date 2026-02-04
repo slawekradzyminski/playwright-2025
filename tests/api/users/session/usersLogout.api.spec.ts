@@ -4,10 +4,10 @@ import { logoutUser } from '../../../../http/userProfileClient';
 import { test } from '../../../fixtures/auth.fixture';
 
 test.describe('/users/logout API tests', () => {
-  test('should logout authenticated user - 200', async ({ request, authenticatedUser }) => {
+  test('should logout authenticated user - 200', async ({ request, clientAuth }) => {
     // given
     // when
-    const response = await logoutUser(request, authenticatedUser.jwtToken);
+    const response = await logoutUser(request, clientAuth.jwtToken);
 
     // then
     expect(response.status()).toBe(200);

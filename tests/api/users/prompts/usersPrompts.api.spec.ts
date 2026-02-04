@@ -11,11 +11,11 @@ import { test } from '../../../fixtures/auth.fixture';
 test.describe('/users prompts API tests', () => {
   test('should return chat system prompt for authenticated user - 200', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     // when
-    const response = await getChatSystemPrompt(request, authenticatedUser.jwtToken);
+    const response = await getChatSystemPrompt(request, clientAuth.jwtToken);
 
     // then
     expect(response.status()).toBe(200);
@@ -37,13 +37,13 @@ test.describe('/users prompts API tests', () => {
 
   test('should update chat system prompt for authenticated user - 200', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     const payload = { chatSystemPrompt: 'Respond with short and clear answers.' };
 
     // when
-    const response = await updateChatSystemPrompt(request, authenticatedUser.jwtToken, payload);
+    const response = await updateChatSystemPrompt(request, clientAuth.jwtToken, payload);
 
     // then
     expect(response.status()).toBe(200);
@@ -68,11 +68,11 @@ test.describe('/users prompts API tests', () => {
 
   test('should return tool system prompt for authenticated user - 200', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     // when
-    const response = await getToolSystemPrompt(request, authenticatedUser.jwtToken);
+    const response = await getToolSystemPrompt(request, clientAuth.jwtToken);
 
     // then
     expect(response.status()).toBe(200);
@@ -94,13 +94,13 @@ test.describe('/users prompts API tests', () => {
 
   test('should update tool system prompt for authenticated user - 200', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     const payload = { toolSystemPrompt: 'Always query product data before answering.' };
 
     // when
-    const response = await updateToolSystemPrompt(request, authenticatedUser.jwtToken, payload);
+    const response = await updateToolSystemPrompt(request, clientAuth.jwtToken, payload);
 
     // then
     expect(response.status()).toBe(200);

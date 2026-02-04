@@ -66,7 +66,7 @@ test.describe('/api/products/{id} PUT API tests', () => {
   test('should return forbidden for non-admin update product - 403', async ({
     request,
     adminAuth,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     const createdResponse = await createProduct(request, adminAuth.jwtToken, createProductData());
@@ -76,7 +76,7 @@ test.describe('/api/products/{id} PUT API tests', () => {
     // when
     const response = await updateProduct(
       request,
-      authenticatedUser.jwtToken,
+      clientAuth.jwtToken,
       createdProduct.id,
       createProductUpdateData()
     );

@@ -9,11 +9,11 @@ import { test } from '../../../fixtures/auth.fixture';
 test.describe('/users/{username} API tests', () => {
   test('should return user by username for authenticated request - 200', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     // when
-    const response = await getUserByUsername(request, authenticatedUser.jwtToken, 'client');
+    const response = await getUserByUsername(request, clientAuth.jwtToken, 'client');
 
     // then
     expect(response.status()).toBe(200);
@@ -43,10 +43,10 @@ test.describe('/users/{username} API tests', () => {
     expect(await response.json()).toEqual({ message: "The user doesn't exist" });
   });
 
-  test('should update own user profile - 200', async ({ request, authenticatedUser }) => {
+  test('should update own user profile - 200', async ({ request, clientAuth }) => {
     // given
     const payload = {
-      email: authenticatedUser.user.email,
+      email: clientAuth.user.email,
       firstName: 'UpdatedFirst',
       lastName: 'UpdatedLast'
     };
@@ -54,8 +54,8 @@ test.describe('/users/{username} API tests', () => {
     // when
     const response = await updateUser(
       request,
-      authenticatedUser.jwtToken,
-      authenticatedUser.user.username,
+      clientAuth.jwtToken,
+      clientAuth.user.username,
       payload
     );
 
@@ -86,7 +86,7 @@ test.describe('/users/{username} API tests', () => {
 
   test('should return forbidden for updating different user as client - 403', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     const payload = {
@@ -96,7 +96,7 @@ test.describe('/users/{username} API tests', () => {
     };
 
     // when
-    const response = await updateUser(request, authenticatedUser.jwtToken, 'admin', payload);
+    const response = await updateUser(request, clientAuth.jwtToken, 'admin', payload);
 
     // then
     expect(response.status()).toBe(403);
@@ -157,7 +157,7 @@ test.describe('/users/{username} API tests', () => {
   test('should return forbidden for delete user as client - 403', async ({
     request,
     adminAuth,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     const userToDelete = createUser({ roles: ['ROLE_CLIENT'] });
@@ -165,7 +165,7 @@ test.describe('/users/{username} API tests', () => {
     expect(signupResponse.status()).toBe(201);
 
     // when
-    const response = await deleteUser(request, authenticatedUser.jwtToken, userToDelete.username);
+    const response = await deleteUser(request, clientAuth.jwtToken, userToDelete.username);
 
     // then
     expect(response.status()).toBe(403);

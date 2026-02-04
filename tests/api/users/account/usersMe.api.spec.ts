@@ -7,16 +7,16 @@ import { test } from '../../../fixtures/auth.fixture';
 test.describe('/users/me API tests', () => {
   test('should return current user for authenticated request - 200', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     // when
-    const response = await getCurrentUser(request, authenticatedUser.jwtToken);
+    const response = await getCurrentUser(request, clientAuth.jwtToken);
 
     // then
     expect(response.status()).toBe(200);
     const responseBody: UserResponseDto = await response.json();
-    expect(responseBody.username).toBe(authenticatedUser.user.username);
+    expect(responseBody.username).toBe(clientAuth.user.username);
   });
 
   test('should return unauthorized for current user request without token - 401', async ({

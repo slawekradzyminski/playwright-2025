@@ -53,13 +53,13 @@ test.describe('/api/products POST API tests', () => {
 
   test('should return forbidden for non-admin create product - 403', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     const productData = createProductData();
 
     // when
-    const response = await createProduct(request, authenticatedUser.jwtToken, productData);
+    const response = await createProduct(request, clientAuth.jwtToken, productData);
 
     // then
     expect(response.status()).toBe(403);

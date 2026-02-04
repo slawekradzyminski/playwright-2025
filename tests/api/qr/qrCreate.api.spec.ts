@@ -4,12 +4,12 @@ import { createQrCode } from '../../../http/qrClient';
 import { test } from '../../fixtures/auth.fixture';
 
 test.describe('/qr/create POST API tests', () => {
-  test('should generate qr code image - 200', async ({ request, authenticatedUser }) => {
+  test('should generate qr code image - 200', async ({ request, clientAuth }) => {
     // given
     const qrText = 'https://example.com/product/1';
 
     // when
-    const response = await createQrCode(request, authenticatedUser.jwtToken, qrText);
+    const response = await createQrCode(request, clientAuth.jwtToken, qrText);
 
     // then
     expect(response.status()).toBe(200);
@@ -18,10 +18,10 @@ test.describe('/qr/create POST API tests', () => {
     expect(responseBody.length).toBeGreaterThan(100);
   });
 
-  test('should return validation error for empty text - 400', async ({ request, authenticatedUser }) => {
+  test('should return validation error for empty text - 400', async ({ request, clientAuth }) => {
     // given
     // when
-    const response = await createQrCode(request, authenticatedUser.jwtToken, '');
+    const response = await createQrCode(request, clientAuth.jwtToken, '');
 
     // then
     expect(response.status()).toBe(400);

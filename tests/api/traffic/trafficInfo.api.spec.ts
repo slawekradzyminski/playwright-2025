@@ -6,11 +6,11 @@ import { test } from '../../fixtures/auth.fixture';
 test.describe('/api/traffic/info GET API tests', () => {
   test('should return traffic info for authenticated request - 200', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     // when
-    const response = await getTrafficInfo(request, authenticatedUser.jwtToken);
+    const response = await getTrafficInfo(request, clientAuth.jwtToken);
 
     // then
     expect(response.status()).toBe(200);

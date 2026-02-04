@@ -4,7 +4,7 @@ import { sendEmail } from '../../../http/emailClient';
 import { test } from '../../fixtures/auth.fixture';
 
 test.describe('/email POST API tests', () => {
-  test('should send email for authenticated request - 200', async ({ request, authenticatedUser }) => {
+  test('should send email for authenticated request - 200', async ({ request, clientAuth }) => {
     // given
     const payload = {
       to: 'user@example.com',
@@ -13,7 +13,7 @@ test.describe('/email POST API tests', () => {
     };
 
     // when
-    const response = await sendEmail(request, authenticatedUser.jwtToken, payload);
+    const response = await sendEmail(request, clientAuth.jwtToken, payload);
 
     // then
     expect(response.status()).toBe(200);
@@ -22,7 +22,7 @@ test.describe('/email POST API tests', () => {
 
   test('should return validation error for invalid payload - 400', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     const payload = {
@@ -31,7 +31,7 @@ test.describe('/email POST API tests', () => {
     };
 
     // when
-    const response = await sendEmail(request, authenticatedUser.jwtToken, payload);
+    const response = await sendEmail(request, clientAuth.jwtToken, payload);
 
     // then
     expect(response.status()).toBe(400);

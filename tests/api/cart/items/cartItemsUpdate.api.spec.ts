@@ -6,13 +6,13 @@ import { test } from '../../../fixtures/auth.fixture';
 import { getExistingProductId } from '../../helpers/productTestUtils';
 
 test.describe('/api/cart/items/{productId} PUT API tests', () => {
-  test('should update cart item quantity - 200', async ({ request, authenticatedUser }) => {
+  test('should update cart item quantity - 200', async ({ request, clientAuth }) => {
     // given
-    const productId = await getExistingProductId(request, authenticatedUser.jwtToken);
-    await addCartItem(request, authenticatedUser.jwtToken, { productId, quantity: 1 });
+    const productId = await getExistingProductId(request, clientAuth.jwtToken);
+    await addCartItem(request, clientAuth.jwtToken, { productId, quantity: 1 });
 
     // when
-    const response = await updateCartItem(request, authenticatedUser.jwtToken, productId, { quantity: 2 });
+    const response = await updateCartItem(request, clientAuth.jwtToken, productId, { quantity: 2 });
 
     // then
     expect(response.status()).toBe(200);
@@ -24,14 +24,14 @@ test.describe('/api/cart/items/{productId} PUT API tests', () => {
 
   test('should return validation error for negative quantity - 400', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
-    const productId = await getExistingProductId(request, authenticatedUser.jwtToken);
-    await addCartItem(request, authenticatedUser.jwtToken, { productId, quantity: 1 });
+    const productId = await getExistingProductId(request, clientAuth.jwtToken);
+    await addCartItem(request, clientAuth.jwtToken, { productId, quantity: 1 });
 
     // when
-    const response = await updateCartItem(request, authenticatedUser.jwtToken, productId, { quantity: -1 });
+    const response = await updateCartItem(request, clientAuth.jwtToken, productId, { quantity: -1 });
 
     // then
     expect(response.status()).toBe(400);
@@ -52,11 +52,11 @@ test.describe('/api/cart/items/{productId} PUT API tests', () => {
 
   test('should return not found for cart item that does not exist - 404', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     // when
-    const response = await updateCartItem(request, authenticatedUser.jwtToken, 999999999, {
+    const response = await updateCartItem(request, clientAuth.jwtToken, 999999999, {
       quantity: 2
     });
 

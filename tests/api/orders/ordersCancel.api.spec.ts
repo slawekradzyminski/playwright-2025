@@ -6,12 +6,12 @@ import { test } from '../../fixtures/auth.fixture';
 import { createPendingOrder } from '../helpers/orderTestUtils';
 
 test.describe('/api/orders/{id}/cancel POST API tests', () => {
-  test('should cancel order - 200', async ({ request, authenticatedUser }) => {
+  test('should cancel order - 200', async ({ request, clientAuth }) => {
     // given
-    const createdOrder = await createPendingOrder(request, authenticatedUser.jwtToken);
+    const createdOrder = await createPendingOrder(request, clientAuth.jwtToken);
 
     // when
-    const response = await cancelOrder(request, authenticatedUser.jwtToken, createdOrder.id);
+    const response = await cancelOrder(request, clientAuth.jwtToken, createdOrder.id);
 
     // then
     expect(response.status()).toBe(200);
@@ -21,15 +21,15 @@ test.describe('/api/orders/{id}/cancel POST API tests', () => {
 
   test('should return error when order cannot be cancelled - 400', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
-    const createdOrder = await createPendingOrder(request, authenticatedUser.jwtToken);
-    const firstCancel = await cancelOrder(request, authenticatedUser.jwtToken, createdOrder.id);
+    const createdOrder = await createPendingOrder(request, clientAuth.jwtToken);
+    const firstCancel = await cancelOrder(request, clientAuth.jwtToken, createdOrder.id);
     expect(firstCancel.status()).toBe(200);
 
     // when
-    const response = await cancelOrder(request, authenticatedUser.jwtToken, createdOrder.id);
+    const response = await cancelOrder(request, clientAuth.jwtToken, createdOrder.id);
 
     // then
     expect(response.status()).toBe(400);
@@ -48,11 +48,11 @@ test.describe('/api/orders/{id}/cancel POST API tests', () => {
 
   test('should return not found for order that does not exist - 404', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     // when
-    const response = await cancelOrder(request, authenticatedUser.jwtToken, 999999999);
+    const response = await cancelOrder(request, clientAuth.jwtToken, 999999999);
 
     // then
     expect(response.status()).toBe(404);

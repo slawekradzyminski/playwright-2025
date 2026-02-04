@@ -6,12 +6,12 @@ import { test } from '../../fixtures/auth.fixture';
 import { createPendingOrder } from '../helpers/orderTestUtils';
 
 test.describe('/api/orders/{id} GET API tests', () => {
-  test('should return order by id - 200', async ({ request, authenticatedUser }) => {
+  test('should return order by id - 200', async ({ request, clientAuth }) => {
     // given
-    const createdOrder = await createPendingOrder(request, authenticatedUser.jwtToken);
+    const createdOrder = await createPendingOrder(request, clientAuth.jwtToken);
 
     // when
-    const response = await getOrderById(request, authenticatedUser.jwtToken, createdOrder.id);
+    const response = await getOrderById(request, clientAuth.jwtToken, createdOrder.id);
 
     // then
     expect(response.status()).toBe(200);
@@ -31,11 +31,11 @@ test.describe('/api/orders/{id} GET API tests', () => {
 
   test('should return not found for order that does not exist - 404', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     // when
-    const response = await getOrderById(request, authenticatedUser.jwtToken, 999999999);
+    const response = await getOrderById(request, clientAuth.jwtToken, 999999999);
 
     // then
     expect(response.status()).toBe(404);

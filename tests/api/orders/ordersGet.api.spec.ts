@@ -5,10 +5,10 @@ import type { OrderDto, PageDto } from '../../../types/order';
 import { test } from '../../fixtures/auth.fixture';
 
 test.describe('/api/orders GET API tests', () => {
-  test('should return user orders - 200', async ({ request, authenticatedUser }) => {
+  test('should return user orders - 200', async ({ request, clientAuth }) => {
     // given
     // when
-    const response = await getOrders(request, authenticatedUser.jwtToken);
+    const response = await getOrders(request, clientAuth.jwtToken);
 
     // then
     expect(response.status()).toBe(200);

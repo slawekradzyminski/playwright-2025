@@ -6,9 +6,9 @@ import { test } from '../../fixtures/auth.fixture';
 import { createPendingOrder } from '../helpers/orderTestUtils';
 
 test.describe('/api/orders/{id}/status PUT API tests', () => {
-  test('should update order status as admin - 200', async ({ request, authenticatedUser, adminAuth }) => {
+  test('should update order status as admin - 200', async ({ request, clientAuth, adminAuth }) => {
     // given
-    const createdOrder = await createPendingOrder(request, authenticatedUser.jwtToken);
+    const createdOrder = await createPendingOrder(request, clientAuth.jwtToken);
 
     // when
     const response = await updateOrderStatus(request, adminAuth.jwtToken, createdOrder.id, 'PAID');
@@ -21,11 +21,11 @@ test.describe('/api/orders/{id}/status PUT API tests', () => {
 
   test('should return validation error for invalid status payload - 400', async ({
     request,
-    authenticatedUser,
+    clientAuth,
     adminAuth
   }) => {
     // given
-    const createdOrder = await createPendingOrder(request, authenticatedUser.jwtToken);
+    const createdOrder = await createPendingOrder(request, clientAuth.jwtToken);
 
     // when
     const response = await updateOrderStatus(request, adminAuth.jwtToken, createdOrder.id, 'INVALID');
@@ -51,15 +51,15 @@ test.describe('/api/orders/{id}/status PUT API tests', () => {
 
   test('should return forbidden for non-admin update order status - 403', async ({
     request,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
-    const createdOrder = await createPendingOrder(request, authenticatedUser.jwtToken);
+    const createdOrder = await createPendingOrder(request, clientAuth.jwtToken);
 
     // when
     const response = await updateOrderStatus(
       request,
-      authenticatedUser.jwtToken,
+      clientAuth.jwtToken,
       createdOrder.id,
       'PAID'
     );

@@ -6,18 +6,18 @@ import { test } from '../../fixtures/auth.fixture';
 import { getExistingProductId } from '../helpers/productTestUtils';
 
 test.describe('/api/cart DELETE API tests', () => {
-  test('should clear current user cart - 204', async ({ request, authenticatedUser }) => {
+  test('should clear current user cart - 204', async ({ request, clientAuth }) => {
     // given
-    const productId = await getExistingProductId(request, authenticatedUser.jwtToken);
-    await addCartItem(request, authenticatedUser.jwtToken, { productId, quantity: 1 });
+    const productId = await getExistingProductId(request, clientAuth.jwtToken);
+    await addCartItem(request, clientAuth.jwtToken, { productId, quantity: 1 });
 
     // when
-    const response = await clearCart(request, authenticatedUser.jwtToken);
+    const response = await clearCart(request, clientAuth.jwtToken);
 
     // then
     expect(response.status()).toBe(204);
     expect(await response.text()).toBe('');
-    const cartResponse = await getCart(request, authenticatedUser.jwtToken);
+    const cartResponse = await getCart(request, clientAuth.jwtToken);
     const cartBody = await cartResponse.json();
     expect(cartBody.totalItems).toBe(0);
   });

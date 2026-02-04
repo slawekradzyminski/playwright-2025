@@ -6,7 +6,7 @@ import { attemptSignup } from '../../http/signupClient';
 import type { LoginResponseDto, UserRegisterDto } from '../../types/auth';
 import type { APIRequestContext } from '@playwright/test';
 
-type AuthenticatedUserFixture = {
+type ClientAuthFixture = {
   jwtToken: string;
   user: UserRegisterDto;
 };
@@ -17,10 +17,10 @@ type AdminAuthFixture = {
 };
 
 export const test = base.extend<{
-  authenticatedUser: AuthenticatedUserFixture;
+  clientAuth: ClientAuthFixture;
   adminAuth: AdminAuthFixture;
 }>({
-  authenticatedUser: async ({ request }, use) => {
+  clientAuth: async ({ request }, use) => {
     const userData = createUser({ roles: ['ROLE_CLIENT'] });
     const signupResponse = await attemptSignup(request, userData);
     expect(signupResponse.status()).toBe(201);

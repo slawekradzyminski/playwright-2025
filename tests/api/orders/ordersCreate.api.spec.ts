@@ -6,24 +6,24 @@ import { test } from '../../fixtures/auth.fixture';
 import { createPendingOrder, shippingAddress } from '../helpers/orderTestUtils';
 
 test.describe('/api/orders POST API tests', () => {
-  test('should create order from cart - 201', async ({ request, authenticatedUser }) => {
+  test('should create order from cart - 201', async ({ request, clientAuth }) => {
     // given
-    await clearCart(request, authenticatedUser.jwtToken);
+    await clearCart(request, clientAuth.jwtToken);
 
     // when
-    const responseBody = await createPendingOrder(request, authenticatedUser.jwtToken);
+    const responseBody = await createPendingOrder(request, clientAuth.jwtToken);
 
     // then
     expect(responseBody.status).toBe('PENDING');
     expect(responseBody.shippingAddress.street).toBe(shippingAddress.street);
   });
 
-  test('should return error for empty cart - 400', async ({ request, authenticatedUser }) => {
+  test('should return error for empty cart - 400', async ({ request, clientAuth }) => {
     // given
-    await clearCart(request, authenticatedUser.jwtToken);
+    await clearCart(request, clientAuth.jwtToken);
 
     // when
-    const response = await createOrder(request, authenticatedUser.jwtToken, shippingAddress);
+    const response = await createOrder(request, clientAuth.jwtToken, shippingAddress);
 
     // then
     expect(response.status()).toBe(400);

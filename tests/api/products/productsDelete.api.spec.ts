@@ -41,7 +41,7 @@ test.describe('/api/products/{id} DELETE API tests', () => {
   test('should return forbidden for non-admin delete product - 403', async ({
     request,
     adminAuth,
-    authenticatedUser
+    clientAuth
   }) => {
     // given
     const createdResponse = await createProduct(request, adminAuth.jwtToken, createProductData());
@@ -49,7 +49,7 @@ test.describe('/api/products/{id} DELETE API tests', () => {
     const createdProduct: ProductDto = await createdResponse.json();
 
     // when
-    const response = await deleteProduct(request, authenticatedUser.jwtToken, createdProduct.id);
+    const response = await deleteProduct(request, clientAuth.jwtToken, createdProduct.id);
 
     // then
     expect(response.status()).toBe(403);
