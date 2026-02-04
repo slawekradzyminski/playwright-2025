@@ -3,6 +3,15 @@ export interface LoginDto {
   password: string;
 }
 
+export interface UserRegisterDto {
+  username: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  roles: ('ROLE_ADMIN' | 'ROLE_CLIENT')[];
+}
+
 export interface LoginResponseDto {
   token: string;
   username: string;

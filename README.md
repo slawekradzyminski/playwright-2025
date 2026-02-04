@@ -19,9 +19,12 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 .
 ├── tests/
 │   ├── api/
-│   │   └── login.api.spec.ts       # API tests for /users/signin endpoint
+│   │   ├── login.api.spec.ts       # API tests for /users/signin endpoint
+│   │   └── signup.api.spec.ts      # API tests for /users/signup endpoint
 │   └── ui/
 │       └── login.ui.spec.ts        # UI tests for the login page
+├── docs/
+│   └── api-test-plan.md            # API endpoint coverage plan (covered vs TODO)
 ├── types/
 │   └── auth.ts                     # TypeScript interfaces for authentication
 ├── playwright.config.ts            # Playwright configuration
@@ -67,6 +70,7 @@ Follow the instructions in the awesome-localstack repository to set up and start
 npm run test:api
 # or
 npx playwright test tests/api/login.api.spec.ts
+npx playwright test tests/api/signup.api.spec.ts
 ```
 
 **UI Tests**
@@ -105,6 +109,34 @@ These tests cover various scenarios for the `/users/signin` endpoint, ordered by
 - **Successful Authentication (200)**: Valid credentials return a 200 status with a JWT token and complete user information
 - **Validation Errors (400)**: Tests for empty username, short username, and short password scenarios with appropriate error messages
 - **Authentication Errors (422)**: Invalid credentials result in 422 status codes with error messages
+
+### API Tests (`tests/api/signup.api.spec.ts`)
+
+These tests cover core scenarios for the `/users/signup` endpoint:
+
+- **Successful User Creation (201)**: Valid registration payload creates a user
+- **Validation Error (400)**: Invalid short username returns exact validation message
+- **Business Rule Error (400)**: Duplicate username returns exact duplicate-user message
+
+## cURL API Checks
+
+You can quickly validate API behavior with `curl` before or during test development.
+
+```bash
+# /users/signin - valid credentials
+curl -i -X POST http://localhost:4001/users/signin \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin"}'
+
+# /users/signup - short username validation error
+curl -i -X POST http://localhost:4001/users/signup \
+  -H "Content-Type: application/json" \
+  -d '{"username":"abc","email":"abc@example.com","password":"Password123!","firstName":"John","lastName":"Boyd","roles":["ROLE_CLIENT"]}'
+```
+
+## API Test Plan
+
+Full endpoint coverage tracking is maintained in `docs/api-test-plan.md`.
 
 ### UI Tests (`tests/ui/login.ui.spec.ts`)
 
