@@ -1,10 +1,10 @@
 import { expect } from '@playwright/test';
-import { API_BASE_URL } from '../../config/constants';
-import { createUser } from '../../generators/userGenerator';
-import { attemptSignup } from '../../http/signupClient';
-import { deleteUser, getUserByUsername, updateUser } from '../../http/userProfileClient';
-import type { UserResponseDto } from '../../types/auth';
-import { test } from '../fixtures/auth.fixture';
+import { API_BASE_URL } from '../../../../config/constants';
+import { createUser } from '../../../../generators/userGenerator';
+import { attemptSignup } from '../../../../http/signupClient';
+import { deleteUser, getUserByUsername, updateUser } from '../../../../http/userProfileClient';
+import type { UserResponseDto } from '../../../../types/auth';
+import { test } from '../../../fixtures/auth.fixture';
 
 test.describe('/users/{username} API tests', () => {
   test('should return user by username for authenticated request - 200', async ({

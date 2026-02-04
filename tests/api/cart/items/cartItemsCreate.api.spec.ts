@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
-import { API_BASE_URL } from '../../config/constants';
-import { addCartItem } from '../../http/cartItemsClient';
-import type { CartDto } from '../../types/cart';
-import { test } from '../fixtures/auth.fixture';
+import { API_BASE_URL } from '../../../../config/constants';
+import { addCartItem } from '../../../../http/cartItemsClient';
+import type { CartDto } from '../../../../types/cart';
+import { test } from '../../../fixtures/auth.fixture';
 
 test.describe('/api/cart/items POST API tests', () => {
   test('should add item to cart - 200', async ({ request, authenticatedUser }) => {

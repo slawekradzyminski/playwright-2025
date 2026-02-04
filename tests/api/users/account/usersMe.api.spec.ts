@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
-import { API_BASE_URL } from '../../config/constants';
-import { getCurrentUser } from '../../http/userProfileClient';
-import type { UserResponseDto } from '../../types/auth';
-import { test } from '../fixtures/auth.fixture';
+import { API_BASE_URL } from '../../../../config/constants';
+import { getCurrentUser } from '../../../../http/userProfileClient';
+import type { UserResponseDto } from '../../../../types/auth';
+import { test } from '../../../fixtures/auth.fixture';
 
 test.describe('/users/me API tests', () => {
   test('should return current user for authenticated request - 200', async ({

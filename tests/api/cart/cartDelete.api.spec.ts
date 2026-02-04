@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
-import { API_BASE_URL } from '../../config/constants';
-import { addCartItem } from '../../http/cartItemsClient';
-import { clearCart, getCart } from '../../http/cartClient';
-import { test } from '../fixtures/auth.fixture';
+import { API_BASE_URL } from '../../../config/constants';
+import { addCartItem } from '../../../http/cartItemsClient';
+import { clearCart, getCart } from '../../../http/cartClient';
+import { test } from '../../fixtures/auth.fixture';
 
 test.describe('/api/cart DELETE API tests', () => {
   test('should clear current user cart - 204', async ({ request, authenticatedUser }) => {

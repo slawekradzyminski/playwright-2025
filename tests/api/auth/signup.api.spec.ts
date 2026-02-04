@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { createUser } from '../../generators/userGenerator';
-import { attemptSignup } from '../../http/signupClient';
+import { createUser } from '../../../generators/userGenerator';
+import { attemptSignup } from '../../../http/signupClient';
 
 test.describe('/users/signup API tests', () => {
   test('should successfully create user account - 201', async ({ request }) => {

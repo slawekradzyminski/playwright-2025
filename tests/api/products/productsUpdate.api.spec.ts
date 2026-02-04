@@ -1,9 +1,9 @@
 import { expect } from '@playwright/test';
-import { API_BASE_URL } from '../../config/constants';
-import { createProductData, createProductUpdateData } from '../../generators/productGenerator';
-import { createProduct, deleteProduct, updateProduct } from '../../http/productsClient';
-import type { ProductDto } from '../../types/product';
-import { test } from '../fixtures/auth.fixture';
+import { API_BASE_URL } from '../../../config/constants';
+import { createProductData, createProductUpdateData } from '../../../generators/productGenerator';
+import { createProduct, deleteProduct, updateProduct } from '../../../http/productsClient';
+import type { ProductDto } from '../../../types/product';
+import { test } from '../../fixtures/auth.fixture';
 
 test.describe('/api/products/{id} PUT API tests', () => {
   test('should update product for admin user - 200', async ({ request, adminAuth }) => {

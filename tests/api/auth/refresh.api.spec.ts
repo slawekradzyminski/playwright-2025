@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { ADMIN_PASSWORD, ADMIN_USERNAME } from '../../config/constants';
-import { attemptLogin } from '../../http/loginClient';
-import { attemptRefreshToken } from '../../http/refreshClient';
+import { ADMIN_PASSWORD, ADMIN_USERNAME } from '../../../config/constants';
+import { attemptLogin } from '../../../http/loginClient';
+import { attemptRefreshToken } from '../../../http/refreshClient';
 
 test.describe('/users/refresh API tests', () => {
   test('should refresh access token with valid refresh token - 200', async ({ request }) => {

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { createUser } from '../../generators/userGenerator';
-import { requestPasswordReset, resetPassword } from '../../http/passwordResetClient';
-import { attemptSignup } from '../../http/signupClient';
+import { createUser } from '../../../generators/userGenerator';
+import { requestPasswordReset, resetPassword } from '../../../http/passwordResetClient';
+import { attemptSignup } from '../../../http/signupClient';
 
 test.describe('/users/password/forgot API tests', () => {
   test('should return reset token for existing account - 202', async ({ request }) => {

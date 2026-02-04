@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { clearLocalEmailOutbox, getLocalEmailOutbox } from '../../http/localEmailOutboxClient';
+import { clearLocalEmailOutbox, getLocalEmailOutbox } from '../../../http/localEmailOutboxClient';
 
 test.describe('/local/email/outbox API tests', () => {
   test('should return email outbox entries - 200', async ({ request }) => {

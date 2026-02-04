@@ -1,7 +1,7 @@
 import { test, expect, APIResponse } from '@playwright/test';
-import type { LoginDto } from '../../types/auth';
-import { attemptLogin } from '../../http/loginClient';
-import { ADMIN_PASSWORD, ADMIN_USERNAME } from '../../config/constants';
+import type { LoginDto } from '../../../types/auth';
+import { attemptLogin } from '../../../http/loginClient';
+import { ADMIN_PASSWORD, ADMIN_USERNAME } from '../../../config/constants';
 
 test.describe('/users/signin API tests', () => {
   test('should successfully authenticate with valid credentials - 200', async ({ request }) => {

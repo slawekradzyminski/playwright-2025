@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
-import { API_BASE_URL } from '../../config/constants';
-import { logoutUser } from '../../http/userProfileClient';
-import { test } from '../fixtures/auth.fixture';
+import { API_BASE_URL } from '../../../../config/constants';
+import { logoutUser } from '../../../../http/userProfileClient';
+import { test } from '../../../fixtures/auth.fixture';
 
 test.describe('/users/logout API tests', () => {
   test('should logout authenticated user - 200', async ({ request, authenticatedUser }) => {

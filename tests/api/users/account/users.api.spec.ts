@@ -1,7 +1,7 @@
-import { getUsers } from '../../http/usersClient';
-import { API_BASE_URL } from '../../config/constants';
-import type { UserResponseDto } from '../../types/auth';
-import { test, expect } from '../fixtures/auth.fixture';
+import { getUsers } from '../../../../http/usersClient';
+import { API_BASE_URL } from '../../../../config/constants';
+import type { UserResponseDto } from '../../../../types/auth';
+import { test, expect } from '../../../fixtures/auth.fixture';
 
 test.describe('/users API tests', () => {
   test('should return all users for authenticated request - 200', async ({ request, authenticatedUser }) => {

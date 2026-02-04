@@ -1,12 +1,12 @@
 import { expect } from '@playwright/test';
-import { API_BASE_URL } from '../../config/constants';
+import { API_BASE_URL } from '../../../../config/constants';
 import {
   getChatSystemPrompt,
   getToolSystemPrompt,
   updateChatSystemPrompt,
   updateToolSystemPrompt
-} from '../../http/userProfileClient';
-import { test } from '../fixtures/auth.fixture';
+} from '../../../../http/userProfileClient';
+import { test } from '../../../fixtures/auth.fixture';
 
 test.describe('/users prompts API tests', () => {
   test('should return chat system prompt for authenticated user - 200', async ({

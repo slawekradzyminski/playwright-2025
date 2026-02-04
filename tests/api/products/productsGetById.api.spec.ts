@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
-import { API_BASE_URL } from '../../config/constants';
-import { getProductById, getProducts } from '../../http/productsClient';
-import type { ProductDto } from '../../types/product';
-import { test } from '../fixtures/auth.fixture';
+import { API_BASE_URL } from '../../../config/constants';
+import { getProductById, getProducts } from '../../../http/productsClient';
+import type { ProductDto } from '../../../types/product';
+import { test } from '../../fixtures/auth.fixture';
 
 test.describe('/api/products/{id} GET API tests', () => {
   test('should return product by id for authenticated request - 200', async ({ request, adminAuth }) => {
