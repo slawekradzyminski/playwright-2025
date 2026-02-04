@@ -137,6 +137,7 @@ curl -i -X POST http://localhost:4001/users/signup \
 ## API Test Plan
 
 Full endpoint coverage tracking is maintained in `docs/api-test-plan.md`.
+The plan is split into non-protected vs protected endpoints and maps each endpoint to backend implementation files in `/Users/admin/IdeaProjects/test-secure-backend`.
 
 ### UI Tests (`tests/ui/login.ui.spec.ts`)
 
