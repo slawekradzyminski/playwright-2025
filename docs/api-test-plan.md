@@ -11,8 +11,8 @@ Derived from `api-docs.json` and cross-checked against backend controllers/secur
 ## Coverage Summary
 
 - Total endpoints: 40
-- Covered by this repo: 22
-- Remaining TODO: 18
+- Covered by this repo: 27
+- Remaining TODO: 13
 - Non-protected endpoints: 7
 - Protected endpoints: 33
 
@@ -32,11 +32,11 @@ Derived from `api-docs.json` and cross-checked against backend controllers/secur
 
 | Coverage | Method | Path | Assertion order (HTTP) | Auth/Role rule | Backend code | Notes |
 |---|---|---|---|---|---|---|
-| TODO | DELETE | `/api/cart` | 204 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartController.java` | Add API tests |
-| TODO | GET | `/api/cart` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartController.java` | Add API tests |
-| TODO | POST | `/api/cart/items` | 200 -> 400 -> 401 -> 404 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartItemsController.java` | Add API tests |
-| TODO | DELETE | `/api/cart/items/{productId}` | 200 -> 401 -> 404 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartItemsController.java` | Add API tests |
-| TODO | PUT | `/api/cart/items/{productId}` | 200 -> 400 -> 401 -> 404 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartItemsController.java` | Add API tests |
+| Covered | DELETE | `/api/cart` | 204 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartController.java` | Tests: `tests/api/cartDelete.api.spec.ts` |
+| Covered | GET | `/api/cart` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartController.java` | Tests: `tests/api/cartGet.api.spec.ts` |
+| Covered | POST | `/api/cart/items` | 200 -> 400 -> 401 -> 404 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartItemsController.java` | Tests: `tests/api/cartItemsCreate.api.spec.ts` |
+| Covered | DELETE | `/api/cart/items/{productId}` | 200 -> 401 -> 404 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartItemsController.java` | Tests: `tests/api/cartItemsDelete.api.spec.ts` |
+| Covered | PUT | `/api/cart/items/{productId}` | 200 -> 400 -> 401 -> 404 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartItemsController.java` | Tests: `tests/api/cartItemsUpdate.api.spec.ts` |
 | TODO | POST | `/api/ollama/chat` | 200 -> 400 -> 401 -> 404 -> 500 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OllamaController.java` | Add API tests |
 | TODO | POST | `/api/ollama/chat/tools` | 200 -> 400 -> 401 -> 500 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OllamaController.java` | Add API tests |
 | TODO | GET | `/api/ollama/chat/tools/definitions` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OllamaController.java` | Add API tests |
