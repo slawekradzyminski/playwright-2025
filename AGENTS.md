@@ -2,6 +2,7 @@
 
 - Use curl to test the API endpoints manually and use the response to create the test cases.
 - Some endpoints are protected by authentication, so you need to provide a valid JWT token in the request. It is returned by login endpoint.
+- LLM endpoint tests (`/api/ollama/**`) are integrated with `/Users/admin/IdeaProjects/ollama-mock`, which returns hardcoded responses; assert stable contract/shape rather than semantic model quality.
 - Keep API test cases ordered by HTTP status code ascending (e.g. `200 -> 400 -> 401 -> 403 -> 404`).
 - Keep one endpoint per API test file (for example separate files for `/api/products`, `/api/products/{id}` GET, PUT, DELETE).
 - Structure each test with clear `given / when / then` comments.

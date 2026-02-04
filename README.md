@@ -69,9 +69,14 @@ Follow the instructions in the awesome-localstack repository to set up and start
 ```bash
 npm run test:api
 # or
-npx playwright test tests/api/login.api.spec.ts
-npx playwright test tests/api/signup.api.spec.ts
+npx playwright test tests/api/auth/login.api.spec.ts
+npx playwright test tests/api/auth/signup.api.spec.ts
 ```
+
+**LLM/Ollama API Tests**
+
+- Tests for `/api/ollama/**` integrate with `/Users/admin/IdeaProjects/ollama-mock`.
+- That mock serves hardcoded responses, so the tests validate API contract and stream shape deterministically.
 
 **UI Tests**
 

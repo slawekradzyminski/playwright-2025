@@ -11,8 +11,8 @@ Derived from `api-docs.json` and cross-checked against backend controllers/secur
 ## Coverage Summary
 
 - Total endpoints: 40
-- Covered by this repo: 34
-- Remaining TODO: 6
+- Covered by this repo: 40
+- Remaining TODO: 0
 - Non-protected endpoints: 7
 - Protected endpoints: 33
 
@@ -37,10 +37,10 @@ Derived from `api-docs.json` and cross-checked against backend controllers/secur
 | Covered | POST | `/api/cart/items` | 200 -> 400 -> 401 -> 404 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartItemsController.java` | Tests: `tests/api/cart/items/cartItemsCreate.api.spec.ts` |
 | Covered | DELETE | `/api/cart/items/{productId}` | 200 -> 401 -> 404 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartItemsController.java` | Tests: `tests/api/cart/items/cartItemsDelete.api.spec.ts` |
 | Covered | PUT | `/api/cart/items/{productId}` | 200 -> 400 -> 401 -> 404 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/cart/CartItemsController.java` | Tests: `tests/api/cart/items/cartItemsUpdate.api.spec.ts` |
-| TODO | POST | `/api/ollama/chat` | 200 -> 400 -> 401 -> 404 -> 500 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OllamaController.java` | Add API tests |
-| TODO | POST | `/api/ollama/chat/tools` | 200 -> 400 -> 401 -> 500 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OllamaController.java` | Add API tests |
-| TODO | GET | `/api/ollama/chat/tools/definitions` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OllamaController.java` | Add API tests |
-| TODO | POST | `/api/ollama/generate` | 200 -> 400 -> 401 -> 404 -> 500 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OllamaController.java` | Add API tests |
+| Covered | POST | `/api/ollama/chat` | 200 -> 400 -> 401 -> 404 -> 500 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OllamaController.java` | Tests: `tests/api/ollama/ollamaChat.api.spec.ts` |
+| Covered | POST | `/api/ollama/chat/tools` | 200 -> 400 -> 401 -> 500 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OllamaController.java` | Tests: `tests/api/ollama/ollamaChatTools.api.spec.ts` |
+| Covered | GET | `/api/ollama/chat/tools/definitions` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OllamaController.java` | Tests: `tests/api/ollama/ollamaToolDefinitions.api.spec.ts` |
+| Covered | POST | `/api/ollama/generate` | 200 -> 400 -> 401 -> 404 -> 500 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OllamaController.java` | Tests: `tests/api/ollama/ollamaGenerate.api.spec.ts` |
 | Covered | GET | `/api/orders` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OrderController.java` | Tests: `tests/api/orders/ordersGet.api.spec.ts` |
 | Covered | POST | `/api/orders` | 201 -> 400 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OrderController.java` | Tests: `tests/api/orders/ordersCreate.api.spec.ts` |
 | Covered | GET | `/api/orders/admin` | 200 -> 401 -> 403 | JWT + hasRole('ROLE_ADMIN') | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/OrderController.java` | Tests: `tests/api/orders/ordersGetAdmin.api.spec.ts` |
@@ -52,8 +52,8 @@ Derived from `api-docs.json` and cross-checked against backend controllers/secur
 | Covered | DELETE | `/api/products/{id}` | 204 -> 401 -> 403 -> 404 | JWT + hasRole('ROLE_ADMIN') | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/ProductController.java` | Tests: `tests/api/products/productsDelete.api.spec.ts` |
 | Covered | GET | `/api/products/{id}` | 200 -> 401 -> 404 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/ProductController.java` | Tests: `tests/api/products/productsGetById.api.spec.ts` |
 | Covered | PUT | `/api/products/{id}` | 200 -> 400 -> 401 -> 403 -> 404 | JWT + hasRole('ROLE_ADMIN') | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/ProductController.java` | Tests: `tests/api/products/productsUpdate.api.spec.ts` |
-| TODO | GET | `/api/traffic/info` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/TrafficController.java` | Add API tests |
-| TODO | POST | `/email` | 200 -> 400 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/EmailController.java` | Add API tests |
+| Covered | GET | `/api/traffic/info` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/TrafficController.java` | Tests: `tests/api/traffic/trafficInfo.api.spec.ts` |
+| Covered | POST | `/email` | 200 -> 400 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/EmailController.java` | Tests: `tests/api/email/emailSend.api.spec.ts` |
 | Covered | POST | `/qr/create` | 200 -> 400 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/QrController.java` | Tests: `tests/api/qr/qrCreate.api.spec.ts` |
 | Covered | GET | `/users` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/users/UserGetUsersController.java` | Tests: `tests/api/users/account/users.api.spec.ts` |
 | Covered | GET | `/users/chat-system-prompt` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/users/UserPromptController.java` | Tests: `tests/api/users/prompts/usersPrompts.api.spec.ts` |
