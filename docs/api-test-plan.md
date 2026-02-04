@@ -11,8 +11,8 @@ Derived from `api-docs.json` and cross-checked against backend controllers/secur
 ## Coverage Summary
 
 - Total endpoints: 40
-- Covered by this repo: 7
-- Remaining TODO: 33
+- Covered by this repo: 8
+- Remaining TODO: 32
 - Non-protected endpoints: 7
 - Protected endpoints: 33
 
@@ -55,7 +55,7 @@ Derived from `api-docs.json` and cross-checked against backend controllers/secur
 | TODO | GET | `/api/traffic/info` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/TrafficController.java` | Add API tests |
 | TODO | POST | `/email` | 200 -> 400 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/EmailController.java` | Add API tests |
 | TODO | POST | `/qr/create` | 200 -> 400 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/QrController.java` | Add API tests |
-| TODO | GET | `/users` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/users/UserGetUsersController.java` | Add API tests |
+| Covered | GET | `/users` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/users/UserGetUsersController.java` | Tests: `tests/api/users.api.spec.ts` |
 | TODO | GET | `/users/chat-system-prompt` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/users/UserPromptController.java` | Add API tests |
 | TODO | PUT | `/users/chat-system-prompt` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/users/UserPromptController.java` | Add API tests |
 | TODO | POST | `/users/logout` | 200 -> 401 | JWT required | `/Users/admin/IdeaProjects/test-secure-backend/src/main/java/com/awesome/testing/controller/users/UserLogoutController.java` | Add API tests |
