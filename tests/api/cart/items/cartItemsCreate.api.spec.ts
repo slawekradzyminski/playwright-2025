@@ -3,13 +3,16 @@ import { API_BASE_URL } from '../../../../config/constants';
 import { addCartItem } from '../../../../http/cartItemsClient';
 import type { CartDto } from '../../../../types/cart';
 import { test } from '../../../fixtures/auth.fixture';
+import { getExistingProductId } from '../../helpers/productTestUtils';
 
 test.describe('/api/cart/items POST API tests', () => {
   test('should add item to cart - 200', async ({ request, authenticatedUser }) => {
     // given
+    const productId = await getExistingProductId(request, authenticatedUser.jwtToken);
+
     // when
     const response = await addCartItem(request, authenticatedUser.jwtToken, {
-      productId: 1,
+      productId,
       quantity: 1
     });
 
@@ -17,7 +20,7 @@ test.describe('/api/cart/items POST API tests', () => {
     expect(response.status()).toBe(200);
     const responseBody: CartDto = await response.json();
     expect(responseBody.items).toEqual(
-      expect.arrayContaining([expect.objectContaining({ productId: 1, quantity: 1 })])
+      expect.arrayContaining([expect.objectContaining({ productId, quantity: 1 })])
     );
   });
 
@@ -26,9 +29,11 @@ test.describe('/api/cart/items POST API tests', () => {
     authenticatedUser
   }) => {
     // given
+    const productId = await getExistingProductId(request, authenticatedUser.jwtToken);
+
     // when
     const response = await addCartItem(request, authenticatedUser.jwtToken, {
-      productId: 1,
+      productId,
       quantity: 0
     });
 

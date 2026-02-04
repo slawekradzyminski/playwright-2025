@@ -3,6 +3,7 @@ import { addCartItem } from '../../../http/cartItemsClient';
 import { clearCart } from '../../../http/cartClient';
 import { createOrder } from '../../../http/ordersClient';
 import type { AddressDto, OrderDto } from '../../../types/order';
+import { getExistingProductId } from './productTestUtils';
 
 export const shippingAddress: AddressDto = {
   street: '123 Main',
@@ -17,7 +18,8 @@ export const createPendingOrder = async (
   jwtToken: string
 ): Promise<OrderDto> => {
   await clearCart(request, jwtToken);
-  await addCartItem(request, jwtToken, { productId: 1, quantity: 1 });
+  const productId = await getExistingProductId(request, jwtToken);
+  await addCartItem(request, jwtToken, { productId, quantity: 1 });
   const response = await createOrder(request, jwtToken, shippingAddress);
   expect(response.status()).toBe(201);
   return await response.json();

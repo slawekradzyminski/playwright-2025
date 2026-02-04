@@ -3,14 +3,16 @@ import { API_BASE_URL } from '../../../../config/constants';
 import { addCartItem, deleteCartItem } from '../../../../http/cartItemsClient';
 import type { CartDto } from '../../../../types/cart';
 import { test } from '../../../fixtures/auth.fixture';
+import { getExistingProductId } from '../../helpers/productTestUtils';
 
 test.describe('/api/cart/items/{productId} DELETE API tests', () => {
   test('should remove item from cart - 200', async ({ request, authenticatedUser }) => {
     // given
-    await addCartItem(request, authenticatedUser.jwtToken, { productId: 1, quantity: 1 });
+    const productId = await getExistingProductId(request, authenticatedUser.jwtToken);
+    await addCartItem(request, authenticatedUser.jwtToken, { productId, quantity: 1 });
 
     // when
-    const response = await deleteCartItem(request, authenticatedUser.jwtToken, 1);
+    const response = await deleteCartItem(request, authenticatedUser.jwtToken, productId);
 
     // then
     expect(response.status()).toBe(200);

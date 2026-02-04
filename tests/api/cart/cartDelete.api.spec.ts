@@ -3,11 +3,13 @@ import { API_BASE_URL } from '../../../config/constants';
 import { addCartItem } from '../../../http/cartItemsClient';
 import { clearCart, getCart } from '../../../http/cartClient';
 import { test } from '../../fixtures/auth.fixture';
+import { getExistingProductId } from '../helpers/productTestUtils';
 
 test.describe('/api/cart DELETE API tests', () => {
   test('should clear current user cart - 204', async ({ request, authenticatedUser }) => {
     // given
-    await addCartItem(request, authenticatedUser.jwtToken, { productId: 1, quantity: 1 });
+    const productId = await getExistingProductId(request, authenticatedUser.jwtToken);
+    await addCartItem(request, authenticatedUser.jwtToken, { productId, quantity: 1 });
 
     // when
     const response = await clearCart(request, authenticatedUser.jwtToken);

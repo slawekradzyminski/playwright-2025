@@ -3,20 +3,22 @@ import { API_BASE_URL } from '../../../../config/constants';
 import { addCartItem, updateCartItem } from '../../../../http/cartItemsClient';
 import type { CartDto } from '../../../../types/cart';
 import { test } from '../../../fixtures/auth.fixture';
+import { getExistingProductId } from '../../helpers/productTestUtils';
 
 test.describe('/api/cart/items/{productId} PUT API tests', () => {
   test('should update cart item quantity - 200', async ({ request, authenticatedUser }) => {
     // given
-    await addCartItem(request, authenticatedUser.jwtToken, { productId: 1, quantity: 1 });
+    const productId = await getExistingProductId(request, authenticatedUser.jwtToken);
+    await addCartItem(request, authenticatedUser.jwtToken, { productId, quantity: 1 });
 
     // when
-    const response = await updateCartItem(request, authenticatedUser.jwtToken, 1, { quantity: 2 });
+    const response = await updateCartItem(request, authenticatedUser.jwtToken, productId, { quantity: 2 });
 
     // then
     expect(response.status()).toBe(200);
     const responseBody: CartDto = await response.json();
     expect(responseBody.items).toEqual(
-      expect.arrayContaining([expect.objectContaining({ productId: 1, quantity: 2 })])
+      expect.arrayContaining([expect.objectContaining({ productId, quantity: 2 })])
     );
   });
 
@@ -25,10 +27,11 @@ test.describe('/api/cart/items/{productId} PUT API tests', () => {
     authenticatedUser
   }) => {
     // given
-    await addCartItem(request, authenticatedUser.jwtToken, { productId: 1, quantity: 1 });
+    const productId = await getExistingProductId(request, authenticatedUser.jwtToken);
+    await addCartItem(request, authenticatedUser.jwtToken, { productId, quantity: 1 });
 
     // when
-    const response = await updateCartItem(request, authenticatedUser.jwtToken, 1, { quantity: -1 });
+    const response = await updateCartItem(request, authenticatedUser.jwtToken, productId, { quantity: -1 });
 
     // then
     expect(response.status()).toBe(400);

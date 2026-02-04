@@ -3,7 +3,7 @@ import { API_BASE_URL } from '../../../config/constants';
 import { cancelOrder } from '../../../http/ordersClient';
 import type { OrderDto } from '../../../types/order';
 import { test } from '../../fixtures/auth.fixture';
-import { createPendingOrder } from './orderTestUtils';
+import { createPendingOrder } from '../helpers/orderTestUtils';
 
 test.describe('/api/orders/{id}/cancel POST API tests', () => {
   test('should cancel order - 200', async ({ request, authenticatedUser }) => {

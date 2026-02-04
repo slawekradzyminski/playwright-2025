@@ -3,7 +3,7 @@ import { API_BASE_URL } from '../../../config/constants';
 import { clearCart } from '../../../http/cartClient';
 import { createOrder } from '../../../http/ordersClient';
 import { test } from '../../fixtures/auth.fixture';
-import { createPendingOrder, shippingAddress } from './orderTestUtils';
+import { createPendingOrder, shippingAddress } from '../helpers/orderTestUtils';
 
 test.describe('/api/orders POST API tests', () => {
   test('should create order from cart - 201', async ({ request, authenticatedUser }) => {
