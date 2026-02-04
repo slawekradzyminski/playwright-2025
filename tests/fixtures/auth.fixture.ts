@@ -4,6 +4,7 @@ import { createUser } from '../../generators/userGenerator';
 import { attemptLogin } from '../../http/loginClient';
 import { attemptSignup } from '../../http/signupClient';
 import type { LoginResponseDto, UserRegisterDto } from '../../types/auth';
+import type { APIRequestContext } from '@playwright/test';
 
 type AuthenticatedUserFixture = {
   jwtToken: string;
@@ -23,25 +24,15 @@ export const test = base.extend<{
     const userData = createUser({ roles: ['ROLE_CLIENT'] });
     const signupResponse = await attemptSignup(request, userData);
     expect(signupResponse.status()).toBe(201);
-
-    const loginResponse = await attemptLogin(request, {
-      username: userData.username,
-      password: userData.password
-    });
-    expect(loginResponse.status()).toBe(200);
+    const loginResponseBody = await loginAndGetResponse(request, userData.username, userData.password);
 
     await use({
-      jwtToken: (await loginResponse.json()).token,
+      jwtToken: loginResponseBody.token,
       user: userData
     });
   },
   adminAuth: async ({ request }, use) => {
-    const loginResponse = await attemptLogin(request, {
-      username: ADMIN_USERNAME,
-      password: ADMIN_PASSWORD
-    });
-    expect(loginResponse.status()).toBe(200);
-    const loginResponseBody: LoginResponseDto = await loginResponse.json();
+    const loginResponseBody = await loginAndGetResponse(request, ADMIN_USERNAME, ADMIN_PASSWORD);
 
     await use({
       jwtToken: loginResponseBody.token,
@@ -49,5 +40,15 @@ export const test = base.extend<{
     });
   }
 });
+
+const loginAndGetResponse = async (
+  request: APIRequestContext,
+  username: string,
+  password: string
+): Promise<LoginResponseDto> => {
+  const loginResponse = await attemptLogin(request, { username, password });
+  expect(loginResponse.status()).toBe(200);
+  return await loginResponse.json();
+};
 
 export { expect };

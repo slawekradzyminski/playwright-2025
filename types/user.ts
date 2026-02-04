@@ -1,13 +1,6 @@
-export interface UserEditDto {
-  email: string;
-  firstName?: string;
-  lastName?: string;
-}
-
-export interface ChatSystemPromptDto {
-  chatSystemPrompt: string;
-}
-
-export interface ToolSystemPromptDto {
-  toolSystemPrompt: string;
-}
+export * from './user/get-user.types';
+export * from './user/update-user.types';
+export * from './user/delete-user.types';
+export * from './user/chat-system-prompt.types';
+export * from './user/tool-system-prompt.types';
+export * from './user/logout-user.types';
