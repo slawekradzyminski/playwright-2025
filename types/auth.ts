@@ -3,6 +3,17 @@ export interface LoginDto {
   password: string;
 }
 
+export type UserRole = 'ROLE_ADMIN' | 'ROLE_CLIENT';
+
+export interface UserRegisterDto {
+  username: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  roles: UserRole[];
+}
+
 export interface LoginResponseDto {
   token: string;
   refreshToken: string;

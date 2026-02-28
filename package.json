@@ -5,7 +5,8 @@
   "scripts": {
     "test": "playwright test",
     "test:api": "playwright test tests/api/",
-    "test:ui": "playwright test tests/ui/"
+    "test:ui": "playwright test tests/ui/",
+    "verify:registrations": "node scripts/register-users-from-csv.mjs"
   },
   "keywords": [
     "playwright",
@@ -17,6 +18,7 @@
   "license": "ISC",
   "description": "A modern TypeScript-based test suite for validating both API and UI layers of a Dockerized AWS-like application stack",
   "devDependencies": {
+    "@faker-js/faker": "^10.3.0",
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.2.3",
     "dotenv": "^17.3.1"
