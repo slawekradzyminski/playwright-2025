@@ -8,7 +8,17 @@ Build complete automated API coverage for the OpenAPI spec in `api-docs.json` (4
 1. `POST /users/signin`
 2. `POST /users/signup`
 3. `GET /users/me`
-- Remaining operations: **37 / 40**
+4. `POST /users/password/forgot`
+5. `POST /users/password/reset`
+6. `POST /users/refresh`
+7. `POST /users/logout`
+8. `GET /users/chat-system-prompt`
+9. `PUT /users/chat-system-prompt`
+10. `GET /users/tool-system-prompt`
+11. `PUT /users/tool-system-prompt`
+12. `GET /local/email/outbox`
+13. `DELETE /local/email/outbox`
+- Remaining operations: **27 / 40**
 
 ## AI Generation Contract (Mandatory)
 For every operation in `api-docs.json`, generate:
@@ -81,13 +91,13 @@ Status legend: `[x]` done, `[ ]` pending.
 | [x] | `POST /users/password/reset` | Easy | `tests/api/http/resetPasswordRequest.ts` | `tests/api/resetPassword.api.spec.ts` |
 | [x] | `POST /users/refresh` | Easy | `tests/api/http/refreshRequest.ts` | `tests/api/refresh.api.spec.ts` |
 | [x] | `GET /users/me` | Easy | `tests/api/http/meRequest.ts` | `tests/api/me.api.spec.ts` |
-| [ ] | `POST /users/logout` | Easy | `tests/api/http/logoutRequest.ts` | `tests/api/logout.api.spec.ts` |
-| [ ] | `GET /users/chat-system-prompt` | Easy | `tests/api/http/getChatSystemPromptRequest.ts` | `tests/api/getChatSystemPrompt.api.spec.ts` |
-| [ ] | `PUT /users/chat-system-prompt` | Easy | `tests/api/http/updateChatSystemPromptRequest.ts` | `tests/api/updateChatSystemPrompt.api.spec.ts` |
-| [ ] | `GET /users/tool-system-prompt` | Easy | `tests/api/http/getToolSystemPromptRequest.ts` | `tests/api/getToolSystemPrompt.api.spec.ts` |
-| [ ] | `PUT /users/tool-system-prompt` | Easy | `tests/api/http/updateToolSystemPromptRequest.ts` | `tests/api/updateToolSystemPrompt.api.spec.ts` |
-| [ ] | `GET /local/email/outbox` | Easy | `tests/api/http/getOutboxRequest.ts` | `tests/api/getOutbox.api.spec.ts` |
-| [ ] | `DELETE /local/email/outbox` | Easy | `tests/api/http/clearOutboxRequest.ts` | `tests/api/clearOutbox.api.spec.ts` |
+| [x] | `POST /users/logout` | Easy | `tests/api/http/logoutRequest.ts` | `tests/api/logout.api.spec.ts` |
+| [x] | `GET /users/chat-system-prompt` | Easy | `tests/api/http/getChatSystemPromptRequest.ts` | `tests/api/getChatSystemPrompt.api.spec.ts` |
+| [x] | `PUT /users/chat-system-prompt` | Easy | `tests/api/http/updateChatSystemPromptRequest.ts` | `tests/api/updateChatSystemPrompt.api.spec.ts` |
+| [x] | `GET /users/tool-system-prompt` | Easy | `tests/api/http/getToolSystemPromptRequest.ts` | `tests/api/getToolSystemPrompt.api.spec.ts` |
+| [x] | `PUT /users/tool-system-prompt` | Easy | `tests/api/http/updateToolSystemPromptRequest.ts` | `tests/api/updateToolSystemPrompt.api.spec.ts` |
+| [x] | `GET /local/email/outbox` | Easy | `tests/api/http/getOutboxRequest.ts` | `tests/api/getOutbox.api.spec.ts` |
+| [x] | `DELETE /local/email/outbox` | Easy | `tests/api/http/clearOutboxRequest.ts` | `tests/api/clearOutbox.api.spec.ts` |
 | [ ] | `POST /qr/create` | Medium | `tests/api/http/createQrCodeRequest.ts` | `tests/api/createQrCode.api.spec.ts` |
 | [ ] | `GET /api/traffic/info` | Medium | `tests/api/http/getTrafficInfoRequest.ts` | `tests/api/getTrafficInfo.api.spec.ts` |
 | [ ] | `POST /email` | Medium | `tests/api/http/sendEmailRequest.ts` | `tests/api/sendEmail.api.spec.ts` |

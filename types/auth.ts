@@ -62,3 +62,17 @@ export interface ResetPasswordRequestDto {
   newPassword: string;
   confirmPassword: string;
 }
+
+export interface ChatSystemPromptDto {
+  chatSystemPrompt: string;
+}
+
+export interface ToolSystemPromptDto {
+  toolSystemPrompt: string;
+}
+
+export interface StoredEmail {
+  timestamp: string;
+  destination: string;
+  payload: Record<string, unknown>;
+}
