@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { generateUser } from '../../generators/userGenerator';
-import type { UserRegisterDto } from '../../types/auth';
+import type { UserRegisterDto } from '../../types/user';
 import { seedFakerForWorker } from '../../utils/fakerSeed';
 import { signupRequest } from './http/signupRequest';
 

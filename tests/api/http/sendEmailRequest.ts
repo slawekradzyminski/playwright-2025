@@ -1,15 +1,15 @@
 import type { APIRequestContext, APIResponse } from '@playwright/test';
-import type { ToolSystemPromptDto } from '../../../types/prompt';
+import type { EmailDto } from '../../../types/email';
 import { authHeaders, jsonHeaders } from './headers';
 
-const TOOL_SYSTEM_PROMPT_ENDPOINT = '/users/tool-system-prompt';
+const SEND_EMAIL_ENDPOINT = '/email';
 
-export const updateToolSystemPromptRequest = (
+export const sendEmailRequest = (
   request: APIRequestContext,
   jwtToken: string,
-  data: ToolSystemPromptDto,
+  data: EmailDto,
 ): Promise<APIResponse> =>
-  request.put(TOOL_SYSTEM_PROMPT_ENDPOINT, {
+  request.post(SEND_EMAIL_ENDPOINT, {
     data,
     headers: {
       ...jsonHeaders,

@@ -1,12 +1,13 @@
 import { test, expect } from '../fixtures/auth.fixture';
-import type { ChatSystemPromptDto, ErrorResponse } from '../../types/auth';
+import type { ErrorResponse } from '../../types/common';
+import type { ChatSystemPromptDto } from '../../types/prompt';
 import { getChatSystemPromptRequest } from './http/getChatSystemPromptRequest';
 import { updateChatSystemPromptRequest } from './http/updateChatSystemPromptRequest';
 
 test.describe('/users/chat-system-prompt PUT API tests', () => {
   test('should update chat system prompt for authenticated user - 200', async ({
     request,
-    authenticatedUser,
+    clientAuth,
   }) => {
     // given
     const payload: ChatSystemPromptDto = {
@@ -16,7 +17,7 @@ test.describe('/users/chat-system-prompt PUT API tests', () => {
     // when
     const updateResponse = await updateChatSystemPromptRequest(
       request,
-      authenticatedUser.jwtToken,
+      clientAuth.jwtToken,
       payload,
     );
 
@@ -27,7 +28,7 @@ test.describe('/users/chat-system-prompt PUT API tests', () => {
     const updateResponseBody = (await updateResponse.json()) as ChatSystemPromptDto;
     expect(updateResponseBody.chatSystemPrompt).toBe(payload.chatSystemPrompt);
 
-    const getResponse = await getChatSystemPromptRequest(request, authenticatedUser.jwtToken);
+    const getResponse = await getChatSystemPromptRequest(request, clientAuth.jwtToken);
     expect(getResponse.status()).toBe(200);
     const getResponseBody = (await getResponse.json()) as ChatSystemPromptDto;
     expect(getResponseBody.chatSystemPrompt).toBe(payload.chatSystemPrompt);

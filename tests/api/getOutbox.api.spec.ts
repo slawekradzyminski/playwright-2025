@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import type { StoredEmail } from '../../types/auth';
+import type { StoredEmail } from '../../types/email';
 import { getOutboxRequest } from './http/getOutboxRequest';
 
 test.describe('/local/email/outbox GET API tests', () => {

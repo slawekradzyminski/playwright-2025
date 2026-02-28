@@ -1,14 +1,15 @@
 import { test, expect } from '../fixtures/auth.fixture';
-import type { ChatSystemPromptDto, ErrorResponse } from '../../types/auth';
+import type { ErrorResponse } from '../../types/common';
+import type { ChatSystemPromptDto } from '../../types/prompt';
 import { getChatSystemPromptRequest } from './http/getChatSystemPromptRequest';
 
 test.describe('/users/chat-system-prompt GET API tests', () => {
   test('should get chat system prompt for authenticated user - 200', async ({
     request,
-    authenticatedUser,
+    clientAuth,
   }) => {
     // when
-    const response = await getChatSystemPromptRequest(request, authenticatedUser.jwtToken);
+    const response = await getChatSystemPromptRequest(request, clientAuth.jwtToken);
 
     // then
     expect(response.status()).toBe(200);

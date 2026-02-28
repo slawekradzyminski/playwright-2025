@@ -1,5 +1,5 @@
 import type { APIRequestContext, APIResponse } from '@playwright/test';
-import type { UserRegisterDto } from '../../../types/auth';
+import type { UserRegisterDto } from '../../../types/user';
 import { jsonHeaders } from './headers';
 
 const SIGNUP_ENDPOINT = '/users/signup';

@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { generateUser } from '../../generators/userGenerator';
-import type { ForgotPasswordRequestDto, ForgotPasswordResponseDto, UserRegisterDto } from '../../types/auth';
+import type { ForgotPasswordRequestDto, ForgotPasswordResponseDto } from '../../types/auth';
+import type { UserRegisterDto } from '../../types/user';
 import { expectAnyNonEmptyErrorMessage } from '../../utils/api/errorUtil';
 import { forgotPasswordRequest } from './http/forgotPasswordRequest';
 import { signupRequest } from './http/signupRequest';

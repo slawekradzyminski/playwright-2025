@@ -1,14 +1,14 @@
 import { test, expect } from '../fixtures/auth.fixture';
-import type { UserResponseDto } from '../../types/auth';
+import type { UserResponseDto } from '../../types/user';
 import { meRequest } from './http/meRequest';
 
 test.describe('/users/me API tests', () => {
   test('should return current user details for authenticated user - 200', async ({
     request,
-    authenticatedUser,
+    clientAuth,
   }) => {
     // when
-    const { userDetails, jwtToken } = authenticatedUser;
+    const { userDetails, jwtToken } = clientAuth;
     const response = await meRequest(request, jwtToken);
 
     // then

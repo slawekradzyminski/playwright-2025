@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
-import type { UserRegisterDto, UserRole } from '../types/auth';
+import { randomUUID } from 'node:crypto';
+import type { UserRegisterDto, UserRole } from '../types/user';
 
 const ensureMinLength = (value: string, minLength: number): string => {
   if (value.length >= minLength) {
@@ -9,8 +10,7 @@ const ensureMinLength = (value: string, minLength: number): string => {
   return `${value}${'x'.repeat(minLength - value.length)}`;
 };
 
-const uniqueSuffix = (): string =>
-  faker.string.alphanumeric({ length: 12, casing: 'lower' });
+const uniqueSuffix = (): string => randomUUID().replace(/-/g, '').slice(0, 12);
 
 export const generateUser = (
   overrides: Partial<UserRegisterDto> = {},

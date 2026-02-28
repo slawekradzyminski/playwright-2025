@@ -1,14 +1,15 @@
 import { test, expect } from '../fixtures/auth.fixture';
-import type { ErrorResponse, ToolSystemPromptDto } from '../../types/auth';
+import type { ErrorResponse } from '../../types/common';
+import type { ToolSystemPromptDto } from '../../types/prompt';
 import { getToolSystemPromptRequest } from './http/getToolSystemPromptRequest';
 
 test.describe('/users/tool-system-prompt GET API tests', () => {
   test('should get tool system prompt for authenticated user - 200', async ({
     request,
-    authenticatedUser,
+    clientAuth,
   }) => {
     // when
-    const response = await getToolSystemPromptRequest(request, authenticatedUser.jwtToken);
+    const response = await getToolSystemPromptRequest(request, clientAuth.jwtToken);
 
     // then
     expect(response.status()).toBe(200);

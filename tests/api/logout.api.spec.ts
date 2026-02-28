@@ -1,11 +1,11 @@
 import { test, expect } from '../fixtures/auth.fixture';
-import type { ErrorResponse } from '../../types/auth';
+import type { ErrorResponse } from '../../types/common';
 import { logoutRequest } from './http/logoutRequest';
 
 test.describe('/users/logout API tests', () => {
-  test('should logout authenticated user - 200', async ({ request, authenticatedUser }) => {
+  test('should logout authenticated user - 200', async ({ request, clientAuth }) => {
     // when
-    const response = await logoutRequest(request, authenticatedUser.jwtToken);
+    const response = await logoutRequest(request, clientAuth.jwtToken);
 
     // then
     expect(response.status()).toBe(200);

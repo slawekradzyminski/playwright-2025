@@ -1,15 +1,16 @@
 import { test, expect } from '../fixtures/auth.fixture';
-import type { ErrorResponse, TokenRefreshResponseDto } from '../../types/auth';
+import type { ErrorResponse } from '../../types/common';
+import type { TokenRefreshResponseDto } from '../../types/auth';
 import { refreshRequest } from './http/refreshRequest';
 
 test.describe('/users/refresh API tests', () => {
   test('should refresh JWT token using valid refresh token - 200', async ({
     request,
-    authenticatedUser,
+    clientAuth,
   }) => {
     // when
     const response = await refreshRequest(request, {
-      refreshToken: authenticatedUser.refreshToken,
+      refreshToken: clientAuth.refreshToken,
     });
 
     // then

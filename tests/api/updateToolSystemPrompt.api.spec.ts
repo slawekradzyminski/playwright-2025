@@ -1,12 +1,13 @@
 import { test, expect } from '../fixtures/auth.fixture';
-import type { ErrorResponse, ToolSystemPromptDto } from '../../types/auth';
+import type { ErrorResponse } from '../../types/common';
+import type { ToolSystemPromptDto } from '../../types/prompt';
 import { getToolSystemPromptRequest } from './http/getToolSystemPromptRequest';
 import { updateToolSystemPromptRequest } from './http/updateToolSystemPromptRequest';
 
 test.describe('/users/tool-system-prompt PUT API tests', () => {
   test('should update tool system prompt for authenticated user - 200', async ({
     request,
-    authenticatedUser,
+    clientAuth,
   }) => {
     // given
     const payload: ToolSystemPromptDto = {
@@ -16,7 +17,7 @@ test.describe('/users/tool-system-prompt PUT API tests', () => {
     // when
     const updateResponse = await updateToolSystemPromptRequest(
       request,
-      authenticatedUser.jwtToken,
+      clientAuth.jwtToken,
       payload,
     );
 
@@ -27,7 +28,7 @@ test.describe('/users/tool-system-prompt PUT API tests', () => {
     const updateResponseBody = (await updateResponse.json()) as ToolSystemPromptDto;
     expect(updateResponseBody.toolSystemPrompt).toBe(payload.toolSystemPrompt);
 
-    const getResponse = await getToolSystemPromptRequest(request, authenticatedUser.jwtToken);
+    const getResponse = await getToolSystemPromptRequest(request, clientAuth.jwtToken);
     expect(getResponse.status()).toBe(200);
     const getResponseBody = (await getResponse.json()) as ToolSystemPromptDto;
     expect(getResponseBody.toolSystemPrompt).toBe(payload.toolSystemPrompt);

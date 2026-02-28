@@ -23,3 +23,27 @@ export const seedFakerForWorker = (workerIndex: number): number => {
   faker.seed(workerSeed);
   return workerSeed;
 };
+
+const hashString = (value: string): number => {
+  let hash = 0;
+  for (let index = 0; index < value.length; index += 1) {
+    hash = (hash * 31 + value.charCodeAt(index)) % MAX_TEST_SEED;
+  }
+  return hash;
+};
+
+export const seedFakerForTest = (workerIndex: number, testId: string): number => {
+  if (!Number.isInteger(workerIndex) || workerIndex < 0) {
+    throw new Error(`Invalid worker index: ${workerIndex}`);
+  }
+  if (!testId) {
+    throw new Error('Missing test id for faker seed generation');
+  }
+
+  const baseSeed = parseSeed(process.env.TEST_SEED);
+  const workerSeed = (baseSeed + workerIndex) % MAX_TEST_SEED;
+  const testSeed = (workerSeed + hashString(testId)) % MAX_TEST_SEED;
+
+  faker.seed(testSeed);
+  return testSeed;
+};

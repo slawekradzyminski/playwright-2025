@@ -1,5 +1,5 @@
 import type { APIRequestContext, APIResponse } from '@playwright/test';
-import type { ChatSystemPromptDto } from '../../../types/auth';
+import type { ChatSystemPromptDto } from '../../../types/prompt';
 import { authHeaders, jsonHeaders } from './headers';
 
 const CHAT_SYSTEM_PROMPT_ENDPOINT = '/users/chat-system-prompt';

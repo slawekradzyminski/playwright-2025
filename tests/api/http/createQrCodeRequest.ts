@@ -1,15 +1,15 @@
 import type { APIRequestContext, APIResponse } from '@playwright/test';
-import type { ToolSystemPromptDto } from '../../../types/prompt';
+import type { CreateQrDto } from '../../../types/qr';
 import { authHeaders, jsonHeaders } from './headers';
 
-const TOOL_SYSTEM_PROMPT_ENDPOINT = '/users/tool-system-prompt';
+const CREATE_QR_ENDPOINT = '/qr/create';
 
-export const updateToolSystemPromptRequest = (
+export const createQrCodeRequest = (
   request: APIRequestContext,
   jwtToken: string,
-  data: ToolSystemPromptDto,
+  data: CreateQrDto,
 ): Promise<APIResponse> =>
-  request.put(TOOL_SYSTEM_PROMPT_ENDPOINT, {
+  request.post(CREATE_QR_ENDPOINT, {
     data,
     headers: {
       ...jsonHeaders,

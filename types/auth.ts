@@ -3,17 +3,6 @@ export interface LoginDto {
   password: string;
 }
 
-export type UserRole = 'ROLE_ADMIN' | 'ROLE_CLIENT';
-
-export interface UserRegisterDto {
-  username: string;
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  roles: UserRole[];
-}
-
 export interface LoginResponseDto {
   token: string;
   refreshToken: string;
@@ -22,20 +11,6 @@ export interface LoginResponseDto {
   firstName: string;
   lastName: string;
   roles: string[];
-}
-
-export interface UserResponseDto {
-  id: number;
-  username: string;
-  email: string;
-  roles: UserRole[];
-  firstName: string;
-  lastName: string;
-}
-
-export interface ErrorResponse {
-  message?: string;
-  errors?: Record<string, string[]>;
 }
 
 export interface RefreshTokenRequestDto {
@@ -61,18 +36,4 @@ export interface ResetPasswordRequestDto {
   token: string;
   newPassword: string;
   confirmPassword: string;
-}
-
-export interface ChatSystemPromptDto {
-  chatSystemPrompt: string;
-}
-
-export interface ToolSystemPromptDto {
-  toolSystemPrompt: string;
-}
-
-export interface StoredEmail {
-  timestamp: string;
-  destination: string;
-  payload: Record<string, unknown>;
 }

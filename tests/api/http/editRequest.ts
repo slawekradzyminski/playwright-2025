@@ -1,15 +1,16 @@
 import type { APIRequestContext, APIResponse } from '@playwright/test';
-import type { ToolSystemPromptDto } from '../../../types/prompt';
+import type { UserEditDto } from '../../../types/user';
 import { authHeaders, jsonHeaders } from './headers';
 
-const TOOL_SYSTEM_PROMPT_ENDPOINT = '/users/tool-system-prompt';
+const USERS_ENDPOINT = '/users';
 
-export const updateToolSystemPromptRequest = (
+export const editRequest = (
   request: APIRequestContext,
   jwtToken: string,
-  data: ToolSystemPromptDto,
+  username: string,
+  data: UserEditDto,
 ): Promise<APIResponse> =>
-  request.put(TOOL_SYSTEM_PROMPT_ENDPOINT, {
+  request.put(`${USERS_ENDPOINT}/${username}`, {
     data,
     headers: {
       ...jsonHeaders,

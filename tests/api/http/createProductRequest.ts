@@ -1,15 +1,15 @@
 import type { APIRequestContext, APIResponse } from '@playwright/test';
-import type { ToolSystemPromptDto } from '../../../types/prompt';
+import type { ProductCreateDto } from '../../../types/product';
 import { authHeaders, jsonHeaders } from './headers';
 
-const TOOL_SYSTEM_PROMPT_ENDPOINT = '/users/tool-system-prompt';
+const PRODUCTS_ENDPOINT = '/api/products';
 
-export const updateToolSystemPromptRequest = (
+export const createProductRequest = (
   request: APIRequestContext,
   jwtToken: string,
-  data: ToolSystemPromptDto,
+  data: ProductCreateDto,
 ): Promise<APIResponse> =>
-  request.put(TOOL_SYSTEM_PROMPT_ENDPOINT, {
+  request.post(PRODUCTS_ENDPOINT, {
     data,
     headers: {
       ...jsonHeaders,

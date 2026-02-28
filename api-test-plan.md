@@ -18,7 +18,19 @@ Build complete automated API coverage for the OpenAPI spec in `api-docs.json` (4
 11. `PUT /users/tool-system-prompt`
 12. `GET /local/email/outbox`
 13. `DELETE /local/email/outbox`
-- Remaining operations: **27 / 40**
+14. `POST /qr/create`
+15. `GET /api/traffic/info`
+16. `POST /email`
+17. `GET /users`
+18. `GET /users/{username}`
+19. `PUT /users/{username}`
+20. `DELETE /users/{username}`
+21. `GET /api/products`
+22. `GET /api/products/{id}`
+23. `POST /api/products`
+24. `PUT /api/products/{id}`
+25. `DELETE /api/products/{id}`
+- Remaining operations: **15 / 40**
 
 ## AI Generation Contract (Mandatory)
 For every operation in `api-docs.json`, generate:
@@ -98,18 +110,18 @@ Status legend: `[x]` done, `[ ]` pending.
 | [x] | `PUT /users/tool-system-prompt` | Easy | `tests/api/http/updateToolSystemPromptRequest.ts` | `tests/api/updateToolSystemPrompt.api.spec.ts` |
 | [x] | `GET /local/email/outbox` | Easy | `tests/api/http/getOutboxRequest.ts` | `tests/api/getOutbox.api.spec.ts` |
 | [x] | `DELETE /local/email/outbox` | Easy | `tests/api/http/clearOutboxRequest.ts` | `tests/api/clearOutbox.api.spec.ts` |
-| [ ] | `POST /qr/create` | Medium | `tests/api/http/createQrCodeRequest.ts` | `tests/api/createQrCode.api.spec.ts` |
-| [ ] | `GET /api/traffic/info` | Medium | `tests/api/http/getTrafficInfoRequest.ts` | `tests/api/getTrafficInfo.api.spec.ts` |
-| [ ] | `POST /email` | Medium | `tests/api/http/sendEmailRequest.ts` | `tests/api/sendEmail.api.spec.ts` |
-| [ ] | `GET /users` | Medium | `tests/api/http/getAllRequest.ts` | `tests/api/getAll.api.spec.ts` |
-| [ ] | `GET /users/{username}` | Medium | `tests/api/http/getByUsernameRequest.ts` | `tests/api/getByUsername.api.spec.ts` |
-| [ ] | `PUT /users/{username}` | Medium | `tests/api/http/editRequest.ts` | `tests/api/edit.api.spec.ts` |
-| [ ] | `DELETE /users/{username}` | Medium | `tests/api/http/deleteRequest.ts` | `tests/api/delete.api.spec.ts` |
-| [ ] | `GET /api/products` | Medium | `tests/api/http/getAllProductsRequest.ts` | `tests/api/getAllProducts.api.spec.ts` |
-| [ ] | `GET /api/products/{id}` | Medium | `tests/api/http/getProductByIdRequest.ts` | `tests/api/getProductById.api.spec.ts` |
-| [ ] | `POST /api/products` | Medium | `tests/api/http/createProductRequest.ts` | `tests/api/createProduct.api.spec.ts` |
-| [ ] | `PUT /api/products/{id}` | Medium | `tests/api/http/updateProductRequest.ts` | `tests/api/updateProduct.api.spec.ts` |
-| [ ] | `DELETE /api/products/{id}` | Medium | `tests/api/http/deleteProductRequest.ts` | `tests/api/deleteProduct.api.spec.ts` |
+| [x] | `POST /qr/create` | Medium | `tests/api/http/createQrCodeRequest.ts` | `tests/api/createQrCode.api.spec.ts` |
+| [x] | `GET /api/traffic/info` | Medium | `tests/api/http/getTrafficInfoRequest.ts` | `tests/api/getTrafficInfo.api.spec.ts` |
+| [x] | `POST /email` | Medium | `tests/api/http/sendEmailRequest.ts` | `tests/api/sendEmail.api.spec.ts` |
+| [x] | `GET /users` | Medium | `tests/api/http/getAllRequest.ts` | `tests/api/getAll.api.spec.ts` |
+| [x] | `GET /users/{username}` | Medium | `tests/api/http/getByUsernameRequest.ts` | `tests/api/getByUsername.api.spec.ts` |
+| [x] | `PUT /users/{username}` | Medium | `tests/api/http/editRequest.ts` | `tests/api/edit.api.spec.ts` |
+| [x] | `DELETE /users/{username}` | Medium | `tests/api/http/deleteRequest.ts` | `tests/api/delete.api.spec.ts` |
+| [x] | `GET /api/products` | Medium | `tests/api/http/getAllProductsRequest.ts` | `tests/api/getAllProducts.api.spec.ts` |
+| [x] | `GET /api/products/{id}` | Medium | `tests/api/http/getProductByIdRequest.ts` | `tests/api/getProductById.api.spec.ts` |
+| [x] | `POST /api/products` | Medium | `tests/api/http/createProductRequest.ts` | `tests/api/createProduct.api.spec.ts` |
+| [x] | `PUT /api/products/{id}` | Medium | `tests/api/http/updateProductRequest.ts` | `tests/api/updateProduct.api.spec.ts` |
+| [x] | `DELETE /api/products/{id}` | Medium | `tests/api/http/deleteProductRequest.ts` | `tests/api/deleteProduct.api.spec.ts` |
 | [ ] | `GET /api/cart` | Medium | `tests/api/http/getCartRequest.ts` | `tests/api/getCart.api.spec.ts` |
 | [ ] | `POST /api/cart/items` | Medium | `tests/api/http/addToCartRequest.ts` | `tests/api/addToCart.api.spec.ts` |
 | [ ] | `PUT /api/cart/items/{productId}` | Medium | `tests/api/http/updateCartItemRequest.ts` | `tests/api/updateCartItem.api.spec.ts` |

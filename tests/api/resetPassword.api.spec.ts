@@ -4,8 +4,8 @@ import type {
   ForgotPasswordResponseDto,
   LoginResponseDto,
   ResetPasswordRequestDto,
-  UserRegisterDto,
 } from '../../types/auth';
+import type { UserRegisterDto } from '../../types/user';
 import { expectAnyNonEmptyErrorMessage } from '../../utils/api/errorUtil';
 import { forgotPasswordRequest } from './http/forgotPasswordRequest';
 import { loginRequest } from './http/loginRequest';
@@ -18,11 +18,11 @@ type ResetValidationErrorResponse = Partial<Record<ResetValidationField, string>
 test.describe('/users/password/reset API tests', () => {
   test('should reset password with valid token and allow login with new password - 200', async ({
     request,
-    authenticatedUser,
+    clientAuth,
   }) => {
     // given
     const forgotResponse = await forgotPasswordRequest(request, {
-      identifier: authenticatedUser.userDetails.username,
+      identifier: clientAuth.userDetails.username,
     });
     expect(forgotResponse.status()).toBe(202);
     const forgotResponseBody = (await forgotResponse.json()) as ForgotPasswordResponseDto;
@@ -42,7 +42,7 @@ test.describe('/users/password/reset API tests', () => {
     expect(resetResponse.status()).toBe(200);
 
     const loginResponse = await loginRequest(request, {
-      username: authenticatedUser.userDetails.username,
+      username: clientAuth.userDetails.username,
       password: newPassword,
     });
     expect(loginResponse.status()).toBe(200);
