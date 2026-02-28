@@ -134,6 +134,6 @@ Status legend: `[x]` done, `[ ]` pending.
 | [ ] | `GET /api/orders/admin` | Hard | `tests/api/http/getAllOrdersRequest.ts` | `tests/api/getAllOrders.api.spec.ts` |
 | [ ] | `PUT /api/orders/{id}/status` | Hard | `tests/api/http/updateOrderStatusRequest.ts` | `tests/api/updateOrderStatus.api.spec.ts` |
 | [ ] | `GET /api/ollama/chat/tools/definitions` | Hard | `tests/api/http/getToolDefinitionsRequest.ts` | `tests/api/getToolDefinitions.api.spec.ts` |
-| [ ] | `POST /api/ollama/generate` | Hard | `tests/api/http/generateTextRequest.ts` | `tests/api/generateText.api.spec.ts` |
-| [ ] | `POST /api/ollama/chat` | Hard | `tests/api/http/chatRequest.ts` | `tests/api/chat.api.spec.ts` |
-| [ ] | `POST /api/ollama/chat/tools` | Hard | `tests/api/http/chatWithToolsRequest.ts` | `tests/api/chatWithTools.api.spec.ts` |
+| [x] | `POST /api/ollama/generate` | Hard | `tests/api/http/generateTextRequest.ts` | `tests/api/generateText.api.spec.ts` |
+| [x] | `POST /api/ollama/chat` | Hard | `tests/api/http/chatRequest.ts` | `tests/api/chat.api.spec.ts` |
+| [x] | `POST /api/ollama/chat/tools` | Hard | `tests/api/http/chatWithToolsRequest.ts` | `tests/api/chatWithTools.api.spec.ts` |
