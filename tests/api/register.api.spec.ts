@@ -8,7 +8,8 @@ type RegisterValidationField = keyof UserRegisterDto;
 type RegisterValidationErrorResponse = Partial<Record<RegisterValidationField, string>>;
 
 test.describe('/users/signup API tests', () => {
-  test.beforeAll(async ({}, testInfo) => {
+  test.beforeAll(({ request }, testInfo) => {
+    void request;
     const workerSeed = seedFakerForWorker(testInfo.parallelIndex);
     console.log(`[faker-seed] worker=${testInfo.parallelIndex} seed=${workerSeed}`);
   });
@@ -47,7 +48,7 @@ test.describe('/users/signup API tests', () => {
     expect(response.status()).toBe(400);
     expect(response.headers()['content-type']).toContain('application/json');
 
-    const responseBody: RegisterValidationErrorResponse = await response.json();
+    const responseBody = (await response.json()) as RegisterValidationErrorResponse;
     expect(responseBody).toEqual({
       username: 'Minimum username length: 4 characters',
       email: 'Email should be valid',
@@ -114,7 +115,7 @@ test.describe('/users/signup API tests', () => {
       expect(response.status()).toBe(400);
       expect(response.headers()['content-type']).toContain('application/json');
 
-      const responseBody: RegisterValidationErrorResponse = await response.json();
+      const responseBody = (await response.json()) as RegisterValidationErrorResponse;
       expect(responseBody[expectedErrorField]).toBe(expectedErrorMessage);
     });
   }

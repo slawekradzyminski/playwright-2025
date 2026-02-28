@@ -15,7 +15,8 @@ const toValidSeed = (seedValue: string | undefined): number | null => {
   return parsedSeed;
 };
 
-export default async function globalSetup(_: FullConfig): Promise<void> {
+export default function globalSetup(config: FullConfig): void {
+  void config;
   const existingSeed = toValidSeed(process.env.TEST_SEED);
   const seed = existingSeed ?? Math.floor(Math.random() * MAX_TEST_SEED);
 

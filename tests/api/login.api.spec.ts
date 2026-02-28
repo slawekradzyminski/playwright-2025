@@ -20,7 +20,7 @@ test.describe('/users/signin API tests', () => {
     expect(response.status()).toBe(200);
     expect(response.headers()['content-type']).toContain('application/json');
 
-    const responseBody: LoginResponseDto = await response.json();
+    const responseBody = (await response.json()) as LoginResponseDto;
     validateCorrectLoginResponse(responseBody, loginData);
   });
 
@@ -58,7 +58,7 @@ test.describe('/users/signin API tests', () => {
       // then
       expect(response.status()).toBe(400);
       expect(response.headers()['content-type']).toContain('application/json');
-      const responseBody = await response.json();
+      const responseBody = (await response.json()) as Record<string, string>;
       expect(responseBody[validationCase.expectedErrorField]).toBe(
         validationCase.expectedErrorMessage,
       );
@@ -80,7 +80,7 @@ test.describe('/users/signin API tests', () => {
     // then
     expect(response.status()).toBe(422);
     expect(response.headers()['content-type']).toContain('application/json');
-    const responseBody = await response.json();
+    const responseBody = (await response.json()) as { message: string };
     expect(responseBody.message).toBe('Invalid username/password supplied');
   });
 });

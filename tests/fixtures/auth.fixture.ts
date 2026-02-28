@@ -41,7 +41,7 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
     });
     expect(loginResponse.status()).toBe(200);
 
-    const loginResponseBody: LoginResponseDto = await loginResponse.json();
+    const loginResponseBody = (await loginResponse.json()) as LoginResponseDto;
     expect(loginResponseBody.token).toBeTruthy();
 
     await use({

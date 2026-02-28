@@ -8,14 +8,14 @@ test.describe('/users/me API tests', () => {
     authenticatedUser,
   }) => {
     // when
-    const { userDetails, jwtToken } = authenticatedUser
+    const { userDetails, jwtToken } = authenticatedUser;
     const response = await meRequest(request, jwtToken);
 
     // then
     expect(response.status()).toBe(200);
     expect(response.headers()['content-type']).toContain('application/json');
 
-    const responseBody: UserResponseDto = await response.json();
+    const responseBody = (await response.json()) as UserResponseDto;
     expect(typeof responseBody.id).toBe('number');
     expect(responseBody.id).toBeGreaterThan(0);
     expect(responseBody.username).toBe(userDetails.username);
@@ -32,7 +32,7 @@ test.describe('/users/me API tests', () => {
     // then
     expect(response.status()).toBe(401);
     expect(response.headers()['content-type']).toContain('application/json');
-    const responseBody = await response.json();
+    const responseBody = (await response.json()) as { message: string };
     expect(responseBody.message).toBe('Unauthorized');
   });
 
@@ -43,7 +43,7 @@ test.describe('/users/me API tests', () => {
     // then
     expect(response.status()).toBe(401);
     expect(response.headers()['content-type']).toContain('application/json');
-    const responseBody = await response.json();
+    const responseBody = (await response.json()) as { message: string };
     expect(responseBody.message).toBe('Invalid or expired token');
   });
 });
