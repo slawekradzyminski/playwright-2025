@@ -5,3 +5,4 @@ For API tests:
 - api docs are in api-docs.json
 - track work status in api-test-plan.md
 - for tests requiring auth use dedicated fixture
+- order tests by status code ascending (200 -> 202 -> 400 -> 401 -> 403, etc.)

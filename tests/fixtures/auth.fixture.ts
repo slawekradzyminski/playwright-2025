@@ -8,6 +8,7 @@ import { seedFakerForWorker } from '../../utils/fakerSeed';
 type AuthenticatedUser = {
   userDetails: UserRegisterDto;
   jwtToken: string;
+  refreshToken: string;
 };
 
 type WorkerFixtures = {
@@ -17,6 +18,8 @@ type WorkerFixtures = {
 type TestFixtures = {
   authenticatedUser: AuthenticatedUser;
 };
+
+const MAX_SIGNUP_ATTEMPTS = 3;
 
 export const test = base.extend<TestFixtures, WorkerFixtures>({
   fakerWorkerSeed: [
@@ -31,9 +34,29 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
   authenticatedUser: async ({ request, fakerWorkerSeed }, use) => {
     void fakerWorkerSeed;
 
-    const userDetails = generateUser();
-    const signupResponse = await signupRequest(request, userDetails);
-    expect(signupResponse.status()).toBe(201);
+    let userDetails: UserRegisterDto | undefined;
+    let signupStatus = 0;
+    let signupResponseBody = '';
+
+    for (let attempt = 1; attempt <= MAX_SIGNUP_ATTEMPTS; attempt += 1) {
+      const candidateUser = generateUser();
+      const signupResponse = await signupRequest(request, candidateUser);
+      signupStatus = signupResponse.status();
+      signupResponseBody = await signupResponse.text();
+
+      if (signupStatus === 201) {
+        userDetails = candidateUser;
+        break;
+      }
+    }
+
+    if (!userDetails) {
+      throw new Error(
+        `Signup failed after ${MAX_SIGNUP_ATTEMPTS} attempts. Last status=${signupStatus}, body=${signupResponseBody}`,
+      );
+    }
+
+    expect(signupStatus).toBe(201);
 
     const loginResponse = await loginRequest(request, {
       username: userDetails.username,
@@ -47,6 +70,7 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
     await use({
       userDetails,
       jwtToken: loginResponseBody.token,
+      refreshToken: loginResponseBody.refreshToken,
     });
   },
 });

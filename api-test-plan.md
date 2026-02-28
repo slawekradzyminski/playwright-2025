@@ -77,9 +77,9 @@ Status legend: `[x]` done, `[ ]` pending.
 |---|---|---|---|---|
 | [x] | `POST /users/signup` | Easy | `tests/api/http/signupRequest.ts` | `tests/api/register.api.spec.ts` |
 | [x] | `POST /users/signin` | Easy | `tests/api/http/loginRequest.ts` | `tests/api/login.api.spec.ts` |
-| [ ] | `POST /users/password/forgot` | Easy | `tests/api/http/forgotPasswordRequest.ts` | `tests/api/forgotPassword.api.spec.ts` |
-| [ ] | `POST /users/password/reset` | Easy | `tests/api/http/resetPasswordRequest.ts` | `tests/api/resetPassword.api.spec.ts` |
-| [ ] | `POST /users/refresh` | Easy | `tests/api/http/refreshRequest.ts` | `tests/api/refresh.api.spec.ts` |
+| [x] | `POST /users/password/forgot` | Easy | `tests/api/http/forgotPasswordRequest.ts` | `tests/api/forgotPassword.api.spec.ts` |
+| [x] | `POST /users/password/reset` | Easy | `tests/api/http/resetPasswordRequest.ts` | `tests/api/resetPassword.api.spec.ts` |
+| [x] | `POST /users/refresh` | Easy | `tests/api/http/refreshRequest.ts` | `tests/api/refresh.api.spec.ts` |
 | [x] | `GET /users/me` | Easy | `tests/api/http/meRequest.ts` | `tests/api/me.api.spec.ts` |
 | [ ] | `POST /users/logout` | Easy | `tests/api/http/logoutRequest.ts` | `tests/api/logout.api.spec.ts` |
 | [ ] | `GET /users/chat-system-prompt` | Easy | `tests/api/http/getChatSystemPromptRequest.ts` | `tests/api/getChatSystemPrompt.api.spec.ts` |
