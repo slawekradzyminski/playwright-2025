@@ -15,3 +15,5 @@ For UI tests:
 - use page object model with reusable components
 - prefer data-testid selectors over role selectors
 - use Playwright MCP to see the page in browser (find selectors, interact with elements, etc.)
+- prefer to setup test state via http requests
+- track work status in ui-test-plan.md
