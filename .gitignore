@@ -10,3 +10,5 @@ node_modules/
 
 .idea
 .env
+.playwright-cli/
+.playwright-mcp/
