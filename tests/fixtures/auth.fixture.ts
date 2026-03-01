@@ -1,6 +1,6 @@
 import { test as base, expect } from '@playwright/test';
 import { generateUser } from '../../generators/userGenerator';
-import { getValidCredentials } from '../../utils/api/loginUtil';
+import { getValidCredentials } from '../../utils/shared/credentialsUtil';
 import { loginRequest } from '../../http/users/loginRequest';
 import { signupRequest } from '../../http/users/signupRequest';
 import type { LoginDto, LoginResponseDto } from '../../types/auth';

@@ -1,93 +1,81 @@
 import { test, expect } from '@playwright/test';
-import type { LoginDto } from '../../types/auth';
-
-const LOGIN_URL = 'http://localhost:8081/login';
+import { getValidCredentials } from '../../utils/shared/credentialsUtil';
+import {
+  EMPTY_PASSWORD_LOGIN_CREDENTIALS,
+  HOME_URL,
+  INVALID_LOGIN_CREDENTIALS,
+  LOGIN_URL,
+  LOGIN_MESSAGES,
+  REGISTER_URL,
+  SHORT_USERNAME_LOGIN_CREDENTIALS,
+} from './constants/login.ui.constants';
+import { HomePage } from './pages/home.page';
+import { LoginPage } from './pages/login.page';
 
 test.describe('Login UI tests', () => {
+  let loginPage: LoginPage;
+
   test.beforeEach(async ({ page }) => {
-    await page.goto(LOGIN_URL);
+    loginPage = new LoginPage(page);
+    await loginPage.goto();
   });
 
   test('should successfully login with valid credentials', async ({ page }) => {
     // given
-    const credentials: LoginDto = {
-      username: 'admin',
-      password: 'admin'
-    };
+    const homePage = new HomePage(page);
+    const credentials = getValidCredentials();
 
     // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await loginPage.login(credentials);
 
     // then
-    await expect(page).not.toHaveURL(LOGIN_URL);
+    await expect(page).toHaveURL(HOME_URL);
+    await expect(homePage.logoutButton).toBeVisible();
   });
 
   test('should show error for empty password', async ({ page }) => {
-    // given
-    const credentials = {
-      username: 'admin',
-      password: ''
-    };
-
     // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await loginPage.login(EMPTY_PASSWORD_LOGIN_CREDENTIALS);
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);
+    await expect(loginPage.getValidationError(LOGIN_MESSAGES.passwordRequired)).toBeVisible();
   });
 
   test('should show error for invalid credentials', async ({ page }) => {
-    // given
-    const credentials: LoginDto = {
-      username: 'invaliduser',
-      password: 'invalidpassword'
-    };
-
     // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await loginPage.login(INVALID_LOGIN_CREDENTIALS);
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);
-  });
-
-  test('should navigate to register page when register button is clicked', async ({ page }) => {
-    // given
-    // when
-    await page.getByRole('button', { name: 'Register' }).click();
-
-    // then
-    await expect(page).toHaveURL('http://localhost:8081/register');
-  });
-
-  test('should navigate to register page when register link is clicked', async ({ page }) => {
-    // given
-    // when
-    await page.getByRole('link', { name: 'Register' }).click();
-
-    // then
-    await expect(page).toHaveURL('http://localhost:8081/register');
+    await loginPage.toast.expectError(
+      LOGIN_MESSAGES.invalidCredentials,
+      LOGIN_MESSAGES.errorToastTitle,
+    );
   });
 
   test('should have proper form validation for short username', async ({ page }) => {
-    // given
-    const credentials = {
-      username: 'abc',
-      password: 'admin'
-    };
-
     // when
-    await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
-    await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await loginPage.login(SHORT_USERNAME_LOGIN_CREDENTIALS);
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);
+    await expect(loginPage.getValidationError(LOGIN_MESSAGES.usernameTooShort)).toBeVisible();
   });
 
-}); 
+  test('should navigate to register page when register button is clicked', async ({ page }) => {
+    // when
+    await loginPage.clickRegisterButton();
+
+    // then
+    await expect(page).toHaveURL(REGISTER_URL);
+  });
+
+  test('should navigate to register page when register link is clicked', async ({ page }) => {
+    // when
+    await loginPage.clickRegisterLink();
+
+    // then
+    await expect(page).toHaveURL(REGISTER_URL);
+  });
+});

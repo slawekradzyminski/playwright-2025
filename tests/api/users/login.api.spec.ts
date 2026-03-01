@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto, LoginResponseDto } from '../../../types/auth';
 import { loginRequest } from '../../../http/users/loginRequest';
+import { getValidCredentials } from '../../../utils/shared/credentialsUtil';
 import {
-  getValidCredentials,
   validateCorrectLoginResponse,
 } from '../../../utils/api/loginUtil';
 

@@ -1,8 +1,5 @@
 import { expect } from '@playwright/test';
 import type { LoginDto, LoginResponseDto } from '../../types/auth';
-
-const VALID_LOGIN_USERNAME_ENV = 'API_LOGIN_USERNAME';
-const VALID_LOGIN_PASSWORD_ENV = 'API_LOGIN_PASSWORD';
 const jwtRegex = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const expectedSuccessKeys = [
@@ -14,19 +11,6 @@ const expectedSuccessKeys = [
   'lastName',
   'roles',
 ] as const;
-
-export const getValidCredentials = (): LoginDto => {
-  const username = process.env[VALID_LOGIN_USERNAME_ENV];
-  const password = process.env[VALID_LOGIN_PASSWORD_ENV];
-
-  if (!username || !password) {
-    throw new Error(
-      `Missing login credentials. Set ${VALID_LOGIN_USERNAME_ENV} and ${VALID_LOGIN_PASSWORD_ENV} in your environment or .env file.`,
-    );
-  }
-
-  return { username, password };
-};
 
 export const validateCorrectLoginResponse = (
   responseBody: LoginResponseDto,
