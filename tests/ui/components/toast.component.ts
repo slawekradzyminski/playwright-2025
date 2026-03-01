@@ -2,17 +2,21 @@ import { expect, type Locator, type Page } from '@playwright/test';
 
 export class ToastComponent {
   readonly notificationsRegion: Locator;
+  readonly toastTitle: Locator;
+  readonly toastDescription: Locator;
 
   constructor(page: Page) {
     this.notificationsRegion = page.getByTestId('toast-viewport');
+    this.toastTitle = this.notificationsRegion.getByTestId('toast-title');
+    this.toastDescription = this.notificationsRegion.getByTestId('toast-description');
   }
 
   getTitle(title: string): Locator {
-    return this.notificationsRegion.getByText(title);
+    return this.toastTitle.filter({ hasText: title });
   }
 
   getMessage(message: string): Locator {
-    return this.notificationsRegion.getByText(message);
+    return this.toastDescription.filter({ hasText: message });
   }
 
   async expectTitle(title: string): Promise<void> {

@@ -1,6 +1,7 @@
 For all tests:
 - always add npm run lint and npm run typecheck to ensure code quality
 - for tests requiring auth use dedicated fixture
+- use /generators folder for test data generation
 
 For API tests:
 - you can use curl to test endpoints manually
