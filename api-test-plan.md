@@ -39,8 +39,8 @@ For every operation in `api-docs.json`, generate:
 3. Separate files per method-path combination (`GET` and `POST` on same path are different files).
 
 Use this convention for all new work:
-1. HTTP helper: `tests/api/http/<operationId>Request.ts`
-2. Test file: `tests/api/<operationId>.api.spec.ts`
+1. HTTP helper: `http/<tag>/<operationId>Request.ts`
+2. Test file: `tests/api/<tag>/<operationId>.api.spec.ts`
 3. Keep assertions contract-driven from `api-docs.json`:
    - status code
    - `content-type`
@@ -53,7 +53,7 @@ Each operation test should include:
 2. Auth check (missing/invalid token) for secured endpoints.
 3. Validation/error cases for invalid input.
 4. Resource-not-found/forbidden checks where documented (`404`, `403`).
-5. Deterministic data generation (faker seeded via existing setup).
+5. Deterministic data generation (faker seeded per test via fixture/hooks, optional `TEST_SEED` override).
 
 ## Execution Roadmap
 1. Phase 1: Public auth and account bootstrap
@@ -97,43 +97,43 @@ Status legend: `[x]` done, `[ ]` pending.
 
 | Status | Operation | Difficulty | HTTP client file | Test file |
 |---|---|---|---|---|
-| [x] | `POST /users/signup` | Easy | `tests/api/http/signupRequest.ts` | `tests/api/register.api.spec.ts` |
-| [x] | `POST /users/signin` | Easy | `tests/api/http/loginRequest.ts` | `tests/api/login.api.spec.ts` |
-| [x] | `POST /users/password/forgot` | Easy | `tests/api/http/forgotPasswordRequest.ts` | `tests/api/forgotPassword.api.spec.ts` |
-| [x] | `POST /users/password/reset` | Easy | `tests/api/http/resetPasswordRequest.ts` | `tests/api/resetPassword.api.spec.ts` |
-| [x] | `POST /users/refresh` | Easy | `tests/api/http/refreshRequest.ts` | `tests/api/refresh.api.spec.ts` |
-| [x] | `GET /users/me` | Easy | `tests/api/http/meRequest.ts` | `tests/api/me.api.spec.ts` |
-| [x] | `POST /users/logout` | Easy | `tests/api/http/logoutRequest.ts` | `tests/api/logout.api.spec.ts` |
-| [x] | `GET /users/chat-system-prompt` | Easy | `tests/api/http/getChatSystemPromptRequest.ts` | `tests/api/getChatSystemPrompt.api.spec.ts` |
-| [x] | `PUT /users/chat-system-prompt` | Easy | `tests/api/http/updateChatSystemPromptRequest.ts` | `tests/api/updateChatSystemPrompt.api.spec.ts` |
-| [x] | `GET /users/tool-system-prompt` | Easy | `tests/api/http/getToolSystemPromptRequest.ts` | `tests/api/getToolSystemPrompt.api.spec.ts` |
-| [x] | `PUT /users/tool-system-prompt` | Easy | `tests/api/http/updateToolSystemPromptRequest.ts` | `tests/api/updateToolSystemPrompt.api.spec.ts` |
-| [x] | `GET /local/email/outbox` | Easy | `tests/api/http/getOutboxRequest.ts` | `tests/api/getOutbox.api.spec.ts` |
-| [x] | `DELETE /local/email/outbox` | Easy | `tests/api/http/clearOutboxRequest.ts` | `tests/api/clearOutbox.api.spec.ts` |
-| [x] | `POST /qr/create` | Medium | `tests/api/http/createQrCodeRequest.ts` | `tests/api/createQrCode.api.spec.ts` |
-| [x] | `GET /api/traffic/info` | Medium | `tests/api/http/getTrafficInfoRequest.ts` | `tests/api/getTrafficInfo.api.spec.ts` |
-| [x] | `POST /email` | Medium | `tests/api/http/sendEmailRequest.ts` | `tests/api/sendEmail.api.spec.ts` |
-| [x] | `GET /users` | Medium | `tests/api/http/getAllRequest.ts` | `tests/api/getAll.api.spec.ts` |
-| [x] | `GET /users/{username}` | Medium | `tests/api/http/getByUsernameRequest.ts` | `tests/api/getByUsername.api.spec.ts` |
-| [x] | `PUT /users/{username}` | Medium | `tests/api/http/editRequest.ts` | `tests/api/edit.api.spec.ts` |
-| [x] | `DELETE /users/{username}` | Medium | `tests/api/http/deleteRequest.ts` | `tests/api/delete.api.spec.ts` |
-| [x] | `GET /api/products` | Medium | `tests/api/http/getAllProductsRequest.ts` | `tests/api/getAllProducts.api.spec.ts` |
-| [x] | `GET /api/products/{id}` | Medium | `tests/api/http/getProductByIdRequest.ts` | `tests/api/getProductById.api.spec.ts` |
-| [x] | `POST /api/products` | Medium | `tests/api/http/createProductRequest.ts` | `tests/api/createProduct.api.spec.ts` |
-| [x] | `PUT /api/products/{id}` | Medium | `tests/api/http/updateProductRequest.ts` | `tests/api/updateProduct.api.spec.ts` |
-| [x] | `DELETE /api/products/{id}` | Medium | `tests/api/http/deleteProductRequest.ts` | `tests/api/deleteProduct.api.spec.ts` |
-| [ ] | `GET /api/cart` | Medium | `tests/api/http/getCartRequest.ts` | `tests/api/getCart.api.spec.ts` |
-| [ ] | `POST /api/cart/items` | Medium | `tests/api/http/addToCartRequest.ts` | `tests/api/addToCart.api.spec.ts` |
-| [ ] | `PUT /api/cart/items/{productId}` | Medium | `tests/api/http/updateCartItemRequest.ts` | `tests/api/updateCartItem.api.spec.ts` |
-| [ ] | `DELETE /api/cart/items/{productId}` | Medium | `tests/api/http/removeFromCartRequest.ts` | `tests/api/removeFromCart.api.spec.ts` |
-| [ ] | `DELETE /api/cart` | Medium | `tests/api/http/clearCartRequest.ts` | `tests/api/clearCart.api.spec.ts` |
-| [ ] | `POST /api/orders` | Hard | `tests/api/http/createOrderRequest.ts` | `tests/api/createOrder.api.spec.ts` |
-| [ ] | `GET /api/orders` | Hard | `tests/api/http/getUserOrdersRequest.ts` | `tests/api/getUserOrders.api.spec.ts` |
-| [ ] | `GET /api/orders/{id}` | Hard | `tests/api/http/getOrderRequest.ts` | `tests/api/getOrder.api.spec.ts` |
-| [ ] | `POST /api/orders/{id}/cancel` | Hard | `tests/api/http/cancelOrderRequest.ts` | `tests/api/cancelOrder.api.spec.ts` |
-| [ ] | `GET /api/orders/admin` | Hard | `tests/api/http/getAllOrdersRequest.ts` | `tests/api/getAllOrders.api.spec.ts` |
-| [ ] | `PUT /api/orders/{id}/status` | Hard | `tests/api/http/updateOrderStatusRequest.ts` | `tests/api/updateOrderStatus.api.spec.ts` |
-| [ ] | `GET /api/ollama/chat/tools/definitions` | Hard | `tests/api/http/getToolDefinitionsRequest.ts` | `tests/api/getToolDefinitions.api.spec.ts` |
-| [x] | `POST /api/ollama/generate` | Hard | `tests/api/http/generateTextRequest.ts` | `tests/api/generateText.api.spec.ts` |
-| [x] | `POST /api/ollama/chat` | Hard | `tests/api/http/chatRequest.ts` | `tests/api/chat.api.spec.ts` |
-| [x] | `POST /api/ollama/chat/tools` | Hard | `tests/api/http/chatWithToolsRequest.ts` | `tests/api/chatWithTools.api.spec.ts` |
+| [x] | `POST /users/signup` | Easy | `http/users/signupRequest.ts` | `tests/api/users/register.api.spec.ts` |
+| [x] | `POST /users/signin` | Easy | `http/users/loginRequest.ts` | `tests/api/users/login.api.spec.ts` |
+| [x] | `POST /users/password/forgot` | Easy | `http/password-reset/forgotPasswordRequest.ts` | `tests/api/password-reset/forgotPassword.api.spec.ts` |
+| [x] | `POST /users/password/reset` | Easy | `http/password-reset/resetPasswordRequest.ts` | `tests/api/password-reset/resetPassword.api.spec.ts` |
+| [x] | `POST /users/refresh` | Easy | `http/users/refreshRequest.ts` | `tests/api/users/refresh.api.spec.ts` |
+| [x] | `GET /users/me` | Easy | `http/users/meRequest.ts` | `tests/api/users/me.api.spec.ts` |
+| [x] | `POST /users/logout` | Easy | `http/users/logoutRequest.ts` | `tests/api/users/logout.api.spec.ts` |
+| [x] | `GET /users/chat-system-prompt` | Easy | `http/users/getChatSystemPromptRequest.ts` | `tests/api/users/getChatSystemPrompt.api.spec.ts` |
+| [x] | `PUT /users/chat-system-prompt` | Easy | `http/users/updateChatSystemPromptRequest.ts` | `tests/api/users/updateChatSystemPrompt.api.spec.ts` |
+| [x] | `GET /users/tool-system-prompt` | Easy | `http/users/getToolSystemPromptRequest.ts` | `tests/api/users/getToolSystemPrompt.api.spec.ts` |
+| [x] | `PUT /users/tool-system-prompt` | Easy | `http/users/updateToolSystemPromptRequest.ts` | `tests/api/users/updateToolSystemPrompt.api.spec.ts` |
+| [x] | `GET /local/email/outbox` | Easy | `http/local-email-outbox/getOutboxRequest.ts` | `tests/api/local-email-outbox/getOutbox.api.spec.ts` |
+| [x] | `DELETE /local/email/outbox` | Easy | `http/local-email-outbox/clearOutboxRequest.ts` | `tests/api/local-email-outbox/clearOutbox.api.spec.ts` |
+| [x] | `POST /qr/create` | Medium | `http/qr/createQrCodeRequest.ts` | `tests/api/qr/createQrCode.api.spec.ts` |
+| [x] | `GET /api/traffic/info` | Medium | `http/traffic-monitoring/getTrafficInfoRequest.ts` | `tests/api/traffic-monitoring/getTrafficInfo.api.spec.ts` |
+| [x] | `POST /email` | Medium | `http/email/sendEmailRequest.ts` | `tests/api/email/sendEmail.api.spec.ts` |
+| [x] | `GET /users` | Medium | `http/users/getAllRequest.ts` | `tests/api/users/getAll.api.spec.ts` |
+| [x] | `GET /users/{username}` | Medium | `http/users/getByUsernameRequest.ts` | `tests/api/users/getByUsername.api.spec.ts` |
+| [x] | `PUT /users/{username}` | Medium | `http/users/editRequest.ts` | `tests/api/users/edit.api.spec.ts` |
+| [x] | `DELETE /users/{username}` | Medium | `http/users/deleteRequest.ts` | `tests/api/users/delete.api.spec.ts` |
+| [x] | `GET /api/products` | Medium | `http/products/getAllProductsRequest.ts` | `tests/api/products/getAllProducts.api.spec.ts` |
+| [x] | `GET /api/products/{id}` | Medium | `http/products/getProductByIdRequest.ts` | `tests/api/products/getProductById.api.spec.ts` |
+| [x] | `POST /api/products` | Medium | `http/products/createProductRequest.ts` | `tests/api/products/createProduct.api.spec.ts` |
+| [x] | `PUT /api/products/{id}` | Medium | `http/products/updateProductRequest.ts` | `tests/api/products/updateProduct.api.spec.ts` |
+| [x] | `DELETE /api/products/{id}` | Medium | `http/products/deleteProductRequest.ts` | `tests/api/products/deleteProduct.api.spec.ts` |
+| [ ] | `GET /api/cart` | Medium | `http/cart/getCartRequest.ts` | `tests/api/cart/getCart.api.spec.ts` |
+| [ ] | `POST /api/cart/items` | Medium | `http/cart/addToCartRequest.ts` | `tests/api/cart/addToCart.api.spec.ts` |
+| [ ] | `PUT /api/cart/items/{productId}` | Medium | `http/cart/updateCartItemRequest.ts` | `tests/api/cart/updateCartItem.api.spec.ts` |
+| [ ] | `DELETE /api/cart/items/{productId}` | Medium | `http/cart/removeFromCartRequest.ts` | `tests/api/cart/removeFromCart.api.spec.ts` |
+| [ ] | `DELETE /api/cart` | Medium | `http/cart/clearCartRequest.ts` | `tests/api/cart/clearCart.api.spec.ts` |
+| [ ] | `POST /api/orders` | Hard | `http/orders/createOrderRequest.ts` | `tests/api/orders/createOrder.api.spec.ts` |
+| [ ] | `GET /api/orders` | Hard | `http/orders/getUserOrdersRequest.ts` | `tests/api/orders/getUserOrders.api.spec.ts` |
+| [ ] | `GET /api/orders/{id}` | Hard | `http/orders/getOrderRequest.ts` | `tests/api/orders/getOrder.api.spec.ts` |
+| [ ] | `POST /api/orders/{id}/cancel` | Hard | `http/orders/cancelOrderRequest.ts` | `tests/api/orders/cancelOrder.api.spec.ts` |
+| [ ] | `GET /api/orders/admin` | Hard | `http/orders/getAllOrdersRequest.ts` | `tests/api/orders/getAllOrders.api.spec.ts` |
+| [ ] | `PUT /api/orders/{id}/status` | Hard | `http/orders/updateOrderStatusRequest.ts` | `tests/api/orders/updateOrderStatus.api.spec.ts` |
+| [ ] | `GET /api/ollama/chat/tools/definitions` | Hard | `http/ollama/getToolDefinitionsRequest.ts` | `tests/api/ollama/getToolDefinitions.api.spec.ts` |
+| [x] | `POST /api/ollama/generate` | Hard | `http/ollama/generateTextRequest.ts` | `tests/api/ollama/generateText.api.spec.ts` |
+| [x] | `POST /api/ollama/chat` | Hard | `http/ollama/chatRequest.ts` | `tests/api/ollama/chat.api.spec.ts` |
+| [x] | `POST /api/ollama/chat/tools` | Hard | `http/ollama/chatWithToolsRequest.ts` | `tests/api/ollama/chatWithTools.api.spec.ts` |

@@ -1,16 +1,24 @@
 import { faker } from '@faker-js/faker';
 
 const MAX_TEST_SEED = 2_147_483_647;
+const DEFAULT_TEST_SEED = 1_337_000_001;
 
-const parseSeed = (seedValue: string | undefined): number => {
+const parseSeed = (seedValue: string): number => {
   const parsedSeed = Number(seedValue);
   if (!Number.isInteger(parsedSeed) || parsedSeed < 0 || parsedSeed > MAX_TEST_SEED) {
-    throw new Error(
-      'Missing or invalid TEST_SEED. Ensure Playwright global setup runs or set TEST_SEED manually.',
-    );
+    throw new Error(`Invalid TEST_SEED value: ${seedValue}`);
   }
 
   return parsedSeed;
+};
+
+const resolveBaseSeed = (): number => {
+  const explicitSeed = process.env.TEST_SEED;
+  if (explicitSeed === undefined) {
+    return DEFAULT_TEST_SEED;
+  }
+
+  return parseSeed(explicitSeed);
 };
 
 export const seedFakerForWorker = (workerIndex: number): number => {
@@ -18,7 +26,7 @@ export const seedFakerForWorker = (workerIndex: number): number => {
     throw new Error(`Invalid worker index: ${workerIndex}`);
   }
 
-  const baseSeed = parseSeed(process.env.TEST_SEED);
+  const baseSeed = resolveBaseSeed();
   const workerSeed = (baseSeed + workerIndex) % MAX_TEST_SEED;
   faker.seed(workerSeed);
   return workerSeed;
@@ -40,7 +48,7 @@ export const seedFakerForTest = (workerIndex: number, testId: string): number =>
     throw new Error('Missing test id for faker seed generation');
   }
 
-  const baseSeed = parseSeed(process.env.TEST_SEED);
+  const baseSeed = resolveBaseSeed();
   const workerSeed = (baseSeed + workerIndex) % MAX_TEST_SEED;
   const testSeed = (workerSeed + hashString(testId)) % MAX_TEST_SEED;
 
