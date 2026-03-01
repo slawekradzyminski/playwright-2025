@@ -18,6 +18,9 @@ test.describe('Login UI tests', () => {
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
     await loginPage.goto();
+    await expect(loginPage.header.navigation).toBeVisible();
+    await expect(loginPage.header.loginLink).toBeVisible();
+    await expect(loginPage.header.registerLink).toBeVisible();
   });
 
   test('should successfully login with valid credentials', async ({ page }) => {

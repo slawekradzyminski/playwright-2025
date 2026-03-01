@@ -17,3 +17,4 @@ For UI tests:
 - use Playwright MCP to see the page in browser (find selectors, interact with elements, etc.)
 - prefer to setup test state via http requests
 - track work status in ui-test-plan.md
+- When you test navigation to other page assert both url and some text/selector presence on the new page (you may have to create a page object for the new page)

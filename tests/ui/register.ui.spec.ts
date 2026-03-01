@@ -16,6 +16,9 @@ test.describe('Register UI tests', () => {
   test.beforeEach(async ({ page }) => {
     registerPage = new RegisterPage(page);
     await registerPage.goto();
+    await expect(registerPage.header.navigation).toBeVisible();
+    await expect(registerPage.header.loginLink).toBeVisible();
+    await expect(registerPage.header.registerLink).toBeVisible();
   });
 
   test('should successfully register with valid data', async ({ page }) => {

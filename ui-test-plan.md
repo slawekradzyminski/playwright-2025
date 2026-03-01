@@ -44,9 +44,9 @@ Status legend: `done`, `in_progress`, `todo`.
 |---|---|---|---|---|
 | done | `/login` | Login Page | Public | Auth entry screen |
 | done | `/register` | Register Page | Public | Account creation screen |
-| todo | `/forgot-password` | Forgot Password Page | Public | Password reset request flow |
-| todo | `/reset` | Reset Password Page | Public | Reset token flow |
-| in_progress | `/` | Home Page | Authenticated | Default post-login landing |
+| done | `/forgot-password` | Forgot Password Page | Public | Password reset request flow |
+| done | `/reset` | Reset Password Page | Public | Reset token flow |
+| done | `/` | Home Page | Authenticated | Default post-login landing |
 | todo | `/products` | Products Page | Authenticated | Product catalog |
 | todo | `/products/:id` | Product Details Page | Authenticated | Product detail view |
 | todo | `/users` | Users Page | Authenticated | User list/management view |

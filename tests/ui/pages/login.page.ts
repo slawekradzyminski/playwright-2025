@@ -1,6 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
 import type { LoginDto } from '../../../types/auth';
 import { LOGIN_MESSAGES, LOGIN_URL } from '../constants/login.ui.constants';
+import { LoggedOutHeaderComponent } from '../components/logged-out-header.component';
 import { ToastComponent } from '../components/toast.component';
 
 export class LoginPage {
@@ -13,6 +14,7 @@ export class LoginPage {
   readonly registerLink: Locator;
   readonly toast: ToastComponent;
   readonly validationAlert: Locator;
+  readonly header: LoggedOutHeaderComponent;
 
   constructor(page: Page) {
     this.page = page;
@@ -24,6 +26,7 @@ export class LoginPage {
     this.registerLink = page.getByTestId('register-link');
     this.toast = new ToastComponent(page);
     this.validationAlert = page.getByRole('alert');
+    this.header = new LoggedOutHeaderComponent(page);
   }
 
   async goto(): Promise<void> {

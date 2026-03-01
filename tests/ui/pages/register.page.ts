@@ -1,6 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
 import type { RegisterFormData } from '../constants/register.ui.constants';
 import { REGISTER_MESSAGES, REGISTER_URL } from '../constants/register.ui.constants';
+import { LoggedOutHeaderComponent } from '../components/logged-out-header.component';
 import { ToastComponent } from '../components/toast.component';
 
 export class RegisterPage {
@@ -15,6 +16,7 @@ export class RegisterPage {
   readonly signInLink: Locator;
   readonly validationAlert: Locator;
   readonly toast: ToastComponent;
+  readonly header: LoggedOutHeaderComponent;
 
   constructor(page: Page) {
     this.page = page;
@@ -28,6 +30,7 @@ export class RegisterPage {
     this.signInLink = page.getByTestId('register-login-link');
     this.validationAlert = page.getByRole('alert');
     this.toast = new ToastComponent(page);
+    this.header = new LoggedOutHeaderComponent(page);
   }
 
   async goto(): Promise<void> {
