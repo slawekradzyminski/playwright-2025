@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto, LoginResponseDto } from '../../types/auth';
 
-const API_BASE_URL = 'http://localhost:4001';
-const SIGNIN_ENDPOINT = '/users/signin';
+const APP_BASE_URL = process.env.APP_BASE_URL ?? 'http://localhost:8081';
+const SIGNIN_ENDPOINT = '/api/v1/users/signin';
 
-test.describe('/users/signin API tests', () => {
+test.describe('/api/v1/users/signin API tests', () => {
   test('should successfully authenticate with valid credentials - 200', async ({ request }) => {
     // given
     const loginData: LoginDto = {
@@ -13,7 +13,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
+    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
       data: loginData,
       headers: {
         'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
+    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
       data: loginData,
       headers: {
         'Content-Type': 'application/json'
@@ -63,7 +63,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
+    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
       data: loginData,
       headers: {
         'Content-Type': 'application/json'
@@ -84,7 +84,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
+    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
       data: loginData,
       headers: {
         'Content-Type': 'application/json'
@@ -105,7 +105,7 @@ test.describe('/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${API_BASE_URL}${SIGNIN_ENDPOINT}`, {
+    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
       data: loginData,
       headers: {
         'Content-Type': 'application/json'

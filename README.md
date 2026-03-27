@@ -1,10 +1,10 @@
 # 🧪 Test Automation in Practice 2025
 
-A modern TypeScript-based test suite for validating both API and UI layers of a Dockerized AWS-like application stack, powered by awesome-localstack.
+A TypeScript-based Playwright suite for validating the current gateway-first application stack powered by awesome-localstack.
 
 ## 📦 Project Overview
 
-This repository contains a comprehensive suite of automated tests using Playwright to validate the functionality of a full-stack application running in a local AWS-like environment provided by awesome-localstack.
+This repository contains automated API and UI tests for the local training environment used during the Playwright course. The tests target the public gateway URL exposed by awesome-localstack, not raw internal service ports.
 
 ## 🔧 Features
 
@@ -19,7 +19,7 @@ This repository contains a comprehensive suite of automated tests using Playwrig
 .
 ├── tests/
 │   ├── api/
-│   │   └── login.api.spec.ts       # API tests for /users/signin endpoint
+│   │   └── login.api.spec.ts       # API tests for /api/v1/users/signin endpoint
 │   └── ui/
 │       └── login.ui.spec.ts        # UI tests for the login page
 ├── types/
@@ -54,10 +54,25 @@ npx playwright install chromium
 
 3. **Start the Dockerized Environment**
 
-Follow the instructions in the awesome-localstack repository to set up and start the Docker containers. Ensure the following services are running:
+Follow the instructions in the awesome-localstack repository and start the lightweight profile:
 
-- **Frontend**: Accessible at http://localhost:8081
-- **Backend API**: Accessible at http://localhost:4001
+```bash
+git clone https://github.com/slawekradzyminski/awesome-localstack
+cd awesome-localstack
+docker compose -f lightweight-docker-compose.yml up -d
+```
+
+The tests expect the following public app URL:
+
+- **App Gateway**: `http://localhost:8081`
+- **Login Page**: `http://localhost:8081/login`
+- **Auth API**: `http://localhost:8081/api/v1/users/signin`
+
+If you run the app on a different host or port, override the default:
+
+```bash
+APP_BASE_URL=http://localhost:8081 npx playwright test
+```
 
 4. **Run Tests**
 
@@ -100,7 +115,7 @@ The `playwright.config.ts` file is configured to:
 
 ### API Tests (`tests/api/login.api.spec.ts`)
 
-These tests cover various scenarios for the `/users/signin` endpoint, ordered by response code:
+These tests cover various scenarios for the `/api/v1/users/signin` endpoint, ordered by response code:
 
 - **Successful Authentication (200)**: Valid credentials return a 200 status with a JWT token and complete user information
 - **Validation Errors (400)**: Tests for empty username, short username, and short password scenarios with appropriate error messages
@@ -121,6 +136,15 @@ These tests validate the login page's functionality and user experience:
 - **TypeScript**: Typed superset of JavaScript
 - **Docker**: Containerization platform
 - **awesome-localstack**: Dockerized local AWS environment for development and testing
+
+## Current Target Architecture
+
+The tests assume a gateway-first local setup:
+
+- browser traffic goes to `http://localhost:8081`
+- frontend routes are served by the gateway
+- backend API is exposed behind the same origin under `/api/v1/...`
+- no test should depend on raw backend port `4001`
 
 ## Playwright MCP
 

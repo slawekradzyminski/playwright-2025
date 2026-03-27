@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto } from '../../types/auth';
 
-const LOGIN_URL = 'http://localhost:8081/login';
+const APP_BASE_URL = process.env.APP_BASE_URL ?? 'http://localhost:8081';
+const LOGIN_URL = `${APP_BASE_URL}/login`;
+const REGISTER_URL = `${APP_BASE_URL}/register`;
 
 test.describe('Login UI tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -62,7 +64,7 @@ test.describe('Login UI tests', () => {
     await page.getByRole('button', { name: 'Register' }).click();
 
     // then
-    await expect(page).toHaveURL('http://localhost:8081/register');
+    await expect(page).toHaveURL(REGISTER_URL);
   });
 
   test('should navigate to register page when register link is clicked', async ({ page }) => {
@@ -71,7 +73,7 @@ test.describe('Login UI tests', () => {
     await page.getByRole('link', { name: 'Register' }).click();
 
     // then
-    await expect(page).toHaveURL('http://localhost:8081/register');
+    await expect(page).toHaveURL(REGISTER_URL);
   });
 
   test('should have proper form validation for short username', async ({ page }) => {
