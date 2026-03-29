@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import type { LoginDto, LoginResponseDto } from '../../types/auth';
 
 const APP_BASE_URL = process.env.APP_BASE_URL ?? 'http://localhost:8081';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'LocalDemoAdmin123!';
 const SIGNIN_ENDPOINT = '/api/v1/users/signin';
 
 test.describe('/api/v1/users/signin API tests', () => {
@@ -9,7 +10,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     // given
     const loginData: LoginDto = {
       username: 'admin',
-      password: 'admin'
+      password: ADMIN_PASSWORD
     };
 
     // when
@@ -38,7 +39,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     // given
     const loginData: LoginDto = {
       username: '',
-      password: 'admin'
+      password: ADMIN_PASSWORD
     };
 
     // when
@@ -59,7 +60,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     // given
     const loginData: LoginDto = {
       username: 'abc',
-      password: 'admin'
+      password: ADMIN_PASSWORD
     };
 
     // when
