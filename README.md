@@ -41,8 +41,8 @@ This repository contains automated API and UI tests for the local training envir
 1. **Clone the Repository**
 
 ```bash
-git clone https://github.com/slawekradzyminski/playwright-may-2025
-cd playwright-may-2025
+git clone https://github.com/slawekradzyminski/playwright-2025
+cd playwright-2025
 ```
 
 2. **Install Dependencies**
@@ -72,6 +72,12 @@ If you run the app on a different host or port, override the default:
 
 ```bash
 APP_BASE_URL=http://localhost:8081 npx playwright test
+```
+
+If the training stack uses a different seeded admin password, override that too:
+
+```bash
+ADMIN_PASSWORD=your-password npx playwright test
 ```
 
 4. **Run Tests**
