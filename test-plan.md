@@ -11,6 +11,9 @@ Before adding tests for any endpoint, explore the endpoint with `curl`, then aut
 - Prefer endpoint-specific HTTP clients over raw `request` calls in specs.
 - Assert both status code and response contract. For state-changing tests, also assert the follow-up state.
 - Use seeded demo data only when it is stable. For ownership-sensitive scenarios, create fresh users/products/cart state in the test.
+- Admin API tests should use `tests/api/fixtures/adminAuthFixture.ts`. The seeded admin is a shared actor, not shared mutable data.
+- Admin tests can run in parallel only when they are read-only or each test creates and cleans up its own data.
+- Admin tests that mutate shared seeded data or depend on ordered transitions must use `test.describe.configure({ mode: 'serial' })` and include `@serial-admin` in the describe title.
 
 ## Status Legend
 
@@ -25,9 +28,9 @@ Before adding tests for any endpoint, explore the endpoint with `curl`, then aut
 
 | Status | Endpoint count |
 | --- | ---: |
-| DONE | 9 |
+| DONE | 13 |
 | NEXT | 3 |
-| TODO | 31 |
+| TODO | 27 |
 | BLOCKED | 0 |
 | Total | 43 |
 
@@ -40,9 +43,13 @@ Already covered:
 - `POST /api/v1/users/logout`
 - `GET /api/v1/products`
 - `GET /api/v1/products/{id}`
+- `POST /api/v1/products`
+- `PUT /api/v1/products/{id}`
+- `DELETE /api/v1/products/{id}`
 - `GET /api/v1/cart`
 - `DELETE /api/v1/cart`
 - `POST /api/v1/cart/items`
+- `GET /api/v1/orders/admin`
 
 ## Recommended Delivery Order
 
@@ -87,9 +94,9 @@ The original phase list was close, but the first useful milestone should build r
 | USER-010 | 6 | Email Events | GET | `/api/v1/users/me/email-events` | Yes | `200`, `401` | Medium | TODO | Best tested after password reset or email send scenarios create events. |
 | PROD-001 | 2 | Products | GET | `/api/v1/products` | Yes | `200`, `401` | High | DONE | Covered authenticated product list and missing JWT. |
 | PROD-002 | 2 | Products | GET | `/api/v1/products/{id}` | Yes | `200`, `401`, `404` | High | DONE | Covered existing product, missing JWT, and missing product. |
-| PROD-003 | 2 | Products | POST | `/api/v1/products` | Yes | `201`, `400`, `401`, `403` | High | TODO | Admin-only. Build admin auth helper first. |
-| PROD-004 | 2 | Products | PUT | `/api/v1/products/{id}` | Yes | `200`, `400`, `401`, `403`, `404` | High | TODO | Admin-only. Prefer creating a product in setup, then updating it. |
-| PROD-005 | 2 | Products | DELETE | `/api/v1/products/{id}` | Yes | `204`, `401`, `403`, `404` | High | TODO | Admin-only. Assert the product is gone with a follow-up `404`. |
+| PROD-003 | 2 | Products | POST | `/api/v1/products` | Yes | `201`, `400`, `401`, `403` | High | DONE | Covered admin create with generated disposable product, validation, missing JWT, and client forbidden. |
+| PROD-004 | 2 | Products | PUT | `/api/v1/products/{id}` | Yes | `200`, `400`, `401`, `403`, `404` | High | DONE | Covered admin update against generated test-owned products only. |
+| PROD-005 | 2 | Products | DELETE | `/api/v1/products/{id}` | Yes | `204`, `401`, `403`, `404` | High | DONE | Covered admin delete against generated test-owned products and follow-up `404`. |
 | CART-001 | 3 | Cart | GET | `/api/v1/cart` | Yes | `200`, `401` | High | DONE | Covered empty cart for fresh user and missing JWT. |
 | CART-002 | 3 | Cart | POST | `/api/v1/cart/items` | Yes | `200`, `400`, `401`, `404` | High | DONE | Covered add valid item, invalid quantity, missing JWT, and missing product. |
 | CART-003 | 3 | Cart | PUT | `/api/v1/cart/items/{productId}` | Yes | `200`, `400`, `401`, `404` | High | TODO | Validate quantity updates. Curl-check whether quantity `0` clears or fails. |
@@ -99,7 +106,7 @@ The original phase list was close, but the first useful milestone should build r
 | ORDER-002 | 4 | Orders | GET | `/api/v1/orders` | Yes | `200`, `401` | High | TODO | Validate paging, default values, and status filter. |
 | ORDER-003 | 4 | Orders | GET | `/api/v1/orders/{id}` | Yes | `200`, `401`, `404` | High | TODO | Validate owner/admin access and missing order. |
 | ORDER-004 | 4 | Orders | POST | `/api/v1/orders/{id}/cancel` | Yes | `200`, `400`, `401`, `403`, `404` | High | TODO | Validate allowed and forbidden status transitions. |
-| ORDER-005 | 4 | Orders | GET | `/api/v1/orders/admin` | Yes | `200`, `401`, `403` | High | TODO | Admin-only. Validate paging/filtering and client forbidden response. |
+| ORDER-005 | 4 | Orders | GET | `/api/v1/orders/admin` | Yes | `200`, `401`, `403` | High | DONE | Covered admin shape-based response, missing JWT, and client forbidden. Avoid exact global count assertions. |
 | ORDER-006 | 4 | Orders | PUT | `/api/v1/orders/{id}/status` | Yes | `200`, `400`, `401`, `403`, `404` | High | TODO | Admin-only. Validate valid and invalid transitions. |
 | EMAIL-001 | 6 | Email | POST | `/api/v1/email` | Yes | `200`, `400`, `401`, `429` | Medium | TODO | Validate send flow, validation, rate limit, and event/outbox side effects. |
 | EMAIL-002 | 6 | Local Email Outbox | GET | `/local/email/outbox` | No | `200` | Medium | TODO | Local profile only. Use after email-triggering actions. |
@@ -148,7 +155,7 @@ Recommended coverage:
 
 Exit criteria:
 
-- A reusable product helper exists.
+- A reusable `generateProduct()` helper exists for disposable product setup.
 - Cart/order tests can request a known product ID without hard-coding fragile data.
 
 ### Phase 3: Cart Lifecycle
@@ -184,6 +191,7 @@ Exit criteria:
 
 - At least one full flow is covered: product -> cart -> order -> status update.
 - Invalid transition rules are explicitly asserted.
+- Shared order transition suites are constrained with `test.describe.configure({ mode: 'serial' })` and tagged `@serial-admin`.
 
 ### Phase 5: User Management And Prompts
 
@@ -253,20 +261,36 @@ Exit criteria:
 
 ## Spec File Suggestions
 
-Suggested files, keeping the existing naming style:
+Suggested files, keeping the current resource-folder and endpoint-per-spec style:
 
-- `tests/api/refresh.api.spec.ts`
-- `tests/api/logout.api.spec.ts`
-- `tests/api/password-reset.api.spec.ts`
-- `tests/api/products.api.spec.ts`
-- `tests/api/cart.api.spec.ts`
-- `tests/api/orders.api.spec.ts`
-- `tests/api/users.api.spec.ts`
-- `tests/api/prompts.api.spec.ts`
-- `tests/api/email.api.spec.ts`
-- `tests/api/qr.api.spec.ts`
-- `tests/api/traffic.api.spec.ts`
-- `tests/api/ollama.api.spec.ts`
+- `tests/api/users/post-password-forgot.api.spec.ts`
+- `tests/api/users/post-password-reset.api.spec.ts`
+- `tests/api/cart/put-cart-items.api.spec.ts`
+- `tests/api/cart/delete-cart-items.api.spec.ts`
+- `tests/api/orders/post-orders.api.spec.ts`
+- `tests/api/orders/get-orders.api.spec.ts`
+- `tests/api/orders/get-order-by-id.api.spec.ts`
+- `tests/api/orders/post-order-cancel.api.spec.ts`
+- `tests/api/orders/put-order-status.api.spec.ts`
+- `tests/api/users/get-users.api.spec.ts`
+- `tests/api/users/get-user-by-username.api.spec.ts`
+- `tests/api/users/put-user.api.spec.ts`
+- `tests/api/users/delete-user.api.spec.ts`
+- `tests/api/users/get-chat-system-prompt.api.spec.ts`
+- `tests/api/users/put-chat-system-prompt.api.spec.ts`
+- `tests/api/users/get-tool-system-prompt.api.spec.ts`
+- `tests/api/users/put-tool-system-prompt.api.spec.ts`
+- `tests/api/email/post-email.api.spec.ts`
+- `tests/api/email/get-local-email-outbox.api.spec.ts`
+- `tests/api/email/delete-local-email-outbox.api.spec.ts`
+- `tests/api/qr/post-qr-create.api.spec.ts`
+- `tests/api/traffic/get-traffic-info.api.spec.ts`
+- `tests/api/traffic/get-traffic-logs.api.spec.ts`
+- `tests/api/traffic/get-traffic-log-by-correlation-id.api.spec.ts`
+- `tests/api/ollama/get-chat-tools-definitions.api.spec.ts`
+- `tests/api/ollama/post-ollama-generate.api.spec.ts`
+- `tests/api/ollama/post-ollama-chat.api.spec.ts`
+- `tests/api/ollama/post-ollama-chat-tools.api.spec.ts`
 
 Keep each spec internally ordered by status code, even when the endpoint inventory is ordered by dependency.
 

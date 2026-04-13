@@ -69,9 +69,12 @@ The `.env` file is listed in `.gitignore` and **must never be committed** — it
 | Variable | Default | Description |
 |---|---|---|
 | `APP_BASE_URL` | `http://localhost:8081` | Base URL of the running gateway |
-| `ADMIN_PASSWORD` | `LocalDemoAdmin123!` | Password of the seeded admin user |
+| `ADMIN_USERNAME` | required | Username of the seeded admin user used by admin API fixtures |
+| `ADMIN_PASSWORD` | required | Password of the seeded admin user |
+| `LOGIN` | `client` | Regular demo user for UI tests |
+| `PASSWORD` | `client` | Regular demo password for UI tests |
 
-`playwright.config.ts` loads `.env` automatically at startup using [dotenv](https://github.com/motdotla/dotenv). Any variable defined there is available as `process.env.VARIABLE_NAME` across all test files. If a variable is missing from `.env`, each file falls back to a sensible hard-coded default so tests still run out of the box against the default local stack.
+`playwright.config.ts` loads `.env` automatically at startup using [dotenv](https://github.com/motdotla/dotenv). Any variable defined there is available as `process.env.VARIABLE_NAME` across all test files. `APP_BASE_URL` falls back to the default local gateway, but admin credentials must be provided through `.env` or the shell environment.
 
 4. **Start the Dockerized Environment**
 
@@ -92,7 +95,7 @@ The tests expect the following public app URL:
 You can also override variables inline without a `.env` file:
 
 ```bash
-APP_BASE_URL=http://localhost:8081 ADMIN_PASSWORD=your-password npx playwright test
+APP_BASE_URL=http://localhost:8081 ADMIN_USERNAME=admin ADMIN_PASSWORD=your-password npx playwright test
 ```
 
 5. **Run Tests**
@@ -133,6 +136,53 @@ The `playwright.config.ts` file is configured to:
 - Use single worker on CI, parallel workers locally
 
 ## 🧪 Test Details
+
+### Admin API Auth and Parallelism
+
+Admin API tests use `tests/api/fixtures/adminAuthFixture.ts`. The fixture logs in as the seeded admin user once per Playwright worker and exposes:
+
+- `adminTokens`: the admin access and refresh tokens
+- `adminRequest`: a worker-scoped `APIRequestContext` with `Authorization: Bearer <token>` already attached
+
+This is intentionally different from regular client tests. Regular API tests create a fresh client user with `registerAndLogin` because public signup always creates `ROLE_CLIENT`. Admin tests cannot create fresh admins through signup, so the single seeded admin is reused only as an actor.
+
+The backend access token is a stateless JWT, and the backend reloads the current user and roles from the database for each authenticated request. That makes parallel read-only admin calls safe. The shared risk is backend data mutation, not the shared admin token.
+
+Safe to run fully in parallel:
+
+- read-only admin checks such as `GET /api/v1/orders/admin`
+- admin mutations where each test creates and owns its target product/user/order
+- authorization checks where a fresh regular user receives `403`
+- assertions based on response shape or test-owned data
+
+Not safe to run fully in parallel:
+
+- tests that delete or edit seeded users such as `admin`, `client`, `client2`, or `client3`
+- tests that update or delete seeded catalog products used by other cart/product tests
+- order status tests that reuse seeded orders, because status transitions are destructive
+- tests that call admin logout or refresh-token revocation from a shared admin fixture
+- tests that assert exact global counts from `/api/v1/orders/admin`, `/api/v1/users`, or other shared list endpoints while other tests create data
+
+When a suite must mutate shared state or verify ordered transitions on one shared object, constrain it in code:
+
+```ts
+test.describe.configure({ mode: 'serial' });
+
+test.describe('PUT /api/v1/orders/{id}/status @serial-admin', () => {
+  // ordered transition tests for one shared order
+});
+```
+
+The `mode: 'serial'` setting is the enforcement mechanism: Playwright will not run tests in that describe block concurrently, even when `fullyParallel: true` is enabled. The `@serial-admin` tag is a searchable marker for reviews and selective runs.
+
+Current admin coverage added by this strategy:
+
+- `GET /api/v1/orders/admin`: admin `200`, missing token `401`, regular client `403`
+- `POST /api/v1/products`: admin-created disposable product `201`, validation `400`, missing token `401`, regular client `403`
+- `PUT /api/v1/products/{id}`: updates only a test-owned product, with `200`, `400`, `401`, `403`, and `404` checks
+- `DELETE /api/v1/products/{id}`: deletes only a test-owned product, with `204`, `401`, `403`, and `404` checks
+
+Product admin mutation tests are parallel-safe because they create unique products and clean them up. They must not be rewritten to touch seeded catalog products.
 
 ### API Tests (`tests/api/login.api.spec.ts`)
 

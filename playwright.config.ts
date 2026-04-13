@@ -5,6 +5,8 @@ import path from 'path';
 
 dotenv.config({ path: path.resolve(__dirname, '.env'), quiet: true });
 
+process.env.APP_BASE_URL ||= 'http://localhost:8081';
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */

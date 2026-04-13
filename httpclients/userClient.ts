@@ -13,4 +13,10 @@ export class UserClient {
       headers: token ? { Authorization: `Bearer ${token}` } : undefined
     });
   }
+
+  deleteUser(username: string, token?: string): Promise<APIResponse> {
+    return this.request.delete(`${this.baseUrl}/api/v1/users/${username}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined
+    });
+  }
 }
