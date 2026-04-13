@@ -17,6 +17,8 @@ This repository contains automated API and UI tests for the local training envir
 
 ```
 .
+├── httpclients/
+│   └── loginClient.ts              # HTTP client for /api/v1/users/signin endpoint
 ├── tests/
 │   ├── api/
 │   │   └── login.api.spec.ts       # API tests for /api/v1/users/signin endpoint
@@ -24,6 +26,8 @@ This repository contains automated API and UI tests for the local training envir
 │       └── login.ui.spec.ts        # UI tests for the login page
 ├── types/
 │   └── auth.ts                     # TypeScript interfaces for authentication
+├── .env                            # Local secrets — gitignored, never commit this
+├── .env.example                    # Template showing which variables are required
 ├── playwright.config.ts            # Playwright configuration
 ├── package.json                    # Project metadata and dependencies
 └── ...
@@ -52,7 +56,24 @@ npm install
 npx playwright install chromium
 ```
 
-3. **Start the Dockerized Environment**
+3. **Configure environment variables**
+
+Copy `.env.example` to `.env` and fill in your values:
+
+```bash
+cp .env.example .env
+```
+
+The `.env` file is listed in `.gitignore` and **must never be committed** — it may contain real passwords. The following variables are supported:
+
+| Variable | Default | Description |
+|---|---|---|
+| `APP_BASE_URL` | `http://localhost:8081` | Base URL of the running gateway |
+| `ADMIN_PASSWORD` | `LocalDemoAdmin123!` | Password of the seeded admin user |
+
+`playwright.config.ts` loads `.env` automatically at startup using [dotenv](https://github.com/motdotla/dotenv). Any variable defined there is available as `process.env.VARIABLE_NAME` across all test files. If a variable is missing from `.env`, each file falls back to a sensible hard-coded default so tests still run out of the box against the default local stack.
+
+4. **Start the Dockerized Environment**
 
 Follow the instructions in the awesome-localstack repository and start the lightweight profile:
 
@@ -68,19 +89,13 @@ The tests expect the following public app URL:
 - **Login Page**: `http://localhost:8081/login`
 - **Auth API**: `http://localhost:8081/api/v1/users/signin`
 
-If you run the app on a different host or port, override the default:
+You can also override variables inline without a `.env` file:
 
 ```bash
-APP_BASE_URL=http://localhost:8081 npx playwright test
+APP_BASE_URL=http://localhost:8081 ADMIN_PASSWORD=your-password npx playwright test
 ```
 
-If the training stack uses a different seeded admin password, override that too:
-
-```bash
-ADMIN_PASSWORD=your-password npx playwright test
-```
-
-4. **Run Tests**
+5. **Run Tests**
 
 **API Tests**
 
