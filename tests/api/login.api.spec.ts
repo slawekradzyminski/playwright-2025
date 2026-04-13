@@ -3,7 +3,8 @@ import type { LoginResponseDto } from '../../types/auth';
 import { LoginClient } from '../../httpclients/loginClient';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || '';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+const LOGIN = process.env.LOGIN || '';
+const PASSWORD = process.env.PASSWORD || '';
 
 test.describe('/api/v1/users/signin API tests', () => {
   test('should successfully authenticate with valid credentials - 200', async ({ request }) => {
@@ -11,7 +12,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     const client = new LoginClient(request, APP_BASE_URL);
 
     // when
-    const response = await client.login({ username: 'admin', password: ADMIN_PASSWORD });
+    const response = await client.login({ username: LOGIN, password: PASSWORD });
 
     // then
     expect(response.status()).toBe(200);
@@ -23,7 +24,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     const client = new LoginClient(request, APP_BASE_URL);
 
     // when
-    const response = await client.login({ username: '', password: ADMIN_PASSWORD });
+    const response = await client.login({ username: '', password: PASSWORD });
 
     // then
     expect(response.status()).toBe(400);
@@ -36,7 +37,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     const client = new LoginClient(request, APP_BASE_URL);
 
     // when
-    const response = await client.login({ username: 'abc', password: ADMIN_PASSWORD });
+    const response = await client.login({ username: 'abc', password: PASSWORD });
 
     // then
     expect(response.status()).toBe(400);
@@ -75,7 +76,7 @@ const assertResponseBody = async (response: APIResponse) => {
   const responseBody: LoginResponseDto = await response.json();
   expect(responseBody.token).toBeDefined();
   expect(responseBody.token).toMatch(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/);
-  expect(responseBody.username).toBe('admin');
+  expect(responseBody.username).toBe(LOGIN);
   expect(responseBody.email).toBeDefined();
   expect(responseBody.firstName).toBeDefined();
   expect(responseBody.lastName).toBeDefined();
