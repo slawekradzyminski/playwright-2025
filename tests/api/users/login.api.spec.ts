@@ -1,6 +1,6 @@
 import { test, expect, APIResponse } from '@playwright/test';
-import type { LoginResponseDto } from '../../types/auth';
-import { LoginClient } from '../../httpclients/loginClient';
+import type { LoginResponseDto } from '../../../types/auth';
+import { LoginClient } from '../../../httpclients/loginClient';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || '';
 const LOGIN = process.env.LOGIN || '';

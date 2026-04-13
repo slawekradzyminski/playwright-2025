@@ -1,7 +1,7 @@
 import type { APIResponse } from '@playwright/test';
-import { test, expect } from './fixtures/authFixture';
-import { UserClient } from '../../httpclients/userClient';
-import type { SignupDto, UserResponseDto } from '../../types/auth';
+import { test, expect } from '../fixtures/authFixture';
+import { UserClient } from '../../../httpclients/userClient';
+import type { SignupDto, UserResponseDto } from '../../../types/auth';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || '';
 

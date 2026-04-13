@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import type { SignupDto } from '../../types/auth';
-import { LoginClient } from '../../httpclients/loginClient';
-import { SignupClient } from '../../httpclients/signupClient';
-import { generateUser } from '../../generators/userGenerator';
+import type { SignupDto } from '../../../types/auth';
+import { LoginClient } from '../../../httpclients/loginClient';
+import { SignupClient } from '../../../httpclients/signupClient';
+import { generateUser } from '../../../generators/userGenerator';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || '';
 
