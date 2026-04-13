@@ -25,8 +25,8 @@ Before adding tests for any endpoint, explore the endpoint with `curl`, then aut
 
 | Status | Endpoint count |
 | --- | ---: |
-| DONE | 5 |
-| NEXT | 5 |
+| DONE | 7 |
+| NEXT | 3 |
 | TODO | 33 |
 | BLOCKED | 0 |
 | Total | 43 |
@@ -38,6 +38,8 @@ Already covered:
 - `GET /api/v1/users/me`
 - `POST /api/v1/users/refresh`
 - `POST /api/v1/users/logout`
+- `GET /api/v1/products`
+- `GET /api/v1/products/{id}`
 
 ## Recommended Delivery Order
 
@@ -80,8 +82,8 @@ The original phase list was close, but the first useful milestone should build r
 | USER-008 | 5 | Users | GET | `/api/v1/users/tool-system-prompt` | Yes | `200`, `401` | Medium | TODO | Validate prompt retrieval. |
 | USER-009 | 5 | Users | PUT | `/api/v1/users/tool-system-prompt` | Yes | `200`, `401` | Medium | TODO | Validate update persistence and max-length behavior after curl exploration. |
 | USER-010 | 6 | Email Events | GET | `/api/v1/users/me/email-events` | Yes | `200`, `401` | Medium | TODO | Best tested after password reset or email send scenarios create events. |
-| PROD-001 | 2 | Products | GET | `/api/v1/products` | Yes | `200`, `401` | High | NEXT | Start here; it gives stable product IDs for cart/order tests. |
-| PROD-002 | 2 | Products | GET | `/api/v1/products/{id}` | Yes | `200`, `401`, `404` | High | NEXT | Validate found/not found and auth. |
+| PROD-001 | 2 | Products | GET | `/api/v1/products` | Yes | `200`, `401` | High | DONE | Covered authenticated product list and missing JWT. |
+| PROD-002 | 2 | Products | GET | `/api/v1/products/{id}` | Yes | `200`, `401`, `404` | High | DONE | Covered existing product, missing JWT, and missing product. |
 | PROD-003 | 2 | Products | POST | `/api/v1/products` | Yes | `201`, `400`, `401`, `403` | High | TODO | Admin-only. Build admin auth helper first. |
 | PROD-004 | 2 | Products | PUT | `/api/v1/products/{id}` | Yes | `200`, `400`, `401`, `403`, `404` | High | TODO | Admin-only. Prefer creating a product in setup, then updating it. |
 | PROD-005 | 2 | Products | DELETE | `/api/v1/products/{id}` | Yes | `204`, `401`, `403`, `404` | High | TODO | Admin-only. Assert the product is gone with a follow-up `404`. |
