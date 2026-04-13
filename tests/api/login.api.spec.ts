@@ -7,10 +7,13 @@ const LOGIN = process.env.LOGIN || '';
 const PASSWORD = process.env.PASSWORD || '';
 
 test.describe('/api/v1/users/signin API tests', () => {
-  test('should successfully authenticate with valid credentials - 200', async ({ request }) => {
-    // given
-    const client = new LoginClient(request, APP_BASE_URL);
+  let client: LoginClient;
 
+  test.beforeEach(async ({ request }) => {
+    client = new LoginClient(request, APP_BASE_URL);
+  });
+
+  test('should successfully authenticate with valid credentials - 200', async () => {
     // when
     const response = await client.login({ username: LOGIN, password: PASSWORD });
 
@@ -19,10 +22,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     assertResponseBody(response);
   });
 
-  test('should return validation error for empty username - 400', async ({ request }) => {
-    // given
-    const client = new LoginClient(request, APP_BASE_URL);
-
+  test('should return validation error for empty username - 400', async () => {
     // when
     const response = await client.login({ username: '', password: PASSWORD });
 
@@ -32,10 +32,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     expect(responseBody.username).toBe('Minimum username length: 4 characters');
   });
 
-  test('should return validation error for username too short - 400', async ({ request }) => {
-    // given
-    const client = new LoginClient(request, APP_BASE_URL);
-
+  test('should return validation error for username too short - 400', async () => {
     // when
     const response = await client.login({ username: 'abc', password: PASSWORD });
 
@@ -45,10 +42,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     expect(responseBody.username).toBe('Minimum username length: 4 characters');
   });
 
-  test('should return validation error for password too short - 400', async ({ request }) => {
-    // given
-    const client = new LoginClient(request, APP_BASE_URL);
-
+  test('should return validation error for password too short - 400', async () => {
     // when
     const response = await client.login({ username: 'admin', password: 'abc' });
 
@@ -58,10 +52,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     expect(responseBody.password).toBe('Minimum password length: 4 characters');
   });
 
-  test('should return authentication error for both invalid credentials - 422', async ({ request }) => {
-    // given
-    const client = new LoginClient(request, APP_BASE_URL);
-
+  test('should return authentication error for both invalid credentials - 422', async () => {
     // when
     const response = await client.login({ username: 'wronguser', password: 'wrongpassword' });
 
