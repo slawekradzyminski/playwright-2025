@@ -25,8 +25,8 @@ Before adding tests for any endpoint, explore the endpoint with `curl`, then aut
 
 | Status | Endpoint count |
 | --- | ---: |
-| DONE | 3 |
-| NEXT | 7 |
+| DONE | 5 |
+| NEXT | 5 |
 | TODO | 33 |
 | BLOCKED | 0 |
 | Total | 43 |
@@ -36,6 +36,8 @@ Already covered:
 - `POST /api/v1/users/signup`
 - `POST /api/v1/users/signin`
 - `GET /api/v1/users/me`
+- `POST /api/v1/users/refresh`
+- `POST /api/v1/users/logout`
 
 ## Recommended Delivery Order
 
@@ -64,8 +66,8 @@ The original phase list was close, but the first useful milestone should build r
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | AUTH-001 | 1 | Users | POST | `/api/v1/users/signin` | No | `200`, `400`, `422`, `429` | High | DONE | Covered for valid login, validation, and invalid credentials. |
 | AUTH-002 | 1 | Users | POST | `/api/v1/users/signup` | No | `201`, `400`, `429` | High | DONE | Covered for registration, duplicate username/email, and validation. |
-| AUTH-003 | 1 | Users | POST | `/api/v1/users/refresh` | No | `200`, `401`, `429` | High | NEXT | Validate token rotation, malformed/unknown refresh token, and rate limit if practical. |
-| AUTH-004 | 1 | Users | POST | `/api/v1/users/logout` | Yes | `200`, `401` | High | NEXT | Validate refresh token revocation by attempting refresh after logout. |
+| AUTH-003 | 1 | Users | POST | `/api/v1/users/refresh` | No | `200`, `401`, `429` | High | DONE | Covered token rotation, invalid token, and already rotated token. |
+| AUTH-004 | 1 | Users | POST | `/api/v1/users/logout` | Yes | `200`, `401` | High | DONE | Covered authenticated logout, refresh token revocation, and missing JWT. |
 | AUTH-005 | 1 | Password Reset | POST | `/api/v1/users/password/forgot` | No | `202`, `400`, `429` | High | NEXT | Use local outbox in local profile to verify reset email side effect. |
 | AUTH-006 | 1 | Password Reset | POST | `/api/v1/users/password/reset` | No | `200`, `400`, `429` | High | NEXT | Validate valid token, invalid token, password mismatch, and token reuse. |
 | USER-001 | 5 | Users | GET | `/api/v1/users/me` | Yes | `200`, `401` | High | DONE | Covered authenticated self endpoint. |

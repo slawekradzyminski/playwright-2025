@@ -8,7 +8,13 @@ const APP_BASE_URL = process.env.APP_BASE_URL || '';
 
 export interface AuthenticatedUser {
   token: string;
+  refreshToken: string;
   user: SignupDto;
+}
+
+export interface AuthTokens {
+  token: string;
+  refreshToken: string;
 }
 
 export const registerUser = async (
@@ -29,6 +35,16 @@ export const loginUser = async (
   credentials: Pick<SignupDto, 'username' | 'password'>,
   baseUrl = APP_BASE_URL
 ): Promise<string> => {
+  const tokens = await loginUserForTokens(request, credentials, baseUrl);
+
+  return tokens.token;
+};
+
+export const loginUserForTokens = async (
+  request: APIRequestContext,
+  credentials: Pick<SignupDto, 'username' | 'password'>,
+  baseUrl = APP_BASE_URL
+): Promise<AuthTokens> => {
   const loginClient = new LoginClient(request, baseUrl);
 
   const loginResponse = await loginClient.login({
@@ -39,8 +55,12 @@ export const loginUser = async (
 
   const loginResponseBody: LoginResponseDto = await loginResponse.json();
   expect(loginResponseBody.token).toBeDefined();
+  expect(loginResponseBody.refreshToken).toBeDefined();
 
-  return loginResponseBody.token;
+  return {
+    token: loginResponseBody.token,
+    refreshToken: loginResponseBody.refreshToken
+  };
 };
 
 export const registerAndLogin = async (
@@ -50,7 +70,7 @@ export const registerAndLogin = async (
   const user = generateUser();
 
   await registerUser(request, user, baseUrl);
-  const token = await loginUser(
+  const { token, refreshToken } = await loginUserForTokens(
     request,
     {
       username: user.username,
@@ -61,6 +81,7 @@ export const registerAndLogin = async (
 
   return {
     token,
+    refreshToken,
     user
   };
 };

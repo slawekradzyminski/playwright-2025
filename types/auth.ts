@@ -13,12 +13,21 @@ export interface SignupDto {
 
 export interface LoginResponseDto {
   token: string;
-  refreshToken?: string;
+  refreshToken: string;
   username: string;
   email: string;
   firstName: string;
   lastName: string;
   roles: string[];
+}
+
+export interface RefreshTokenRequestDto {
+  refreshToken: string;
+}
+
+export interface TokenRefreshResponseDto {
+  token: string;
+  refreshToken: string;
 }
 
 export interface UserResponseDto {
