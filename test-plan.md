@@ -25,9 +25,9 @@ Before adding tests for any endpoint, explore the endpoint with `curl`, then aut
 
 | Status | Endpoint count |
 | --- | ---: |
-| DONE | 7 |
+| DONE | 9 |
 | NEXT | 3 |
-| TODO | 33 |
+| TODO | 31 |
 | BLOCKED | 0 |
 | Total | 43 |
 
@@ -40,6 +40,9 @@ Already covered:
 - `POST /api/v1/users/logout`
 - `GET /api/v1/products`
 - `GET /api/v1/products/{id}`
+- `GET /api/v1/cart`
+- `DELETE /api/v1/cart`
+- `POST /api/v1/cart/items`
 
 ## Recommended Delivery Order
 
@@ -87,11 +90,11 @@ The original phase list was close, but the first useful milestone should build r
 | PROD-003 | 2 | Products | POST | `/api/v1/products` | Yes | `201`, `400`, `401`, `403` | High | TODO | Admin-only. Build admin auth helper first. |
 | PROD-004 | 2 | Products | PUT | `/api/v1/products/{id}` | Yes | `200`, `400`, `401`, `403`, `404` | High | TODO | Admin-only. Prefer creating a product in setup, then updating it. |
 | PROD-005 | 2 | Products | DELETE | `/api/v1/products/{id}` | Yes | `204`, `401`, `403`, `404` | High | TODO | Admin-only. Assert the product is gone with a follow-up `404`. |
-| CART-001 | 3 | Cart | GET | `/api/v1/cart` | Yes | `200`, `401` | High | NEXT | Validate empty cart for a fresh user. |
-| CART-002 | 3 | Cart | POST | `/api/v1/cart/items` | Yes | `200`, `400`, `401`, `404` | High | TODO | Validate add valid item, invalid quantity, and missing product. |
+| CART-001 | 3 | Cart | GET | `/api/v1/cart` | Yes | `200`, `401` | High | DONE | Covered empty cart for fresh user and missing JWT. |
+| CART-002 | 3 | Cart | POST | `/api/v1/cart/items` | Yes | `200`, `400`, `401`, `404` | High | DONE | Covered add valid item, invalid quantity, missing JWT, and missing product. |
 | CART-003 | 3 | Cart | PUT | `/api/v1/cart/items/{productId}` | Yes | `200`, `400`, `401`, `404` | High | TODO | Validate quantity updates. Curl-check whether quantity `0` clears or fails. |
 | CART-004 | 3 | Cart | DELETE | `/api/v1/cart/items/{productId}` | Yes | `200`, `401`, `404` | High | TODO | Validate remove existing and non-existing item. |
-| CART-005 | 3 | Cart | DELETE | `/api/v1/cart` | Yes | `204`, `401` | High | TODO | Validate clear behavior and idempotency. |
+| CART-005 | 3 | Cart | DELETE | `/api/v1/cart` | Yes | `204`, `401` | High | DONE | Covered clear behavior and missing JWT. |
 | ORDER-001 | 4 | Orders | POST | `/api/v1/orders` | Yes | `201`, `400`, `401` | High | TODO | Requires populated cart and valid address payload. |
 | ORDER-002 | 4 | Orders | GET | `/api/v1/orders` | Yes | `200`, `401` | High | TODO | Validate paging, default values, and status filter. |
 | ORDER-003 | 4 | Orders | GET | `/api/v1/orders/{id}` | Yes | `200`, `401`, `404` | High | TODO | Validate owner/admin access and missing order. |
