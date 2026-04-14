@@ -28,9 +28,9 @@ Before adding tests for any endpoint, explore the endpoint with `curl`, then aut
 
 | Status | Endpoint count |
 | --- | ---: |
-| DONE | 13 |
-| NEXT | 3 |
-| TODO | 27 |
+| DONE | 22 |
+| NEXT | 2 |
+| TODO | 19 |
 | BLOCKED | 0 |
 | Total | 43 |
 
@@ -41,6 +41,14 @@ Already covered:
 - `GET /api/v1/users/me`
 - `POST /api/v1/users/refresh`
 - `POST /api/v1/users/logout`
+- `GET /api/v1/users`
+- `GET /api/v1/users/{username}`
+- `PUT /api/v1/users/{username}`
+- `DELETE /api/v1/users/{username}`
+- `GET /api/v1/users/chat-system-prompt`
+- `PUT /api/v1/users/chat-system-prompt`
+- `GET /api/v1/users/tool-system-prompt`
+- `PUT /api/v1/users/tool-system-prompt`
 - `GET /api/v1/products`
 - `GET /api/v1/products/{id}`
 - `POST /api/v1/products`
@@ -83,14 +91,14 @@ The original phase list was close, but the first useful milestone should build r
 | AUTH-005 | 1 | Password Reset | POST | `/api/v1/users/password/forgot` | No | `202`, `400`, `429` | High | NEXT | Use local outbox in local profile to verify reset email side effect. |
 | AUTH-006 | 1 | Password Reset | POST | `/api/v1/users/password/reset` | No | `200`, `400`, `429` | High | NEXT | Validate valid token, invalid token, password mismatch, and token reuse. |
 | USER-001 | 5 | Users | GET | `/api/v1/users/me` | Yes | `200`, `401` | High | DONE | Covered authenticated self endpoint. |
-| USER-002 | 5 | Users | GET | `/api/v1/users` | Yes | `200`, `401` | Medium | TODO | OpenAPI says authenticated; backend README says admin-only, so verify with curl first. |
-| USER-003 | 5 | Users | GET | `/api/v1/users/{username}` | Yes | `200`, `401`, `404` | Medium | TODO | Validate existing user, missing user, and auth enforcement. |
-| USER-004 | 5 | Users | PUT | `/api/v1/users/{username}` | Yes | `200`, `401`, `403`, `404` | High | TODO | Validate self/admin update, forbidden access, and missing user. |
-| USER-005 | 5 | Users | DELETE | `/api/v1/users/{username}` | Yes | `204`, `401`, `403`, `404` | High | TODO | Validate delete permissions and cleanup. |
-| USER-006 | 5 | Users | GET | `/api/v1/users/chat-system-prompt` | Yes | `200`, `401` | Medium | TODO | Validate default/empty value retrieval. |
-| USER-007 | 5 | Users | PUT | `/api/v1/users/chat-system-prompt` | Yes | `200`, `401` | Medium | TODO | Validate update persistence and max-length behavior after curl exploration. |
-| USER-008 | 5 | Users | GET | `/api/v1/users/tool-system-prompt` | Yes | `200`, `401` | Medium | TODO | Validate prompt retrieval. |
-| USER-009 | 5 | Users | PUT | `/api/v1/users/tool-system-prompt` | Yes | `200`, `401` | Medium | TODO | Validate update persistence and max-length behavior after curl exploration. |
+| USER-002 | 5 | Users | GET | `/api/v1/users` | Yes | `200`, `401` | Medium | DONE | Covered authenticated client list response shape and missing JWT. Avoid exact global count assertions. |
+| USER-003 | 5 | Users | GET | `/api/v1/users/{username}` | Yes | `200`, `401`, `404` | Medium | DONE | Covered existing generated user, missing JWT, and missing username. |
+| USER-004 | 5 | Users | PUT | `/api/v1/users/{username}` | Yes | `200`, `401`, `403`, `404` | High | DONE | Covered self update, admin update of generated user, forbidden client update, and missing username with valid `UserEditDto`. |
+| USER-005 | 5 | Users | DELETE | `/api/v1/users/{username}` | Yes | `204`, `401`, `403`, `404` | High | DONE | Covered admin delete of generated user, missing JWT, client forbidden, and missing username. |
+| USER-006 | 5 | Users | GET | `/api/v1/users/chat-system-prompt` | Yes | `200`, `401` | Medium | DONE | Covered effective fallback retrieval after blanking the prompt and missing JWT. |
+| USER-007 | 5 | Users | PUT | `/api/v1/users/chat-system-prompt` | Yes | `200`, `400`, `401` | Medium | DONE | Covered update persistence, max-length validation, and missing JWT. |
+| USER-008 | 5 | Users | GET | `/api/v1/users/tool-system-prompt` | Yes | `200`, `401` | Medium | DONE | Covered authenticated prompt retrieval and missing JWT. |
+| USER-009 | 5 | Users | PUT | `/api/v1/users/tool-system-prompt` | Yes | `200`, `400`, `401` | Medium | DONE | Covered update persistence, max-length validation, and missing JWT. |
 | USER-010 | 6 | Email Events | GET | `/api/v1/users/me/email-events` | Yes | `200`, `401` | Medium | TODO | Best tested after password reset or email send scenarios create events. |
 | PROD-001 | 2 | Products | GET | `/api/v1/products` | Yes | `200`, `401` | High | DONE | Covered authenticated product list and missing JWT. |
 | PROD-002 | 2 | Products | GET | `/api/v1/products/{id}` | Yes | `200`, `401`, `404` | High | DONE | Covered existing product, missing JWT, and missing product. |
@@ -272,14 +280,6 @@ Suggested files, keeping the current resource-folder and endpoint-per-spec style
 - `tests/api/orders/get-order-by-id.api.spec.ts`
 - `tests/api/orders/post-order-cancel.api.spec.ts`
 - `tests/api/orders/put-order-status.api.spec.ts`
-- `tests/api/users/get-users.api.spec.ts`
-- `tests/api/users/get-user-by-username.api.spec.ts`
-- `tests/api/users/put-user.api.spec.ts`
-- `tests/api/users/delete-user.api.spec.ts`
-- `tests/api/users/get-chat-system-prompt.api.spec.ts`
-- `tests/api/users/put-chat-system-prompt.api.spec.ts`
-- `tests/api/users/get-tool-system-prompt.api.spec.ts`
-- `tests/api/users/put-tool-system-prompt.api.spec.ts`
 - `tests/api/email/post-email.api.spec.ts`
 - `tests/api/email/get-local-email-outbox.api.spec.ts`
 - `tests/api/email/delete-local-email-outbox.api.spec.ts`
@@ -296,7 +296,6 @@ Keep each spec internally ordered by status code, even when the endpoint invento
 
 ## Notes To Verify With Curl Before Automating
 
-- Does `GET /api/v1/users` require admin despite OpenAPI only listing bearer auth?
 - For `PUT /api/v1/cart/items/{productId}`, does quantity `0` remove the item or return `400`?
 - Which exact validation messages are returned for product, cart, address, prompt, QR, and email payload errors?
 - Are local outbox endpoints available in the environment used by Playwright (`local` profile only)?

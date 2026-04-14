@@ -39,6 +39,21 @@ export interface UserResponseDto {
   roles: string[];
 }
 
+
+export interface UserEditDto {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface ChatSystemPromptDto {
+  chatSystemPrompt: string;
+}
+
+export interface ToolSystemPromptDto {
+  toolSystemPrompt: string;
+}
+
 export interface ErrorResponse {
   message?: string;
   errors?: Record<string, string[]>;
