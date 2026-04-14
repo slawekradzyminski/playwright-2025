@@ -1,4 +1,6 @@
 import { type Page, type Locator, expect } from '@playwright/test';
+import { ToastComponent } from '../components/ToastComponent';
+import { LoggedOutHeaderComponent } from '../components/LoggedOutHeaderComponent';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || '';
 
@@ -10,11 +12,10 @@ export class LoginPage {
   readonly passwordInput: Locator;
   readonly submitButton: Locator;
   readonly registerButton: Locator;
-  readonly registerNavLink: Locator;
   readonly usernameError: Locator;
   readonly passwordError: Locator;
-  readonly toastTitle: Locator;
-  readonly toastDescription: Locator;
+  readonly toast: ToastComponent;
+  readonly header: LoggedOutHeaderComponent;
 
   constructor(page: Page) {
     this.page = page;
@@ -24,11 +25,10 @@ export class LoginPage {
     this.passwordInput = page.getByTestId('login-password-input');
     this.submitButton = page.getByTestId('login-submit-button');
     this.registerButton = page.getByTestId('login-register-link');
-    this.registerNavLink = page.getByTestId('register-link');
     this.usernameError = page.getByTestId('login-username-error');
     this.passwordError = page.getByTestId('login-password-error');
-    this.toastTitle = page.getByTestId('toast-title');
-    this.toastDescription = page.getByTestId('toast-description');
+    this.toast = new ToastComponent(page.getByTestId('toast-viewport'));
+    this.header = new LoggedOutHeaderComponent(page.getByTestId('navigation'));
   }
 
   async goto() {

@@ -55,8 +55,7 @@ test.describe('Login UI tests', () => {
 
     // then
     await loginPage.expectToBeOnLoginPage();
-    await expect(loginPage.toastTitle).toHaveText('Error');
-    await expect(loginPage.toastDescription).toHaveText('Invalid username/password');
+    await loginPage.toast.expectError('Error', 'Invalid username/password');
   });
 
   test('should show validation error when username is too short', async () => {
@@ -81,7 +80,7 @@ test.describe('Login UI tests', () => {
 
   test('should navigate to register page when register nav link is clicked', async () => {
     // when
-    await loginPage.registerNavLink.click();
+    await loginPage.header.registerLink.click();
 
     // then
     await expect(loginPage.page).toHaveURL(REGISTER_URL);

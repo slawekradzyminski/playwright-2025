@@ -17,3 +17,5 @@
 # UI tests
 - use page object model
 - Always run all UI tests after changing them via `npm run test:ui` to avoid regressions
+- before writing automated tests for given page explore that it works using `playwright-cli`. Use dedicated skill which is present in `.claude/skills/playwright-cli/SKILL.md` file.
+- Use `data-testid` selectors whenever possible, fallback to role-based selectors.
