@@ -1,7 +1,7 @@
 import { test, expect, APIResponse } from '@playwright/test';
 import { RefreshClient } from '../../../httpclients/refreshClient';
 import type { TokenRefreshResponseDto } from '../../../types/auth';
-import { registerAndLogin } from '../helpers/authHelper';
+import { registerAndLogin } from '../../../helpers/authHelper';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || '';
 

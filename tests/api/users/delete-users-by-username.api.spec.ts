@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/adminAuthFixture';
 import { UserClient } from '../../../httpclients/userClient';
-import { registerAndLogin } from '../helpers/authHelper';
+import { registerAndLogin } from '../../../helpers/authHelper';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || '';
 const MISSING_USERNAME = 'missing-user-delete';

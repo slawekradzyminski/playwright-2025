@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { LogoutClient } from '../../../httpclients/logoutClient';
 import { RefreshClient } from '../../../httpclients/refreshClient';
-import { registerAndLogin } from '../helpers/authHelper';
+import { registerAndLogin } from '../../../helpers/authHelper';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || '';
 

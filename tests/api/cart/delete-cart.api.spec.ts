@@ -3,7 +3,7 @@ import { CartClient } from '../../../httpclients/cartClient';
 import { ProductClient } from '../../../httpclients/productClient';
 import type { CartDto } from '../../../types/cart';
 import type { ProductDto } from '../../../types/product';
-import { registerAndLogin } from '../helpers/authHelper';
+import { registerAndLogin } from '../../../helpers/authHelper';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || '';
 

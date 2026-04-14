@@ -1,7 +1,7 @@
 import { test, expect } from '../fixtures/adminAuthFixture';
 import { ProductClient } from '../../../httpclients/productClient';
 import type { ProductCreateDto, ProductDto } from '../../../types/product';
-import { registerAndLogin } from '../helpers/authHelper';
+import { registerAndLogin } from '../../../helpers/authHelper';
 import { generateProduct } from '../../../generators/productGenerator';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || '';

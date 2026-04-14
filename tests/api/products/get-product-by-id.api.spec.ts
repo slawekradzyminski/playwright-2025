@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { ProductClient } from '../../../httpclients/productClient';
 import type { ProductDto } from '../../../types/product';
-import { registerAndLogin } from '../helpers/authHelper';
+import { registerAndLogin } from '../../../helpers/authHelper';
 import { assertProductResponse } from '../helpers/productAssertions';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || '';

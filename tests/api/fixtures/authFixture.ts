@@ -1,15 +1,14 @@
-import { test as base, expect } from '@playwright/test';
-import { registerAndLogin, type AuthenticatedUser } from '../helpers/authHelper';
+import { test as clientAuthTest, expect } from '../../../fixtures/clientAuthFixture';
+import type { AuthenticatedUser } from '../../../helpers/authHelper';
 
 type AuthFixtures = {
   authenticatedUser: AuthenticatedUser;
 };
 
-export const test = base.extend<AuthFixtures>({
-  authenticatedUser: async ({ request }, use) => {
-    const authenticatedUser = await registerAndLogin(request);
-    await use(authenticatedUser);
-  }
+export const test = clientAuthTest.extend<AuthFixtures>({
+  authenticatedUser: async ({ authenticatedClientUser }, use) => {
+    await use(authenticatedClientUser);
+  },
 });
 
 export { expect };

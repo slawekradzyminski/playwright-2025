@@ -1,5 +1,5 @@
 import { request as playwrightRequest, test as base, expect, type APIRequestContext } from '@playwright/test';
-import { loginUserForTokens, type AuthTokens } from '../helpers/authHelper';
+import { loginUserForTokens, type AuthTokens } from '../../../helpers/authHelper';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || 'http://localhost:8081';
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME;

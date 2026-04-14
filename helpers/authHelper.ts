@@ -1,8 +1,8 @@
 import { expect, type APIRequestContext } from '@playwright/test';
-import { generateUser } from '../../../generators/userGenerator';
-import { LoginClient } from '../../../httpclients/loginClient';
-import { SignupClient } from '../../../httpclients/signupClient';
-import type { LoginResponseDto, SignupDto } from '../../../types/auth';
+import { generateUser } from '../generators/userGenerator';
+import { LoginClient } from '../httpclients/loginClient';
+import { SignupClient } from '../httpclients/signupClient';
+import type { LoginResponseDto, SignupDto } from '../types/auth';
 
 const APP_BASE_URL = process.env.APP_BASE_URL || '';
 
