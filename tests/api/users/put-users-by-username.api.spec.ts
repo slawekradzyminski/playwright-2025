@@ -19,7 +19,11 @@ test.describe('PUT /api/v1/users/{username}', () => {
     const updatedFirstName = `${actor.user.firstName}-updated`;
 
     // when
-    const response = await client.updateUserByUsername(actor.user.username, { firstName: updatedFirstName }, actor.token);
+    const response = await client.updateUserByUsername(actor.user.username, {
+      email: actor.user.email,
+      firstName: updatedFirstName,
+      lastName: actor.user.lastName
+    }, actor.token);
 
     // then
     expect(response.status()).toBe(200);
@@ -33,7 +37,11 @@ test.describe('PUT /api/v1/users/{username}', () => {
     const targetUser = await registerAndLogin(request);
 
     // when
-    const response = await client.updateUserByUsername(targetUser.user.username, { lastName: 'AdminUpdated' }, adminTokens.token);
+    const response = await client.updateUserByUsername(targetUser.user.username, {
+      email: targetUser.user.email,
+      firstName: targetUser.user.firstName,
+      lastName: 'AdminUpdated'
+    }, adminTokens.token);
 
     // then
     expect(response.status()).toBe(200);
@@ -47,7 +55,11 @@ test.describe('PUT /api/v1/users/{username}', () => {
     const actor = await registerAndLogin(request);
 
     // when
-    const response = await client.updateUserByUsername(actor.user.username, { firstName: 'NoAuth' });
+    const response = await client.updateUserByUsername(actor.user.username, {
+      email: actor.user.email,
+      firstName: 'NoAuth',
+      lastName: actor.user.lastName
+    });
 
     // then
     expect(response.status()).toBe(401);
@@ -61,7 +73,11 @@ test.describe('PUT /api/v1/users/{username}', () => {
     const target = await registerAndLogin(request);
 
     // when
-    const response = await client.updateUserByUsername(target.user.username, { firstName: 'ForbiddenChange' }, actor.token);
+    const response = await client.updateUserByUsername(target.user.username, {
+      email: target.user.email,
+      firstName: 'ForbiddenChange',
+      lastName: target.user.lastName
+    }, actor.token);
 
     // then
     expect(response.status()).toBe(403);
@@ -71,7 +87,11 @@ test.describe('PUT /api/v1/users/{username}', () => {
 
   test('should return not found for missing username - 404', async ({ adminTokens }) => {
     // when
-    const response = await client.updateUserByUsername(MISSING_USERNAME, { firstName: 'Missing' }, adminTokens.token);
+    const response = await client.updateUserByUsername(MISSING_USERNAME, {
+      email: 'missing-user-put@example.com',
+      firstName: 'Missing',
+      lastName: 'Username'
+    }, adminTokens.token);
 
     // then
     expect(response.status()).toBe(404);

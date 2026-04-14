@@ -41,7 +41,7 @@ export interface UserResponseDto {
 
 
 export interface UserEditDto {
-  email?: string;
+  email: string;
   firstName?: string;
   lastName?: string;
 }
