@@ -1,0 +1,2 @@
+### Result
+[POST] http://localhost:8081/api/v1/users/signup => [400] 

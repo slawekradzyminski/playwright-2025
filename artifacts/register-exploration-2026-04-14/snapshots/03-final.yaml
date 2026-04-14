@@ -1,0 +1,84 @@
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - navigation [ref=e5]:
+      - generic [ref=e7]:
+        - link "Awesome Testing" [ref=e9] [cursor=pointer]:
+          - /url: /login
+          - img "Awesome Testing" [ref=e10]
+        - generic [ref=e12]:
+          - link "Login" [ref=e13] [cursor=pointer]:
+            - /url: /login
+          - link "Register" [ref=e14] [cursor=pointer]:
+            - /url: /register
+    - main [ref=e15]:
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - img "Awesome Testing" [ref=e20]
+            - generic [ref=e21]:
+              - generic [ref=e22]: Awesome Testing
+              - heading "Create your account" [level=2] [ref=e23]
+              - paragraph [ref=e24]: Join the workspace and get immediate access to operations tooling, monitoring flows, and the AI surface.
+              - generic [ref=e25]: Training environment only. Create throwaway accounts, use fake inputs, and assume demo data can be reset at any time.
+          - generic [ref=e26]:
+            - generic [ref=e27]:
+              - paragraph [ref=e28]: Fast start
+              - paragraph [ref=e29]: Create an account and move straight into the dashboard.
+            - generic [ref=e30]:
+              - paragraph [ref=e31]: Managed access
+              - paragraph [ref=e32]: Client role defaults keep onboarding predictable.
+            - generic [ref=e33]:
+              - paragraph [ref=e34]: Connected tools
+              - paragraph [ref=e35]: Products, email, QR, traffic, and LLM tools stay in one place.
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - generic [ref=e39]:
+              - text: Username
+              - textbox "Username" [active] [ref=e40]
+              - alert [ref=e41]: Username is required
+            - generic [ref=e42]:
+              - text: Email
+              - textbox "Email" [ref=e43]
+              - alert [ref=e44]: Email is required
+            - generic [ref=e45]:
+              - text: Password
+              - textbox "Password" [ref=e46]
+              - alert [ref=e47]: Password is required
+            - generic [ref=e48]:
+              - text: First Name
+              - textbox "First Name" [ref=e49]
+              - alert [ref=e50]: First name is required
+            - generic [ref=e51]:
+              - text: Last Name
+              - textbox "Last Name" [ref=e52]
+              - alert [ref=e53]: Last name is required
+          - button "Create account" [ref=e55]
+          - generic [ref=e56]:
+            - text: Already have an account?
+            - button "Sign in" [ref=e57]
+    - contentinfo [ref=e58]:
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - paragraph [ref=e61]: Stay in touch
+          - paragraph [ref=e62]: Follow Awesome Testing blog, author's LinkedIn, or buy me a coffee.
+        - generic [ref=e63]:
+          - link "Read the blog" [ref=e64] [cursor=pointer]:
+            - /url: https://www.awesome-testing.com/
+            - generic [ref=e65]:
+              - img [ref=e67]
+              - generic [ref=e68]: Read the blog
+            - img [ref=e69]
+          - link "Follow on LinkedIn" [ref=e72] [cursor=pointer]:
+            - /url: https://www.linkedin.com/in/slawekradzyminski/?locale=en
+            - generic [ref=e73]:
+              - img [ref=e75]
+              - generic [ref=e79]: Follow on LinkedIn
+            - img [ref=e80]
+          - link "Buy me a coffee" [ref=e83] [cursor=pointer]:
+            - /url: https://buymeacoffee.com/awesometesting
+            - generic [ref=e84]:
+              - img [ref=e86]
+              - generic [ref=e88]: Buy me a coffee
+            - img [ref=e89]
+  - region "Notifications (F8)":
+    - list
