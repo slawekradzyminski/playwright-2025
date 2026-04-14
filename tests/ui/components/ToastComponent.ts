@@ -11,8 +11,12 @@ export class ToastComponent {
     this.description = root.getByTestId('toast-description');
   }
 
-  async expectError(title: string, description: string) {
+  async expectMessage(title: string, description: string) {
     await expect(this.title).toHaveText(title);
     await expect(this.description).toHaveText(description);
+  }
+
+  async expectError(title: string, description: string) {
+    await this.expectMessage(title, description);
   }
 }
