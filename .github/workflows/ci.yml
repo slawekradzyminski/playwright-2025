@@ -26,8 +26,27 @@ jobs:
       - name: Start application stack
         working-directory: awesome-localstack
         run: |
-          chmod +x ./run-docker-compose-ci.sh
-          ./run-docker-compose-ci.sh
+          docker compose -f lightweight-docker-compose.yml up -d
+          for url in \
+            http://localhost:8081/swagger-ui/index.html \
+            http://localhost:8081/login \
+            http://localhost:8081/images/iphone.png
+          do
+            echo "Waiting for ${url}"
+            for attempt in {1..300}; do
+              status=$(curl -sL -m 5 -w "%{http_code}" "$url" -o /dev/null || true)
+              if [ "$status" = "200" ]; then
+                echo "${url} is ready"
+                break
+              fi
+              if [ "$attempt" = "300" ]; then
+                docker compose -f lightweight-docker-compose.yml ps
+                docker compose -f lightweight-docker-compose.yml logs --tail=200
+                exit 1
+              fi
+              sleep 1
+            done
+          done
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -68,4 +87,4 @@ jobs:
       - name: Stop application stack
         if: always()
         working-directory: awesome-localstack
-        run: docker compose -f docker-compose-ci.yml down -v
+        run: docker compose -f lightweight-docker-compose.yml down -v
