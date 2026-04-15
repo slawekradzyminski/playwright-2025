@@ -106,6 +106,35 @@ npm test
 npx playwright test
 ```
 
+### Running by Tags
+
+The test suites are tagged at the `test.describe` level:
+
+- API suites use `@api`
+- UI suites use `@ui`
+
+That means every test inside the tagged suite inherits the tag. In practice, run:
+
+```bash
+npm run test:api
+# same as
+npx playwright test --grep @api
+
+npm run test:ui
+# same as
+npx playwright test --grep @ui
+```
+
+You can combine tags with regular Playwright filters:
+
+```bash
+npx playwright test --grep @api --project chromium
+npx playwright test --grep @ui tests/ui/login.ui.spec.ts
+npx playwright test --grep-invert @ui
+```
+
+Use folder paths when the physical location is the filter you care about. Use tags when the category cuts across folders, CI jobs, ownership, smoke/regression groups, or reporting.
+
 ## ⚙️ Configuration
 
 The `playwright.config.ts` file is configured to:

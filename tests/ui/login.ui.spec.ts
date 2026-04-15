@@ -1,12 +1,13 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto } from '../../types/auth';
+import { UI_TEST_DETAILS } from '../../config/testDetails';
 
 const APP_BASE_URL = process.env.APP_BASE_URL ?? 'http://localhost:8081';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 const LOGIN_URL = `${APP_BASE_URL}/login`;
 const REGISTER_URL = `${APP_BASE_URL}/register`;
 
-test.describe('Login UI tests', () => {
+test.describe('Login UI tests', UI_TEST_DETAILS, () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(LOGIN_URL);
   });

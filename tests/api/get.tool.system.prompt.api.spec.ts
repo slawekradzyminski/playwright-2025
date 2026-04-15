@@ -1,7 +1,8 @@
 import { test, expect } from '../../fixtures/apiAuthFixture';
 import { toolSystemPromptClient } from '../../httpclients/toolSystemPromptClient';
+import { API_TEST_DETAILS } from '../../config/testDetails';
 
-test.describe('/api/v1/users/tool-system-prompt GET API tests', () => {
+test.describe('/api/v1/users/tool-system-prompt GET API tests', API_TEST_DETAILS, () => {
   test('should successfully get tool system prompt - 200', async ({ request, auth }) => {
     // given
     const { token } = auth;

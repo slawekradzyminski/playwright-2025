@@ -1,8 +1,9 @@
 import { test, expect, APIResponse } from '@playwright/test';
 import { generateUser } from '../../generators/userGenerator';
 import { registerClient } from '../../httpclients/registerClient';
+import { API_TEST_DETAILS } from '../../config/testDetails';
 
-test.describe('/api/v1/users/signin API tests', () => {
+test.describe('/api/v1/users/signin API tests', API_TEST_DETAILS, () => {
     test('should successfully register new user - 201', async ({ request }) => {
         // given
         const randomUser = generateUser();

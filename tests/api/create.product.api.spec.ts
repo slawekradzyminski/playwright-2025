@@ -5,8 +5,9 @@ import { loginClient } from '../../httpclients/loginClient';
 import { ADMIN_PASSWORD, ADMIN_USERNAME } from '../../config/constants';
 import { productsClient } from '../../httpclients/productsClient';
 import { CreateProductRequest, ProductResponse } from '../../types/products';
+import { API_TEST_DETAILS } from '../../config/testDetails';
 
-test.describe('/api/v1/products API tests', () => {
+test.describe('/api/v1/products API tests', API_TEST_DETAILS, () => {
     test('should successfully generate new product - 200', async ({ request }) => {
         // given
         const product = generateProduct();

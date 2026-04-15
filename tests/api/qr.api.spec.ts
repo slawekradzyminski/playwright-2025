@@ -1,7 +1,8 @@
 import { test, expect } from '../../fixtures/apiAuthFixture';
 import { qrClient } from '../../httpclients/qrClient';
+import { API_TEST_DETAILS } from '../../config/testDetails';
 
-test.describe('/api/v1/qr API tests', () => {
+test.describe('/api/v1/qr API tests', API_TEST_DETAILS, () => {
   test('should successfully generate new qr - 200', async ({ request, auth }) => {
     // given
     const qrRequestBody = {

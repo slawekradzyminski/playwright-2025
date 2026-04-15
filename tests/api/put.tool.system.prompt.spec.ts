@@ -2,8 +2,9 @@ import { test, expect } from '../../fixtures/apiAuthFixture';
 import { toolSystemPromptClient } from '../../httpclients/toolSystemPromptClient';
 import { faker } from '@faker-js/faker';
 import { ToolSystemPromptResponse } from '../../types/prompts';
+import { API_TEST_DETAILS } from '../../config/testDetails';
 
-test.describe('/api/v1/users/tool-system-prompt PUT API tests', () => {
+test.describe('/api/v1/users/tool-system-prompt PUT API tests', API_TEST_DETAILS, () => {
   test('should successfully update tool system prompt - 200', async ({ request, auth }) => {
     // given
     const { token } = auth;
