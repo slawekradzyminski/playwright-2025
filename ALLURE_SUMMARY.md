@@ -36,7 +36,7 @@ This project now has these scripts:
 ```json
 {
   "allure:clean": "rm -rf allure-results allure-report",
-  "allure:generate": "allure generate allure-results --clean -o allure-report",
+  "allure:generate": "allure generate allure-results --output allure-report",
   "allure:open": "allure open allure-report",
   "allure:serve": "allure serve allure-results"
 }
@@ -99,19 +99,17 @@ npm run allure:open
 
 Serves the generated `allure-report` directory locally.
 
-## Why `--clean` Is Not Enough
+## Why Cleaning Happens Before Generation
 
-This command:
+Allure v3 generation is handled by this script:
 
 ```bash
-allure generate allure-results --clean -o allure-report
+allure generate allure-results --output allure-report
 ```
 
-cleans the generated output directory, `allure-report`.
+The script does not clean old input or output by itself.
 
-It does not clean the input directory, `allure-results`.
-
-That is why the reliable local workflow starts with:
+That is why the reliable local workflow starts by deleting both old raw results and old generated HTML:
 
 ```bash
 npm run allure:clean
@@ -154,4 +152,3 @@ npm run allure:generate
 ```
 
 Clean before the run when you want one clear report for one clear execution.
-
