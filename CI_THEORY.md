@@ -127,14 +127,20 @@ The workflow uploads many artifacts deliberately:
 
 This is intentionally generous for training. In a mature project, artifact retention and volume can be reduced once the team knows which artifacts they actually use.
 
-The report is not currently deployed to GitHub Pages. In this repository, Allure is available as a downloadable CI artifact:
+Allure is available in two ways in this repository. First, each matrix job uploads its own downloadable CI artifact:
 
 ```text
 allure-report-api
 allure-report-ui
 ```
 
-That is enough for debugging and course demos because each CI run keeps the exact report generated from that run. Deploying to GitHub Pages is a separate decision: it gives one stable public URL, but it also requires enabling GitHub Pages for the repository and deciding which report should be published when API and UI jobs run separately.
+Second, the `deploy-allure-report` job downloads the API and UI raw results, generates one combined Allure report, and deploys it to GitHub Pages:
+
+```text
+https://slawekradzyminski.github.io/playwright-2025/
+```
+
+This is intentionally done in a separate job after the matrix finishes. Deploying from each matrix job would be risky because the API and UI jobs could overwrite each other.
 
 Each artifact answers a different debugging question:
 
@@ -490,9 +496,9 @@ Then upload:
 - `allure-report`
 - Playwright report if used
 
-For local debugging, `allure:serve` is convenient. For CI artifacts, `allure:generate` is better.
+For local debugging, `allure:serve` is convenient. For CI artifacts and Pages deployment, `allure:generate` is better.
 
-If you want GitHub Pages later, add a separate deploy job that:
+The Pages deployment in this workflow:
 
 1. waits for API and UI jobs
 2. downloads both `allure-results-*` artifacts

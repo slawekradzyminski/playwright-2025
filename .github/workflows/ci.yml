@@ -6,6 +6,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 jobs:
   playwright-tests:
@@ -98,7 +100,7 @@ jobs:
           fi
 
       - name: Upload Playwright HTML report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-report-${{ matrix.suite }}
@@ -107,7 +109,7 @@ jobs:
           retention-days: 14
 
       - name: Upload Playwright test results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-test-results-${{ matrix.suite }}
@@ -116,7 +118,7 @@ jobs:
           retention-days: 14
 
       - name: Upload Playwright traces
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-traces-${{ matrix.suite }}
@@ -125,7 +127,7 @@ jobs:
           retention-days: 14
 
       - name: Upload Playwright screenshots
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-screenshots-${{ matrix.suite }}
@@ -134,7 +136,7 @@ jobs:
           retention-days: 14
 
       - name: Upload Playwright videos
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-videos-${{ matrix.suite }}
@@ -143,7 +145,7 @@ jobs:
           retention-days: 14
 
       - name: Upload Allure raw results
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: allure-results-${{ matrix.suite }}
@@ -152,7 +154,7 @@ jobs:
           retention-days: 14
 
       - name: Upload Allure HTML report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: allure-report-${{ matrix.suite }}
@@ -172,7 +174,7 @@ jobs:
           fi
 
       - name: Upload application stack diagnostics
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: application-stack-diagnostics-${{ matrix.suite }}
@@ -189,3 +191,48 @@ jobs:
           else
             echo "awesome-localstack directory does not exist; nothing to stop."
           fi
+
+  deploy-allure-report:
+    name: Deploy combined Allure report
+    runs-on: ubuntu-latest
+    needs: playwright-tests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/sciaga'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout test repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download API Allure results
+        uses: actions/download-artifact@v8
+        with:
+          name: allure-results-api
+          path: combined-allure-results
+
+      - name: Download UI Allure results
+        uses: actions/download-artifact@v8
+        with:
+          name: allure-results-ui
+          path: combined-allure-results
+
+      - name: Generate combined Allure report
+        run: allure generate combined-allure-results --output allure-report
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: allure-report
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
