@@ -226,7 +226,7 @@ jobs:
           path: combined-allure-results
 
       - name: Generate combined Allure report
-        run: allure generate combined-allure-results --output allure-report
+        run: npx allure generate combined-allure-results --output allure-report
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
