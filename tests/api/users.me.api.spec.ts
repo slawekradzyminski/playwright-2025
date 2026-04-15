@@ -33,4 +33,20 @@ test.describe('/api/v1/users/me API tests', () => {
 
   });
 
+  test('should return unauthorized error when no token provided - 401', async ({ request }) => {
+    // when
+    const response = await usersMeClient.getUserMe(request);
+
+    // then
+    expect(response.status()).toBe(401);
+  });
+
+    test('should return unauthorized error if fake token provided - 401', async ({ request }) => {
+    // when
+    const response = await usersMeClient.getUserMe(request, 'fakeToken');
+
+    // then
+    expect(response.status()).toBe(401);
+  });
+
 }); 
