@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import type { LoginDto } from '../../types/auth';
 
 const APP_BASE_URL = process.env.APP_BASE_URL ?? 'http://localhost:8081';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'LocalDemoAdmin123!';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 const LOGIN_URL = `${APP_BASE_URL}/login`;
 const REGISTER_URL = `${APP_BASE_URL}/register`;
 
