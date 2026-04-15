@@ -1,0 +1,192 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  playwright-tests:
+    name: Playwright ${{ matrix.suite }} tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [api, ui]
+        include:
+          - suite: api
+            command: npm run test:api -- --reporter=list,html,allure-playwright
+          - suite: ui
+            command: npm run test:ui -- --reporter=list,html,allure-playwright
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      APP_BASE_URL: http://localhost:8081
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD || 'admin123' }}
+      PLAYWRIGHT_HTML_OPEN: never
+      CI: true
+
+    steps:
+      - name: Checkout test repository
+        uses: actions/checkout@v4
+
+      - name: Checkout application stack
+        uses: actions/checkout@v4
+        with:
+          repository: slawekradzyminski/awesome-localstack
+          path: awesome-localstack
+
+      - name: Start application stack
+        working-directory: awesome-localstack
+        run: |
+          docker compose -f lightweight-docker-compose.yml up -d
+
+      - name: Wait for application readiness
+        working-directory: awesome-localstack
+        run: |
+          for url in \
+            http://localhost:8081/swagger-ui/index.html \
+            http://localhost:8081/login \
+            http://localhost:8081/images/iphone.png
+          do
+            echo "Waiting for ${url}"
+            for attempt in {1..300}; do
+              status=$(curl -sL -m 5 -w "%{http_code}" "$url" -o /dev/null || true)
+              if [ "$status" = "200" ]; then
+                echo "${url} is ready"
+                break
+              fi
+              if [ "$attempt" = "300" ]; then
+                echo "::error::${url} did not become ready"
+                docker compose -f lightweight-docker-compose.yml ps
+                docker compose -f lightweight-docker-compose.yml logs --tail=300
+                exit 1
+              fi
+              sleep 1
+            done
+          done
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+
+      - name: Clean previous local reports
+        run: |
+          npm run allure:clean
+          npm run trace:clean
+
+      - name: Run ${{ matrix.suite }} tests
+        run: ${{ matrix.command }}
+
+      - name: Generate Allure report
+        if: always()
+        run: |
+          if [ -d allure-results ]; then
+            npm run allure:generate
+          else
+            echo "No allure-results directory found; skipping Allure report generation."
+          fi
+
+      - name: Upload Playwright HTML report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-${{ matrix.suite }}
+          path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload Playwright test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-test-results-${{ matrix.suite }}
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload Playwright traces
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-traces-${{ matrix.suite }}
+          path: test-results/**/trace.zip
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload Playwright screenshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-screenshots-${{ matrix.suite }}
+          path: test-results/**/*.png
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload Playwright videos
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-videos-${{ matrix.suite }}
+          path: test-results/**/*.webm
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload Allure raw results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-${{ matrix.suite }}
+          path: allure-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload Allure HTML report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-report-${{ matrix.suite }}
+          path: allure-report/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Print application stack diagnostics
+        if: always()
+        run: |
+          if [ -d awesome-localstack ]; then
+            cd awesome-localstack
+            docker compose -f lightweight-docker-compose.yml ps || true
+            docker compose -f lightweight-docker-compose.yml logs --tail=300 > stack-logs-${{ matrix.suite }}.txt || true
+          else
+            echo "awesome-localstack directory does not exist; skipping stack diagnostics."
+          fi
+
+      - name: Upload application stack diagnostics
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: application-stack-diagnostics-${{ matrix.suite }}
+          path: awesome-localstack/stack-logs-${{ matrix.suite }}.txt
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Stop application stack
+        if: always()
+        run: |
+          if [ -d awesome-localstack ]; then
+            cd awesome-localstack
+            docker compose -f lightweight-docker-compose.yml down -v
+          else
+            echo "awesome-localstack directory does not exist; nothing to stop."
+          fi
