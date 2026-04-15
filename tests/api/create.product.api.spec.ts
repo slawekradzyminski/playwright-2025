@@ -1,4 +1,5 @@
-import { test, expect, APIResponse } from '@playwright/test';
+import { APIResponse } from '@playwright/test';
+import { test, expect } from '../../fixtures/apiAuthFixture';
 import { generateProduct } from '../../generators/productGenerator';
 import { loginClient } from '../../httpclients/loginClient';
 import { ADMIN_PASSWORD, ADMIN_USERNAME } from '../../config/constants';
@@ -23,22 +24,32 @@ test.describe('/api/v1/products API tests', () => {
         await assertProductResponse(response, product);
     });
 
-    //   test('should return unauthorized error when no token provided - 401', async ({ request }) => {
-    //     // when
-    //     const response = await qrClient.createQrCode(request, { text: 'Test QR code text' });
+    test('should return unauthorized error when no token provided - 401', async ({ request }) => {
+        // when
+        const response = await productsClient.createProduct(request, generateProduct());
 
-    //     // then
-    //     expect(response.status()).toBe(401);
-    //   });
+        // then
+        expect(response.status()).toBe(401);
+    });
 
-    //     test('should return unauthorized error if fake token provided - 401', async ({ request }) => {
-    //     // when
-    //     const response = await qrClient.createQrCode(request, { text: 'Test QR code text' }, 'fakeToken');
+    test('should return unauthorized error if fake token provided - 401', async ({ request }) => {
+        // when
+        const response = await productsClient.createProduct(request, generateProduct(), 'fakeToken');
 
-    //     // then
-    //     expect(response.status()).toBe(401);
-    //   });
+        // then
+        expect(response.status()).toBe(401);
+    });
 
+    test('should forbid client to create a product - 403', async ({ request, auth }) => {
+        // given
+        const { token } = auth;
+
+        // when
+        const response = await productsClient.createProduct(request, generateProduct(), token);
+
+        // then
+        expect(response.status()).toBe(403);
+    });
 });
 
 const assertProductResponse = async (response: APIResponse, product: CreateProductRequest) => {
