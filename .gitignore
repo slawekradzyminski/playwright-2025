@@ -8,8 +8,9 @@ node_modules/
 .playwright-cli/
 .playwright-mcp/
 
+artifacts
+
 .DS_Store
 
 .idea
 .env
-
