@@ -1,9 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, APIResponse } from '@playwright/test';
 import type { LoginDto, LoginResponseDto } from '../../types/auth';
-
-const APP_BASE_URL = process.env.APP_BASE_URL ?? 'http://localhost:8081';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'LocalDemoAdmin123!';
-const SIGNIN_ENDPOINT = '/api/v1/users/signin';
+import { ADMIN_PASSWORD } from '../../config/constants';
+import { loginClient } from '../../httpclients/loginClient';
 
 test.describe('/api/v1/users/signin API tests', () => {
   test('should successfully authenticate with valid credentials - 200', async ({ request }) => {
@@ -14,25 +12,11 @@ test.describe('/api/v1/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await loginClient.postLogin(request, loginData);
 
     // then
     expect(response.status()).toBe(200);
-    
-    const responseBody: LoginResponseDto = await response.json();
-    expect(responseBody.token).toBeDefined();
-    expect(responseBody.token).toMatch(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/);
-    expect(responseBody.username).toBe(loginData.username);
-    expect(responseBody.email).toBeDefined();
-    expect(responseBody.firstName).toBeDefined();
-    expect(responseBody.lastName).toBeDefined();
-    expect(responseBody.roles).toBeDefined();
-    expect(Array.isArray(responseBody.roles)).toBe(true);
+    await assertLoginResponse(response, loginData);
   });
 
   test('should return validation error for empty username - 400', async ({ request }) => {
@@ -43,12 +27,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await loginClient.postLogin(request, loginData);
 
     // then
     expect(response.status()).toBe(400);
@@ -64,12 +43,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await loginClient.postLogin(request, loginData);
 
     // then
     expect(response.status()).toBe(400);
@@ -85,12 +59,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await loginClient.postLogin(request, loginData);
 
     // then
     expect(response.status()).toBe(400);
@@ -106,12 +75,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     };
 
     // when
-    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await loginClient.postLogin(request, loginData);
 
     // then
     expect(response.status()).toBe(422);
@@ -119,3 +83,15 @@ test.describe('/api/v1/users/signin API tests', () => {
     expect(responseBody.message).toBe('Invalid username/password supplied');
   });
 }); 
+
+const assertLoginResponse = async (response: APIResponse, loginData: LoginDto) => {
+  const responseBody: LoginResponseDto = await response.json();
+  expect(responseBody.token).toBeDefined();
+  expect(responseBody.token).toMatch(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/);
+  expect(responseBody.username).toBe(loginData.username);
+  expect(responseBody.email).toBeDefined();
+  expect(responseBody.firstName).toBeDefined();
+  expect(responseBody.lastName).toBeDefined();
+  expect(responseBody.roles).toBeDefined();
+  expect(Array.isArray(responseBody.roles)).toBe(true);
+};
