@@ -1,8 +1,11 @@
 import { test, expect } from '../../fixtures/apiAuthFixture';
+import { APIResponse } from '@playwright/test';
 import { usersMeClient } from '../../httpclients/usersMeClient';
+import { RegisterDto } from '../../types/auth';
 
 test.describe('/api/v1/users/me API tests', () => {
   test('should successfully get current user info - 200', async ({ request, auth }) => {
+    // given
     const { user, token } = auth;
 
     // when
@@ -10,16 +13,7 @@ test.describe('/api/v1/users/me API tests', () => {
 
     // then
     expect(response.status()).toBe(200);
-    const responseBody = await response.json();
-    expect(responseBody).toMatchObject({
-      username: user.username,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      roles: ['ROLE_CLIENT'],
-      id: expect.any(Number)
-    });
-
+    assertUserMeResponse(response, user);
   });
 
   test('should return unauthorized error when no token provided - 401', async ({ request }) => {
@@ -39,3 +33,15 @@ test.describe('/api/v1/users/me API tests', () => {
   });
 
 }); 
+
+const assertUserMeResponse = async (response: APIResponse, user: RegisterDto) => {
+    const responseBody = await response.json();
+    expect(responseBody).toMatchObject({
+      username: user.username,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      roles: ['ROLE_CLIENT'],
+      id: expect.any(Number)
+    });
+}
