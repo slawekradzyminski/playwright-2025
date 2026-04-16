@@ -9,6 +9,7 @@ node_modules/
 .playwright-mcp/
 allure-results/
 allure-report/
+docs
 
 artifacts
 
