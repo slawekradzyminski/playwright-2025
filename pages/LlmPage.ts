@@ -14,5 +14,4 @@ export class LlmPage extends BasePage {
     this.llmTitle = page.getByTestId('llm-title');
  }
 
-
 }

@@ -1,11 +1,11 @@
 import { test, expect } from '../../fixtures/uiAuthFixture';
-import { toolSystemPromptClient } from '../../httpclients/toolSystemPromptClient';
 import { LlmPage } from '../../pages/LlmPage';
 import { HomePage } from '../../pages/HomePage';
 
 test.describe('Home page tests', () => {
-    test('should open llm page via button', async ({ page, uiAuth }) => {
+    test('should open llm page via button', async ({ uiAuth }) => {
         // given
+        const { page } = uiAuth;
         const homePage = new HomePage(page);
         const llmPage = new LlmPage(page);
         await homePage.goto();
