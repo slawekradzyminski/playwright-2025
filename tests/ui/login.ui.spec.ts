@@ -4,10 +4,11 @@ import { ADMIN_PASSWORD, ADMIN_USERNAME } from '../../config/constants';
 import { LoginPage } from '../../pages/LoginPage';
 import { RegisterPage } from '../../pages/RegisterPage';
 import { HomePage } from '../../pages/HomePage';
+import { UI } from '../../config/tags';
 
 test.describe('Login UI tests', {
-  tag: ['@ui'],
-  annotation: [{ type: 'bug', description: 'JIRA-1234' }]
+  tag: [UI],
+  annotation: [{ type: 'bug', description: '\n\n\n\n\n\nhttps://jira.com/BBBB-2222' }]
 }, () => {
   let loginPage: LoginPage;
 
@@ -42,7 +43,7 @@ test.describe('Login UI tests', {
     await loginPage.expectToLeavePage(LoginPage.url);
     expect(loginResponseBody).toEqual(expect.objectContaining({
       token: expect.any(String),
-      refreshToken: expect.any(String)
+      refreshToken: expect.any(Number)
     }));
     await expect(homePage.welcomeMessage).toBeVisible();
     await homePage.expectToBeOnPage(HomePage.url);
