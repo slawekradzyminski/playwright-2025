@@ -43,7 +43,7 @@ test.describe('Login UI tests', {
     await loginPage.expectToLeavePage(LoginPage.url);
     expect(loginResponseBody).toEqual(expect.objectContaining({
       token: expect.any(String),
-      refreshToken: expect.any(Number)
+      refreshToken: expect.any(String)
     }));
     await expect(homePage.welcomeMessage).toBeVisible();
     await homePage.expectToBeOnPage(HomePage.url);

@@ -1,4 +1,4 @@
-import { type Locator, type Page } from '@playwright/test';
+import { expect, type Locator, type Page } from '@playwright/test';
 import { APP_BASE_URL } from '../config/constants';
 import type { RegisterDto } from '../types/auth';
 import { BasePage } from './BasePage';
@@ -14,6 +14,11 @@ export class RegisterPage extends BasePage {
   readonly firstNameInput: Locator;
   readonly lastNameInput: Locator;
   readonly createAccountButton: Locator;
+  readonly usernameError: Locator;
+  readonly emailError: Locator;
+  readonly passwordError: Locator;
+  readonly firstNameError: Locator;
+  readonly lastNameError: Locator;
   readonly toast: ToastComponent;
 
   constructor(page: Page) {
@@ -25,6 +30,11 @@ export class RegisterPage extends BasePage {
     this.firstNameInput = page.getByTestId('register-firstname-input');
     this.lastNameInput = page.getByTestId('register-lastname-input');
     this.createAccountButton = page.getByTestId('register-submit-button');
+    this.usernameError = page.getByTestId('register-username-error');
+    this.emailError = page.getByTestId('register-email-error');
+    this.passwordError = page.getByTestId('register-password-error');
+    this.firstNameError = page.getByTestId('register-firstname-error');
+    this.lastNameError = page.getByTestId('register-lastname-error');
     this.toast = new ToastComponent(page);
   }
 
@@ -47,6 +57,14 @@ export class RegisterPage extends BasePage {
 
   async submit() {
     await this.createAccountButton.click();
+  }
+
+  async expectRequiredFieldErrors() {
+    await expect(this.usernameError).toHaveText('Username is required');
+    await expect(this.emailError).toHaveText('Email is required');
+    await expect(this.passwordError).toHaveText('Password is required');
+    await expect(this.firstNameError).toHaveText('First name is required');
+    await expect(this.lastNameError).toHaveText('Last name is required');
   }
 
 }

@@ -29,4 +29,13 @@ test.describe('Register UI tests', () => {
     expect(response.status()).toBe(200);
   });
 
+  test('should show frontend validation errors for empty required fields', async () => {
+    // when
+    await registerPage.submit();
+
+    // then
+    await registerPage.expectToBeOnPage(RegisterPage.url);
+    await registerPage.expectRequiredFieldErrors();
+  });
+
 });
