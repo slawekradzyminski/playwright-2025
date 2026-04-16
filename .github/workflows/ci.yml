@@ -59,11 +59,8 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
 
-      - name: Run API tests
-        run: npm run test:api -- --reporter=list,html
-
-      - name: Run UI tests
-        run: npm run test:ui -- --reporter=list,html
+      - name: Run tests
+        run: npm run test -- --reporter=list,html
 
       - name: Upload Playwright report
         uses: actions/upload-artifact@v7
