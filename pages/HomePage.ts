@@ -1,6 +1,7 @@
 import { Locator, type Page } from '@playwright/test';
 import { APP_BASE_URL } from '../config/constants';
 import { BasePage } from './BasePage';
+import { LoggedInHeaderComponent } from './components/LoggedInHeaderComponent';
 
 export class HomePage extends BasePage {
  static readonly url = `${APP_BASE_URL}`;
@@ -8,12 +9,14 @@ export class HomePage extends BasePage {
  readonly page: Page;
  readonly welcomeMessage: Locator;
  readonly homeLlmButton: Locator;
+ readonly loggedInHeader: LoggedInHeaderComponent;
 
  constructor(page: Page) {
    super(page);
    this.page = page;
    this.welcomeMessage = page.getByTestId('home-welcome-title');
-    this.homeLlmButton = page.getByTestId('home-llm-button');
+   this.homeLlmButton = page.getByTestId('home-llm-button');
+   this.loggedInHeader = new LoggedInHeaderComponent(page);
  }
 
   async goto() {
