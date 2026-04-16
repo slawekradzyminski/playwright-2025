@@ -5,7 +5,8 @@ const { spawnSync } = require('node:child_process');
 
 const testScript = process.argv[2] ?? 'test';
 const testArgs = process.argv.slice(3);
-const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+const isWindows = process.platform === 'win32';
+const npmCommand = 'npm';
 
 function runNpmScript(script, args = []) {
   const commandArgs = ['run', script];
@@ -18,7 +19,7 @@ function runNpmScript(script, args = []) {
 
   const result = spawnSync(npmCommand, commandArgs, {
     stdio: 'inherit',
-    shell: false,
+    shell: isWindows,
   });
 
   if (result.error) {
