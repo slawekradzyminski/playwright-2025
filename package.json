@@ -12,9 +12,9 @@
     "allure:open": "allure open allure-report",
     "allure:serve": "allure open allure-results",
 
-    "test:report": "npm run allure:clean && npm run test && npm run allure:generate && npm run allure:open",
-    "test:api:report": "npm run allure:clean && npm run test:api && npm run allure:generate && npm run allure:open",
-    "test:ui:report": "npm run allure:clean && npm run test:ui && npm run allure:generate && npm run allure:open"
+    "test:report": "node scripts/allure-report.js test",
+    "test:api:report": "node scripts/allure-report.js test:api",
+    "test:ui:report": "node scripts/allure-report.js test:ui"
   },
   "keywords": [
     "playwright",
