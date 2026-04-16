@@ -10,6 +10,8 @@ node_modules/
 allure-results/
 allure-report/
 
+docs
+
 artifacts
 
 .DS_Store
