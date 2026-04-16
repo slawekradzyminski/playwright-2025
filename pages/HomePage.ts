@@ -7,11 +7,21 @@ export class HomePage extends BasePage {
 
  readonly page: Page;
  readonly welcomeMessage: Locator;
+ readonly homeLlmButton: Locator;
 
  constructor(page: Page) {
    super(page);
    this.page = page;
    this.welcomeMessage = page.getByTestId('home-welcome-title');
+    this.homeLlmButton = page.getByTestId('home-llm-button');
  }
+
+  async goto() {
+    await this.page.goto(HomePage.url);
+  }
+
+  async clickHomeLlmButton() {
+    await this.homeLlmButton.click();
+  }
 
 }
