@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import type { LoginDto } from '../../types/auth';
+import type { LoginDto, LoginResponseDto } from '../../types/auth';
 import { ADMIN_PASSWORD, ADMIN_USERNAME } from '../../config/constants';
 import { LoginPage } from '../../pages/LoginPage';
 import { RegisterPage } from '../../pages/RegisterPage';
@@ -16,6 +16,15 @@ test.describe('Login UI tests', () => {
   test('should successfully login with valid credentials', async () => {
     // given
     const homePage = new HomePage(loginPage.page);
+    let loginResponseBody: LoginResponseDto | undefined;
+
+    await loginPage.page.route('**/users/signin', async route => {
+      const response = await route.fetch();
+      loginResponseBody = await response.json();
+
+      await route.fulfill({ response });
+    });
+
     const credentials: LoginDto = {
       username: ADMIN_USERNAME,
       password: ADMIN_PASSWORD
@@ -26,6 +35,10 @@ test.describe('Login UI tests', () => {
 
     // then
     await loginPage.expectToLeavePage(LoginPage.url);
+    expect(loginResponseBody).toEqual(expect.objectContaining({
+      token: expect.any(String),
+      refreshToken: expect.any(String)
+    }));
     await expect(homePage.welcomeMessage).toBeVisible();
     await homePage.expectToBeOnPage(HomePage.url);
   });
