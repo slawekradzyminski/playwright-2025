@@ -10,6 +10,27 @@ interface RequestInfo {
   body?: unknown;
 }
 
+const BINARY_CONTENT_TYPE_PREFIXES = [
+  'image/',
+  'audio/',
+  'video/',
+];
+
+const BINARY_CONTENT_TYPES = [
+  'application/octet-stream',
+  'application/pdf',
+  'application/zip',
+];
+
+function isBinaryContentType(contentType: string): boolean {
+  const normalizedContentType = contentType.toLowerCase().split(';')[0].trim();
+
+  return (
+    BINARY_CONTENT_TYPE_PREFIXES.some((prefix) => normalizedContentType.startsWith(prefix)) ||
+    BINARY_CONTENT_TYPES.includes(normalizedContentType)
+  );
+}
+
 /**
  * Wraps an API call with:
  *  - Pino structured logging (console + file) for request & response
@@ -43,8 +64,34 @@ export async function loggedApiCall(
     const res = await fn();
 
     const status = res.status();
+    const contentType = res.headers()['content-type'] ?? '';
 
-    // Read response body for logging; Playwright buffers it so further
+    if (isBinaryContentType(contentType)) {
+      const responseBody = await res.body();
+      const responseSummary = {
+        contentType,
+        bodySizeBytes: responseBody.length,
+        body: '<binary response omitted from logs>',
+      };
+
+      log.info({ method, url, status, response: responseSummary }, `← ${status} ${method} ${url}`);
+
+      await allure.attachment(
+        `Response ${status} Body`,
+        responseBody,
+        { contentType },
+      );
+
+      await allure.attachment(
+        `Response ${status} Metadata`,
+        JSON.stringify({ status, ...responseSummary }, null, 2),
+        { contentType: 'application/json' },
+      );
+
+      return res;
+    }
+
+    // Read text/JSON response body for logging; Playwright buffers it so further
     // .json() / .text() calls in the test will still work correctly.
     let responseBody: unknown;
     try {

@@ -7,7 +7,7 @@
     "test:api": "playwright test tests/api/",
     "test:ui": "playwright test tests/ui/",
 
-    "allure:clean": "rm -rf allure-results allure-report",
+    "allure:clean": "node -e \"const fs = require('fs'); ['allure-results', 'allure-report'].forEach((path) => fs.rmSync(path, { recursive: true, force: true }));\"",
     "allure:generate": "allure generate allure-results -o allure-report",
     "allure:open": "allure open allure-report",
     "allure:serve": "allure open allure-results",
