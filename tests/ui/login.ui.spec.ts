@@ -5,7 +5,10 @@ import { LoginPage } from '../../pages/LoginPage';
 import { RegisterPage } from '../../pages/RegisterPage';
 import { HomePage } from '../../pages/HomePage';
 
-test.describe('Login UI tests', () => {
+test.describe('Login UI tests', {
+  tag: ['@ui'],
+  annotation: [{ type: 'bug', description: 'JIRA-1234' }]
+}, () => {
   let loginPage: LoginPage;
 
   test.beforeEach(async ({ page }) => {
@@ -13,7 +16,9 @@ test.describe('Login UI tests', () => {
     await loginPage.goto();
   });
 
-  test('should successfully login with valid credentials', async () => {
+  test('should successfully login with valid credentials', {
+    tag: ['@smoke']
+  }, async () => {
     // given
     const homePage = new HomePage(loginPage.page);
     let loginResponseBody: LoginResponseDto | undefined;
