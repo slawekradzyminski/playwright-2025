@@ -19,4 +19,9 @@ export class ToastComponent extends BasePage {
         await expect(this.toastMessage).toHaveText(expectedText);
     }
 
+    async expectSuccessToastMessageToHaveText(expectedText: string) {
+        await expect(this.toastTitle).toHaveText('Success');
+        await expect(this.toastMessage).toHaveText(expectedText);
+    }
+
 }

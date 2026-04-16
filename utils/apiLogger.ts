@@ -57,7 +57,7 @@ export async function loggedApiCall(
       await allure.attachment(
         'Request Body',
         JSON.stringify(body, null, 2),
-        { contentType: 'application/json' },
+        'application/json',
       );
     }
 
@@ -79,13 +79,13 @@ export async function loggedApiCall(
       await allure.attachment(
         `Response ${status} Body`,
         responseBody,
-        { contentType },
+        contentType,
       );
 
       await allure.attachment(
         `Response ${status} Metadata`,
         JSON.stringify({ status, ...responseSummary }, null, 2),
-        { contentType: 'application/json' },
+        'application/json',
       );
 
       return res;
@@ -106,7 +106,7 @@ export async function loggedApiCall(
     await allure.attachment(
       `Response ${status}`,
       JSON.stringify({ status, body: responseBody }, null, 2),
-      { contentType: 'application/json' },
+      'application/json',
     );
 
     return res;
