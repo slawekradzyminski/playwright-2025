@@ -12,6 +12,14 @@ export interface LoginResponseDto {
   roles: string[];
 }
 
+export interface LoginResponseWithRefreshToken extends LoginResponseDto {
+  refreshToken: string;
+}
+
+export interface SsoExchangeDto {
+  idToken: string;
+}
+
 export interface RegisterDto {
   username: string;
   password: string;
