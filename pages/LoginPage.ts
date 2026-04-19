@@ -12,6 +12,8 @@ export class LoginPage extends BasePage {
   readonly passwordInput: Locator;
   readonly submitButton: Locator;
   readonly ssoButton: Locator;
+  readonly googleButton: Locator;
+  readonly githubButton: Locator;
   readonly registerButton: Locator;
   readonly registerNavigationLink: Locator;
   readonly loginPasswordError: Locator;
@@ -24,6 +26,8 @@ export class LoginPage extends BasePage {
     this.passwordInput = page.getByTestId('login-password-input');
     this.submitButton = page.getByTestId('login-submit-button');
     this.ssoButton = page.getByTestId('login-sso-button');
+    this.googleButton = page.getByTestId('login-google-button');
+    this.githubButton = page.getByTestId('login-github-button');
     this.registerButton = page.getByTestId('login-register-link');
     this.registerNavigationLink = page.getByTestId('register-link');
     this.loginPasswordError = page.getByTestId('login-password-error');
@@ -50,6 +54,14 @@ export class LoginPage extends BasePage {
 
   async clickSsoButton() {
     await this.ssoButton.click();
+  }
+
+  async clickGoogleButton() {
+    await this.googleButton.click();
+  }
+
+  async clickGitHubButton() {
+    await this.githubButton.click();
   }
 
   async clickRegisterButton() {
