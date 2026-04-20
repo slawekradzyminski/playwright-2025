@@ -1,34 +1,17 @@
-import { expect, test, type APIRequestContext } from '@playwright/test';
-import { APP_BASE_URL } from '../../config/constants';
-import { CLIENT_SESSION_HEADER, TrafficClient } from '../../httpclients/trafficClient';
+import { expect, test } from '@playwright/test';
+import { TrafficClient } from '../../../httpclients/trafficClient';
+import { asRecord, findTrafficEntryEventually, postJson } from '../../../helpers/trafficHelpers';
 import {
   invalidSigninPayload,
   invalidSignupPayload,
   trafficSessionId
-} from '../../helpers/trafficTestData';
-import type { PageDto, TrafficInfoDto, TrafficLogEntryDto, TrafficLogsQuery } from '../../types/traffic';
+} from '../../../helpers/trafficTestData';
+import type { PageDto, TrafficLogEntryDto } from '../../../types/traffic';
 
 const SIGNIN_ENDPOINT = '/api/v1/users/signin';
 const SIGNUP_ENDPOINT = '/api/v1/users/signup';
-const MISSING_CORRELATION_ID = '00000000-0000-0000-0000-000000000000';
 
-test.describe('/api/v1/traffic/logs API tests', () => {
-  test('should return traffic monitoring info - 200', async ({ request }) => {
-    // given
-    const trafficClient = new TrafficClient(request);
-
-    // when
-    const response = await trafficClient.getInfo();
-
-    // then
-    expect(response.status()).toBe(200);
-
-    const responseBody: TrafficInfoDto = await response.json();
-    expect(responseBody.webSocketEndpoint).toBe('/api/v1/ws-traffic');
-    expect(responseBody.topic).toBe('/topic/traffic');
-    expect(responseBody.description).toContain('WebSocket');
-  });
-
+test.describe('GET /api/v1/traffic/logs', () => {
   test('should return paginated traffic logs - 200', async ({ request }) => {
     // given
     const trafficClient = new TrafficClient(request);
@@ -170,43 +153,6 @@ test.describe('/api/v1/traffic/logs API tests', () => {
     expect(entryTime).toBeLessThanOrEqual(Date.parse(to));
   });
 
-  test('should return traffic log by correlation id - 200', async ({ request }, testInfo) => {
-    // given
-    const trafficClient = new TrafficClient(request);
-    const clientSessionId = trafficSessionId(testInfo.title);
-
-    const signinResponse = await postJson(request, SIGNIN_ENDPOINT, invalidSigninPayload(), clientSessionId);
-    expect(signinResponse.status()).toBe(422);
-
-    const listEntry = await findTrafficEntryEventually(trafficClient, {
-      clientSessionId,
-      pathContains: 'signin'
-    });
-
-    // when
-    const detailResponse = await trafficClient.getLog(listEntry.correlationId);
-
-    // then
-    expect(detailResponse.status()).toBe(200);
-
-    const detailEntry: TrafficLogEntryDto = await detailResponse.json();
-    expect(detailEntry.correlationId).toBe(listEntry.correlationId);
-    expect(detailEntry.clientSessionId).toBe(clientSessionId);
-    expect(detailEntry.path).toBe(SIGNIN_ENDPOINT);
-    expect(detailEntry.status).toBe(422);
-  });
-
-  test('should return 404 for missing correlation id', async ({ request }) => {
-    // given
-    const trafficClient = new TrafficClient(request);
-
-    // when
-    const response = await trafficClient.getLog(MISSING_CORRELATION_ID);
-
-    // then
-    expect(response.status()).toBe(404);
-  });
-
   test('should return validation errors for invalid query params', async ({ request }) => {
     // given
     const trafficClient = new TrafficClient(request);
@@ -230,49 +176,6 @@ test.describe('/api/v1/traffic/logs API tests', () => {
   });
 });
 
-async function postJson(
-  request: APIRequestContext,
-  endpoint: string,
-  data: Record<string, string>,
-  clientSessionId: string
-) {
-  return request.post(`${APP_BASE_URL}${endpoint}`, {
-    data,
-    headers: {
-      'Content-Type': 'application/json',
-      [CLIENT_SESSION_HEADER]: clientSessionId
-    }
-  });
-}
-
-async function findTrafficEntryEventually(
-  trafficClient: TrafficClient,
-  query: TrafficLogsQuery,
-  predicate: (entry: TrafficLogEntryDto) => boolean = () => true
-): Promise<TrafficLogEntryDto> {
-  const timeoutMs = 5_000;
-  const intervalMs = 250;
-  const startedAt = Date.now();
-  let lastResponse: PageDto<TrafficLogEntryDto> | undefined;
-
-  while (Date.now() - startedAt < timeoutMs) {
-    const response = await trafficClient.getLogs({ page: 0, size: 10, ...query });
-    expect(response.status()).toBe(200);
-
-    const currentResponse: PageDto<TrafficLogEntryDto> = await response.json();
-    lastResponse = currentResponse;
-    const entry = currentResponse.content.find(predicate);
-
-    if (entry) {
-      return entry;
-    }
-
-    await new Promise(resolve => setTimeout(resolve, intervalMs));
-  }
-
-  throw new Error(`Traffic entry was not captured in time. Last response: ${JSON.stringify(lastResponse ?? null)}`);
-}
-
 function expectTrafficPageShape(page: PageDto<TrafficLogEntryDto>): void {
   expect(Array.isArray(page.content)).toBe(true);
   expect(page.pageNumber).toEqual(expect.any(Number));
@@ -291,10 +194,4 @@ function expectTrafficLogEntryShape(entry: TrafficLogEntryDto): void {
   expect(entry.durationMs).toEqual(expect.any(Number));
   expect(typeof entry.requestBodyTruncated).toBe('boolean');
   expect(typeof entry.responseBodyTruncated).toBe('boolean');
-}
-
-function asRecord(value: unknown): Record<string, string> {
-  expect(value).toEqual(expect.any(Object));
-
-  return value as Record<string, string>;
 }
