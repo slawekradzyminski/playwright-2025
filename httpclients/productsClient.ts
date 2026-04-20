@@ -1,5 +1,6 @@
 import type { APIRequestContext, APIResponse } from '@playwright/test';
 import { APP_BASE_URL } from '../config/constants';
+import { buildAuthHeaders } from './httpUtils';
 
 export const PRODUCTS_ENDPOINT = '/api/v1/products';
 
@@ -8,21 +9,13 @@ export class ProductsClient {
 
   async getProducts(token?: string): Promise<APIResponse> {
     return this.request.get(`${APP_BASE_URL}${PRODUCTS_ENDPOINT}`, {
-      headers: addHeaders(token)
+      headers: buildAuthHeaders(token)
     });
   }
 
   async getProductById(productId: number, token?: string): Promise<APIResponse> {
     return this.request.get(`${APP_BASE_URL}${PRODUCTS_ENDPOINT}/${productId}`, {
-      headers: addHeaders(token)
+      headers: buildAuthHeaders(token)
     });
   }
 }
-
-const addHeaders = (token?: string) => {
-  return token
-    ? {
-        Authorization: `Bearer ${token}`
-      }
-    : undefined;
-};

@@ -1,6 +1,7 @@
 import { ProductsClient } from '../../httpclients/productsClient';
 import type { ProductDto } from '../../types/product';
 import { expect, test } from '../../fixtures/authenticatedUserFixture';
+import { isValidProduct } from '../../helpers/productHelpers';
 
 test.describe('GET /api/v1/products API tests', () => {
   test('should return all products for authenticated user - 200', async ({ request, authenticatedUser }) => {
@@ -49,14 +50,3 @@ test.describe('GET /api/v1/products API tests', () => {
   });
 });
 
-export const isValidProduct = (product: ProductDto) => {
-  expect(product.id).toEqual(expect.any(Number));
-  expect(product.name).toEqual(expect.any(String));
-  expect(product.description).toEqual(expect.any(String));
-  expect(product.price).toEqual(expect.any(Number));
-  expect(product.stockQuantity).toEqual(expect.any(Number));
-  expect(product.category).toEqual(expect.any(String));
-  expect(product.imageUrl).toEqual(expect.any(String));
-  expect(product.createdAt).toEqual(expect.any(String));
-  expect(product.updatedAt).toEqual(expect.any(String));
-}

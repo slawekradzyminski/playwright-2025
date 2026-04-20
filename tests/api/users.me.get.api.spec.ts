@@ -1,6 +1,7 @@
 import { UsersClient } from '../../httpclients/usersClient';
 import type { UserResponseDto } from '../../types/auth';
 import { expect, test } from '../../fixtures/authenticatedUserFixture';
+import { expectValidUserResponse } from '../../helpers/userHelpers';
 
 test.describe('GET /api/v1/users/me API tests', () => {
   test('should return current user information - 200', async ({ request, authenticatedUser }) => {
@@ -14,12 +15,7 @@ test.describe('GET /api/v1/users/me API tests', () => {
     expect(response.status()).toBe(200);
 
     const responseBody: UserResponseDto = await response.json();
-    expect(responseBody.id).toEqual(expect.any(Number));
-    expect(responseBody.username).toBe(authenticatedUser.userData.username);
-    expect(responseBody.email).toBe(authenticatedUser.userData.email);
-    expect(responseBody.firstName).toBe(authenticatedUser.userData.firstName);
-    expect(responseBody.lastName).toBe(authenticatedUser.userData.lastName);
-    expect(responseBody.roles).toEqual(['ROLE_CLIENT']);
+    expectValidUserResponse(responseBody, authenticatedUser.userData);
   });
 
   test('should return unauthorized when token is missing - 401', async ({ request }) => {

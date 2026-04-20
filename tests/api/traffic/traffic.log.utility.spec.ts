@@ -4,10 +4,10 @@ import { promisify } from 'util';
 import { TrafficClient } from '../../../httpclients/trafficClient';
 import { asRecord, findTrafficEntryEventually, postJson } from '../../../helpers/trafficHelpers';
 import { invalidSigninPayload, trafficSessionId } from '../../../helpers/trafficTestData';
+import { SIGNIN_ENDPOINT } from '../../../httpclients/loginClient';
 import type { TrafficLogEntryDto } from '../../../types/traffic';
 
 const execFileAsync = promisify(execFile);
-const SIGNIN_ENDPOINT = '/api/v1/users/signin';
 
 test.describe('traffic logs utility', () => {
   test('should render AI-friendly markdown with redacted sensitive fields', async ({ request }, testInfo) => {

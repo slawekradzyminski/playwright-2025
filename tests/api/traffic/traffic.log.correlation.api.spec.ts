@@ -2,9 +2,9 @@ import { expect, test } from '@playwright/test';
 import { TrafficClient } from '../../../httpclients/trafficClient';
 import { findTrafficEntryEventually, postJson } from '../../../helpers/trafficHelpers';
 import { invalidSigninPayload, trafficSessionId } from '../../../helpers/trafficTestData';
+import { SIGNIN_ENDPOINT } from '../../../httpclients/loginClient';
 import type { TrafficLogEntryDto } from '../../../types/traffic';
 
-const SIGNIN_ENDPOINT = '/api/v1/users/signin';
 const MISSING_CORRELATION_ID = '00000000-0000-0000-0000-000000000000';
 
 test.describe('GET /api/v1/traffic/logs/{correlationId}', () => {

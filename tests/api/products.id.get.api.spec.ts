@@ -1,6 +1,7 @@
 import { ProductsClient } from '../../httpclients/productsClient';
 import type { ProductDto } from '../../types/product';
 import { expect, test } from '../../fixtures/authenticatedUserFixture';
+import { isValidProduct } from '../../helpers/productHelpers';
 
 test.describe('GET /api/v1/products/{id} API tests', () => {
   test('should return product by id for authenticated user - 200', async ({ request, authenticatedUser }) => {
@@ -21,14 +22,7 @@ test.describe('GET /api/v1/products/{id} API tests', () => {
 
     const responseBody: ProductDto = await response.json();
     expect(responseBody.id).toBe(existingProduct.id);
-    expect(responseBody.name).toEqual(expect.any(String));
-    expect(responseBody.description).toEqual(expect.any(String));
-    expect(responseBody.price).toEqual(expect.any(Number));
-    expect(responseBody.stockQuantity).toEqual(expect.any(Number));
-    expect(responseBody.category).toEqual(expect.any(String));
-    expect(responseBody.imageUrl).toEqual(expect.any(String));
-    expect(responseBody.createdAt).toEqual(expect.any(String));
-    expect(responseBody.updatedAt).toEqual(expect.any(String));
+    isValidProduct(responseBody);
   });
 
   test('should return unauthorized when token is missing - 401', async ({ request }) => {

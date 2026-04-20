@@ -1,6 +1,7 @@
 import type { APIRequestContext, APIResponse } from '@playwright/test';
 import { APP_BASE_URL } from '../config/constants';
 import type { CreateQrDto } from '../types/qr';
+import { buildAuthHeaders } from './httpUtils';
 
 export const QR_CREATE_ENDPOINT = '/api/v1/qr/create';
 
@@ -12,7 +13,7 @@ export class QrClient {
       data: createQrData,
       headers: {
         'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {})
+        ...(buildAuthHeaders(token) ?? {})
       }
     });
   }

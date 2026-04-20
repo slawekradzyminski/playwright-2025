@@ -6,10 +6,9 @@ import {
   invalidSignupPayload,
   trafficSessionId
 } from '../../../helpers/trafficTestData';
+import { SIGNIN_ENDPOINT } from '../../../httpclients/loginClient';
+import { SIGNUP_ENDPOINT } from '../../../httpclients/signupClient';
 import type { PageDto, TrafficLogEntryDto } from '../../../types/traffic';
-
-const SIGNIN_ENDPOINT = '/api/v1/users/signin';
-const SIGNUP_ENDPOINT = '/api/v1/users/signup';
 
 test.describe('GET /api/v1/traffic/logs', () => {
   test('should return paginated traffic logs - 200', async ({ request }) => {
