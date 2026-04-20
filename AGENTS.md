@@ -1,3 +1,6 @@
+## General
+- use English
+
 ## API test rules
 - follow the patterns from `login.api.spec.ts` and `loginClient.ts` - http clients in separate folder
 - use given (test setup), when (tested action), then (assertions)
