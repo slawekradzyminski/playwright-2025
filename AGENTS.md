@@ -9,3 +9,4 @@
 - you can explore how given endpoint work by reading `api-docs.json` and using curl command
 - each endpoint should be in a separate file (so one file for GET, one for PUT, etc.)
 - you can read server-side logs using `CLI_TRAFFIC_LOGS_UTILITY.md`
+- backend code is available in ../test-secure-backend
