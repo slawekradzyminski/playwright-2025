@@ -37,15 +37,15 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total endpoints** | 43 |
-| **Covered** (happy path + key negatives) | 8 |
+| **Total endpoints** | 45 |
+| **Covered** (happy path + key negatives) | 12 |
 | **Partial** (some scenarios missing) | 0 |
-| **Not covered** | 35 |
-| **Overall coverage %** | **18.6%** |
-| **Auth endpoints total** | 33 |
-| **Auth endpoints covered** | 3 (9.1%) |
-| **Non-auth endpoints total** | 10 |
-| **Non-auth endpoints covered** | 5 (50.0%) |
+| **Not covered** | 33 |
+| **Overall coverage %** | **26.7%** |
+| **Auth endpoints total** | 34 |
+| **Auth endpoints covered** | 7 (20.6%) |
+| **Non-auth endpoints total** | 11 |
+| **Non-auth endpoints covered** | 5 (45.5%) |
 | **High-complexity endpoints** | 7 |
 | **Admin-only endpoints** | 7 |
 | **Rate-limited endpoints** | 4 |
@@ -64,9 +64,10 @@
 | ✅ | POST | `/api/v1/users/signup` | 🌐 | — | Covered | `signup.api.spec.ts` | 🟢 Low | High | Validation + duplicate tested |
 | ✅ | GET | `/api/v1/users/me` | 🔒 | any | Covered | `users.me.get.api.spec.ts` | 🟢 Low | High | 200 + 401 tested |
 | ⬜ | POST | `/api/v1/users/refresh` | 🌐 | — | None | — | 🟢 Low | High | Refresh JWT; test expired/invalid tokens |
+| ⬜ | POST | `/api/v1/users/sso/exchange` | 🌐 | — | None | — | ⚙️ Medium | Low | OIDC token exchange; depends on configured identity provider |
 | ⬜ | POST | `/api/v1/users/logout` | 🔒 | any | None | — | 🟢 Low | Medium | Token invalidation |
 | ⬜ | GET | `/api/v1/users` | 🔒 | any | None | — | 🟢 Low | Medium | Returns all users; no role restriction in code |
-| ⬜ | GET | `/api/v1/users/{username}` | 🔒 | any | None | — | 🟢 Low | Medium | 404 for missing user |
+| ✅ | GET | `/api/v1/users/{username}` | 🔒 | any | Covered | `users.username.get.api.spec.ts` | 🟢 Low | Medium | 200 + 401 + 404 tested |
 | ⬜ | PUT | `/api/v1/users/{username}` | 🔒 | ADMIN or owner | None | — | ⚙️ Medium | Medium | `@PreAuthorize` checks self or admin; 403 cases |
 | ⬜ | DELETE | `/api/v1/users/{username}` | 🔒 | ADMIN | None | — | ⚙️ Medium | Low | Admin-only; 403 + 404 cases |
 | ⬜ | DELETE | `/api/v1/users/{username}/right-to-be-forgotten` | 🔒 | ADMIN or owner | None | — | ⚙️ Medium | Medium | Cascading data deletion; owner or admin |
@@ -88,7 +89,7 @@
 | Status | Method | Path | Auth | Role Required | Coverage | Test File(s) | Difficulty | Priority | Notes |
 |--------|--------|------|------|--------------|----------|-------------|-----------|---------|-------|
 | ✅ | GET | `/api/v1/products` | 🔒 | any | Covered | `products.get.api.spec.ts` | 🟢 Low | High | 200 + 401 tested; response contract validated |
-| ⬜ | GET | `/api/v1/products/{id}` | 🔒 | any | None | — | 🟢 Low | High | 200 + 404; contract check |
+| ✅ | GET | `/api/v1/products/{id}` | 🔒 | any | Covered | `products.id.get.api.spec.ts` | 🟢 Low | High | 200 + 401 + 404 tested; response contract validated |
 | ⬜ | POST | `/api/v1/products` | 🔒 | ADMIN | None | — | ⚙️ Medium | Medium | Admin-only; validation; 400 + 403 cases |
 | ⬜ | PUT | `/api/v1/products/{id}` | 🔒 | ADMIN | None | — | ⚙️ Medium | Medium | Admin-only; 400 + 403 + 404 cases |
 | ⬜ | DELETE | `/api/v1/products/{id}` | 🔒 | ADMIN | None | — | ⚙️ Medium | Low | Admin-only; 404 + 403 cases |
@@ -108,8 +109,8 @@
 
 | Status | Method | Path | Auth | Role Required | Coverage | Test File(s) | Difficulty | Priority | Notes |
 |--------|--------|------|------|--------------|----------|-------------|-----------|---------|-------|
-| ⬜ | GET | `/api/v1/cart` | 🔒 | any | None | — | 🟢 Low | High | Returns current user cart |
-| ⬜ | DELETE | `/api/v1/cart` | 🔒 | any | None | — | 🟢 Low | Medium | Clears entire cart |
+| ✅ | GET | `/api/v1/cart` | 🔒 | any | Covered | `cart.get.api.spec.ts` | 🟢 Low | High | 200 + 401 tested; response contract validated |
+| ✅ | DELETE | `/api/v1/cart` | 🔒 | any | Covered | `cart.delete.api.spec.ts` | 🟢 Low | Medium | 204 + 401 tested |
 | ⬜ | POST | `/api/v1/cart/items` | 🔒 | any | None | — | ⚙️ Medium | High | Add item; 404 if product missing; validation |
 | ⬜ | PUT | `/api/v1/cart/items/{productId}` | 🔒 | any | None | — | ⚙️ Medium | Medium | Update quantity; 404 if item not in cart |
 | ⬜ | DELETE | `/api/v1/cart/items/{productId}` | 🔒 | any | None | — | ⚙️ Medium | Medium | Remove item; 404 if not in cart |
@@ -154,12 +155,12 @@
 
 ## Auth Split
 
-### 🔒 Endpoints Requiring Authentication (33 total, 3 covered — 9.1%)
+### 🔒 Endpoints Requiring Authentication (34 total, 7 covered — 20.6%)
 
 #### Users
 - `GET /api/v1/users` — any authenticated user
 - `GET /api/v1/users/me` ✅
-- `GET /api/v1/users/{username}` — any authenticated user
+- `GET /api/v1/users/{username}` — any authenticated user ✅
 - `PUT /api/v1/users/{username}` — ADMIN or self (`@PreAuthorize`)
 - `DELETE /api/v1/users/{username}` — ADMIN only
 - `DELETE /api/v1/users/{username}/right-to-be-forgotten` — ADMIN or self
@@ -172,7 +173,7 @@
 
 #### Products
 - `GET /api/v1/products` ✅
-- `GET /api/v1/products/{id}`
+- `GET /api/v1/products/{id}` ✅
 - `POST /api/v1/products` — ADMIN only
 - `PUT /api/v1/products/{id}` — ADMIN only
 - `DELETE /api/v1/products/{id}` — ADMIN only
@@ -186,8 +187,8 @@
 - `GET /api/v1/orders/admin` — ADMIN only
 
 #### Cart
-- `GET /api/v1/cart`
-- `DELETE /api/v1/cart`
+- `GET /api/v1/cart` ✅
+- `DELETE /api/v1/cart` ✅
 - `POST /api/v1/cart/items`
 - `PUT /api/v1/cart/items/{productId}`
 - `DELETE /api/v1/cart/items/{productId}`
@@ -212,6 +213,7 @@
 - `POST /api/v1/users/signin` ✅
 - `POST /api/v1/users/signup` ✅
 - `POST /api/v1/users/refresh`
+- `POST /api/v1/users/sso/exchange`
 - `POST /api/v1/users/password/forgot`
 - `POST /api/v1/users/password/reset`
 
@@ -235,13 +237,17 @@
 | `GET /api/v1/users/me` | **Covered** | Happy path with contract validation, missing token, invalid token tested |
 | `POST /api/v1/qr/create` | **Covered** | PNG response + magic bytes, empty text validation, missing and invalid token tested |
 | `GET /api/v1/products` | **Covered** | Happy path + array contract, missing token, invalid token tested |
+| `GET /api/v1/products/{id}` | **Covered** | Happy path + contract, missing token, invalid token, missing product tested |
+| `GET /api/v1/cart` | **Covered** | Happy path + contract, missing token, invalid token tested |
+| `DELETE /api/v1/cart` | **Covered** | Happy path, missing token, invalid token tested |
+| `GET /api/v1/users/{username}` | **Covered** | Happy path + contract, missing token, invalid token, missing user tested |
 | `GET /api/v1/traffic/info` | **Covered** | Contract fields verified |
 | `GET /api/v1/traffic/logs` | **Covered** | Pagination, client session ID filter, multi-filter, ordering, time window, validation errors |
 | `GET /api/v1/traffic/logs/{correlationId}` | **Covered** | Happy path + 404 for missing ID |
 | `POST /api/v1/users/refresh` | **None** | No tests; should cover valid token, expired token, missing token |
+| `POST /api/v1/users/sso/exchange` | **None** | No tests; depends on configured OIDC provider/token fixture |
 | `POST /api/v1/users/logout` | **None** | No tests; should cover successful logout, subsequent request rejected |
 | `GET /api/v1/users` | **None** | No tests; verify any-auth access, response contract |
-| `GET /api/v1/users/{username}` | **None** | No tests; happy path + 404 |
 | `PUT /api/v1/users/{username}` | **None** | No tests; missing owner/admin permission cases, 403 for other user |
 | `DELETE /api/v1/users/{username}` | **None** | No tests; admin-only 403, 404 |
 | `DELETE /api/v1/users/{username}/right-to-be-forgotten` | **None** | No tests; cascading delete, permission check |
@@ -250,7 +256,6 @@
 | `GET/PUT /api/v1/users/tool-system-prompt` | **None** | No tests; same pattern as chat-system-prompt |
 | `POST /api/v1/users/password/forgot` | **None** | No tests; needs local outbox to verify email queued; rate limit (429) |
 | `POST /api/v1/users/password/reset` | **None** | No tests; stateful — requires token from forgot flow |
-| `GET /api/v1/products/{id}` | **None** | No tests; happy path + 404 |
 | `POST /api/v1/products` | **None** | No tests; admin-only; validation |
 | `PUT /api/v1/products/{id}` | **None** | No tests; admin-only; 403 + 404 |
 | `DELETE /api/v1/products/{id}` | **None** | No tests; admin-only; 403 + 404 |
@@ -260,8 +265,6 @@
 | `POST /api/v1/orders/{id}/cancel` | **None** | No tests; business rule — only certain statuses cancellable |
 | `PUT /api/v1/orders/{id}/status` | **None** | No tests; admin-only; invalid status transition |
 | `GET /api/v1/orders/admin` | **None** | No tests; admin-only; pagination + status filter |
-| `GET /api/v1/cart` | **None** | No tests |
-| `DELETE /api/v1/cart` | **None** | No tests |
 | `POST /api/v1/cart/items` | **None** | No tests; product must exist; quantity validation |
 | `PUT /api/v1/cart/items/{productId}` | **None** | No tests; 404 if not in cart |
 | `DELETE /api/v1/cart/items/{productId}` | **None** | No tests; 404 if not in cart |
@@ -282,6 +285,7 @@
 | `POST /api/v1/users/signin` | 🟢 Low | Simple credential check, minimal branching |
 | `POST /api/v1/users/signup` | 🟢 Low | Validation + uniqueness check only |
 | `POST /api/v1/users/refresh` | 🟢 Low | Single token exchange path |
+| `POST /api/v1/users/sso/exchange` | ⚙️ Medium | Depends on configured OIDC validation and account-linking conflict behavior |
 | `POST /api/v1/users/logout` | 🟢 Low | Token invalidation, no business logic |
 | `GET /api/v1/users` | 🟢 Low | Simple list, no filtering |
 | `GET /api/v1/users/me` | 🟢 Low | Returns current user from principal |
@@ -390,6 +394,7 @@
 - `PUT /api/v1/orders/{id}/status` — admin-only; invalid transitions
 - `POST /api/v1/users/password/forgot` — rate limit (429), unknown identifier (still 202 for privacy)
 - `POST /api/v1/users/password/reset` — expired token, invalid token, reuse of token
+- `POST /api/v1/users/sso/exchange` — invalid token and account-conflict behavior
 - `POST /api/v1/email` — rate limit (429), validation errors
 - All admin endpoints — 403 for non-admin user
 - `GET /api/v1/orders/{id}` — user cannot see another user's order
