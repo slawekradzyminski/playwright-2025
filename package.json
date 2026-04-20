@@ -5,7 +5,8 @@
   "scripts": {
     "test": "playwright test",
     "test:api": "playwright test tests/api/",
-    "test:ui": "playwright test tests/ui/"
+    "test:ui": "playwright test tests/ui/",
+    "traffic:logs": "node scripts/traffic-logs.mjs"
   },
   "keywords": [
     "playwright",
