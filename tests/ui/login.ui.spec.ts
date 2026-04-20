@@ -21,7 +21,7 @@ test.describe('Login UI tests', () => {
     // when
     await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
     await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByTestId('login-submit-button').click();
 
     // then
     await expect(page).not.toHaveURL(LOGIN_URL);
@@ -37,7 +37,7 @@ test.describe('Login UI tests', () => {
     // when
     await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
     await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByTestId('login-submit-button').click();
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);
@@ -53,7 +53,7 @@ test.describe('Login UI tests', () => {
     // when
     await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
     await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByTestId('login-submit-button').click();
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);
@@ -87,7 +87,7 @@ test.describe('Login UI tests', () => {
     // when
     await page.getByRole('textbox', { name: 'Username' }).fill(credentials.username);
     await page.getByRole('textbox', { name: 'Password' }).fill(credentials.password);
-    await page.getByRole('button', { name: 'Sign in' }).click();
+    await page.getByTestId('login-submit-button').click();
 
     // then
     await expect(page).toHaveURL(LOGIN_URL);

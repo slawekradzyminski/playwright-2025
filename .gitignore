@@ -7,6 +7,9 @@ node_modules/
 /playwright/.cache/
 .playwright-cli/
 .playwright-mcp/
+allure-report/
+allure-results/
+logs/
 
 artifacts
 
