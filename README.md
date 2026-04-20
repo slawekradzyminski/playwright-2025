@@ -68,19 +68,24 @@ The tests expect the following public app URL:
 - **Login Page**: `http://localhost:8081/login`
 - **Auth API**: `http://localhost:8081/api/v1/users/signin`
 
-If you run the app on a different host or port, override the default:
+4. **Create Local Environment File**
+
+Create a local `.env` file in the project root. This file is ignored by git and is loaded automatically by Playwright through `dotenv` in quiet mode.
 
 ```bash
-APP_BASE_URL=http://localhost:8081 npx playwright test
+cp .env.example .env
 ```
 
-If the training stack uses a different seeded admin password, override that too:
+If `.env.example` is not available, create `.env` manually:
 
 ```bash
-ADMIN_PASSWORD=your-password npx playwright test
+APP_BASE_URL=http://localhost:8081
+ADMIN_PASSWORD=your-password
 ```
 
-4. **Run Tests**
+Set `APP_BASE_URL` to the app gateway URL and `ADMIN_PASSWORD` to the seeded admin password for your local training stack. Environment variables passed directly in the shell still take precedence over values from `.env`.
+
+5. **Run Tests**
 
 **API Tests**
 
