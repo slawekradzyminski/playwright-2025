@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto } from '../../types/auth';
+import { APP_BASE_URL, ADMIN_PASSWORD } from '../../config/constants';
 
-const APP_BASE_URL = process.env.APP_BASE_URL ?? '';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? '';
 const LOGIN_URL = `${APP_BASE_URL}/login`;
 const REGISTER_URL = `${APP_BASE_URL}/register`;
 

@@ -1,25 +1,19 @@
 import { test, expect } from '@playwright/test';
 import type { LoginDto, LoginResponseDto } from '../../types/auth';
-
-const APP_BASE_URL = process.env.APP_BASE_URL ?? '';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? '';
-const SIGNIN_ENDPOINT = '/api/v1/users/signin';
+import { ADMIN_PASSWORD } from '../../config/constants';
+import { LoginClient } from '../../httpclients/loginClient';
 
 test.describe('/api/v1/users/signin API tests', () => {
   test('should successfully authenticate with valid credentials - 200', async ({ request }) => {
     // given
+    const loginClient = new LoginClient(request);
     const loginData: LoginDto = {
       username: 'admin',
       password: ADMIN_PASSWORD
     };
 
     // when
-    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await loginClient.signin(loginData);
 
     // then
     expect(response.status()).toBe(200);
@@ -37,18 +31,14 @@ test.describe('/api/v1/users/signin API tests', () => {
 
   test('should return validation error for empty username - 400', async ({ request }) => {
     // given
+    const loginClient = new LoginClient(request);
     const loginData: LoginDto = {
       username: '',
       password: ADMIN_PASSWORD
     };
 
     // when
-    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await loginClient.signin(loginData);
 
     // then
     expect(response.status()).toBe(400);
@@ -58,18 +48,14 @@ test.describe('/api/v1/users/signin API tests', () => {
 
   test('should return validation error for username too short - 400', async ({ request }) => {
     // given
+    const loginClient = new LoginClient(request);
     const loginData: LoginDto = {
       username: 'abc',
       password: ADMIN_PASSWORD
     };
 
     // when
-    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await loginClient.signin(loginData);
 
     // then
     expect(response.status()).toBe(400);
@@ -79,18 +65,14 @@ test.describe('/api/v1/users/signin API tests', () => {
 
   test('should return validation error for password too short - 400', async ({ request }) => {
     // given
+    const loginClient = new LoginClient(request);
     const loginData: LoginDto = {
       username: 'admin',
       password: 'abc'
     };
 
     // when
-    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await loginClient.signin(loginData);
 
     // then
     expect(response.status()).toBe(400);
@@ -100,18 +82,14 @@ test.describe('/api/v1/users/signin API tests', () => {
 
   test('should return authentication error for both invalid credentials - 422', async ({ request }) => {
     // given
+    const loginClient = new LoginClient(request);
     const loginData: LoginDto = {
       username: 'wronguser',
       password: 'wrongpassword'
     };
 
     // when
-    const response = await request.post(`${APP_BASE_URL}${SIGNIN_ENDPOINT}`, {
-      data: loginData,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await loginClient.signin(loginData);
 
     // then
     expect(response.status()).toBe(422);
