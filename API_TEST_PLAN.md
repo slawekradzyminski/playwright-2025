@@ -1,6 +1,6 @@
 # API Test Plan — JWT Authentication API
 
-**Last Updated:** 2026-04-20  
+**Last Updated:** 2026-04-21  
 **Project:** `slawekradzyminski/playwright-2025` — JWT Authentication API (Spring Boot backend)  
 **Sources Analysed:**
 - `api-docs.json` — OpenAPI 3.1 spec (primary endpoint inventory)
@@ -9,11 +9,20 @@
 - `httpclients/` — HTTP client wrappers
 
 **How to use this document:**
-1. Use the **Coverage Summary** table for a quick health check.
-2. Use the **Endpoint Inventory** table to track per-endpoint progress.
-3. When you add a test, update `Current Coverage` and `Existing Test File(s)` in the table.
-4. When you add a new endpoint, append a row, then add it to the appropriate Auth section and Phase.
-5. Recalculate coverage percentages using the rules in the **Maintenance** section.
+1. Use this document as the endpoint inventory and coverage source of truth.
+2. Use [`API_TESTS_PHASES.md`](./API_TESTS_PHASES.md) to decide what to implement next and what can run in parallel.
+3. Use the **Coverage Summary** table for a quick health check.
+4. Use the **Endpoint Inventory** table to track per-endpoint progress.
+5. When you add a test, update `Current Coverage` and `Existing Test File(s)` in the table.
+6. When you add a new endpoint, append a row, then add it to the appropriate Auth section and phase document.
+7. Recalculate coverage percentages using the rules in the **Maintenance** section.
+
+**Companion documents:**
+
+| Document | Purpose |
+|----------|---------|
+| [`API_TEST_PLAN.md`](./API_TEST_PLAN.md) | Endpoint inventory, current coverage, scenario checklist, and discrepancies |
+| [`API_TESTS_PHASES.md`](./API_TESTS_PHASES.md) | Execution order, dependencies, parallelization rules, and next-step selection |
 
 ---
 
@@ -330,99 +339,21 @@
 
 ## Phased Delivery Plan
 
-### Phase 1 — Quick Wins (public + low-complexity auth)
+Use [`API_TESTS_PHASES.md`](./API_TESTS_PHASES.md) as the detailed execution roadmap. It contains dependency gates, parallelization guidance, exit criteria, and the current recommended next increment.
 
-**Goals:** Establish baseline coverage for easy endpoints; non-auth flows; simple authenticated CRUD.
+This plan keeps only the high-level phase index so there is one source of truth for execution status.
 
-**Included endpoints:**
-- `POST /api/v1/users/refresh`
-- `POST /api/v1/users/logout`
-- `GET /api/v1/users`
-- `GET /api/v1/users/{username}`
-- `GET /api/v1/users/me/email-events`
-- `GET /api/v1/users/chat-system-prompt`
-- `PUT /api/v1/users/chat-system-prompt`
-- `GET /api/v1/users/tool-system-prompt`
-- `PUT /api/v1/users/tool-system-prompt`
-- `GET /api/v1/products/{id}`
-- `GET /api/v1/cart`
-- `DELETE /api/v1/cart`
-- `GET /api/v1/local/email/outbox`
-- `DELETE /api/v1/local/email/outbox`
-- `GET /api/v1/ollama/chat/tools/definitions`
-
-**Rationale:** All low-complexity; most require only a valid token (use existing `authenticatedUserFixture`). No data seeding beyond what already exists (seeded products).
-
-**Expected challenges:** None significant. Refresh token test requires saving the token from signup response.
-
----
-
-### Phase 2 — Core Authenticated Flows
-
-**Goals:** Cover key user journeys: cart → order lifecycle, products admin CRUD, user management.
-
-**Included endpoints:**
-- `POST /api/v1/cart/items`
-- `PUT /api/v1/cart/items/{productId}`
-- `DELETE /api/v1/cart/items/{productId}`
-- `POST /api/v1/orders` (requires Phase 1 cart setup)
-- `GET /api/v1/orders`
-- `GET /api/v1/orders/{id}`
-- `PUT /api/v1/users/{username}`
-- `DELETE /api/v1/users/{username}`
-- `DELETE /api/v1/users/{username}/right-to-be-forgotten`
-- `POST /api/v1/products`
-- `PUT /api/v1/products/{id}`
-- `DELETE /api/v1/products/{id}`
-- `GET /api/v1/orders/admin`
-
-**Rationale:** Covers main business flows. Cart → Order is the core e-commerce journey. Product CRUD and user management needed for admin coverage. Requires admin token — use existing `ADMIN_PASSWORD` constant.
-
-**Expected challenges:**
-- Cart/order tests must be isolated (each test creates its own cart state).
-- Admin token generation needs a fixture or helper.
-- Product delete may have FK constraints if products appear in orders.
-
----
-
-### Phase 3 — Edge Cases and Resilience
-
-**Goals:** Negative scenarios, permission boundaries, validation, business rule failures.
-
-**Included endpoints (additional scenarios for already-tested and Phase 2 endpoints):**
-- `POST /api/v1/orders/{id}/cancel` — invalid status transitions
-- `PUT /api/v1/orders/{id}/status` — admin-only; invalid transitions
-- `POST /api/v1/users/password/forgot` — rate limit (429), unknown identifier (still 202 for privacy)
-- `POST /api/v1/users/password/reset` — expired token, invalid token, reuse of token
-- `POST /api/v1/users/sso/exchange` — invalid token and account-conflict behavior
-- `POST /api/v1/email` — rate limit (429), validation errors
-- All admin endpoints — 403 for non-admin user
-- `GET /api/v1/orders/{id}` — user cannot see another user's order
-
-**Rationale:** Business rules and security boundaries are high-risk areas. Password reset flow is stateful and requires local outbox as test oracle.
-
-**Expected challenges:**
-- Rate limiting tests may be flaky if tests run in parallel; consider serial execution for rate-limit scenarios.
-- Password reset requires `local` profile outbox; ensure tests run against `local` profile backend.
-- Status transition tests require seeded orders in specific states.
-
----
-
-### Phase 4 — Advanced / High-Complexity Coverage
-
-**Goals:** Streaming AI endpoints; complex stateful workflows.
-
-**Included endpoints:**
-- `POST /api/v1/ollama/generate`
-- `POST /api/v1/ollama/chat`
-- `POST /api/v1/ollama/chat/tools`
-
-**Rationale:** These depend on a running Ollama instance and produce non-deterministic output. SSE streaming requires special handling in Playwright. Left for last as they may need a dedicated test environment.
-
-**Expected challenges:**
-- Ollama must be running and the model loaded. Consider skipping or marking as `@skip` in CI if not available.
-- SSE stream parsing — use `response.body()` or a custom SSE reader.
-- Ollama output is non-deterministic; assert shape, not content.
+| Phase | Focus | Parallelization Summary |
+|-------|-------|-------------------------|
+| Phase 1 | Support and low-risk endpoint coverage | Mostly parallel-safe |
+| Phase 2A | Cart mutations | `POST /cart/items` first, then PUT/DELETE can split |
+| Phase 2B | Admin test foundation | Can run in parallel with cart work |
+| Phase 3 | User order lifecycle | Sequential after cart mutations |
+| Phase 4A | Product admin CRUD | Parallel-safe after admin foundation |
+| Phase 4B | User management permissions | Parallel-safe after admin foundation |
+| Phase 5 | Email and password reset | Parallel-safe except rate-limit scenarios |
+| Phase 6 | Order admin and business rules | Partially parallel; depends on admin and order foundations |
+| Phase 7 | SSO and Ollama streaming | Isolated, environment-dependent work |
 
 ---
 
@@ -606,7 +537,7 @@
 ### Adding a new endpoint
 1. Add a row to the **Endpoint Inventory** table under the appropriate module section.
 2. Add it to the **Auth Split** section under the right heading.
-3. Add it to the appropriate **Phase** based on complexity and priority.
+3. Add it to the appropriate phase in [`API_TESTS_PHASES.md`](./API_TESTS_PHASES.md) based on complexity, priority, and dependencies.
 4. Add recommended scenarios in the **Scenarios** section.
 5. Recalculate the **Coverage Summary** table.
 
@@ -614,7 +545,8 @@
 1. Change the `Status` emoji from ⬜ to ✅ (or 🟡 if partial).
 2. Fill in `Existing Test File(s)` with the relative path (e.g., `tests/api/products.get.api.spec.ts`).
 3. Update `Current Coverage` from `None` → `Partial` or `Covered`.
-4. Recalculate coverage percentages:
+4. Update the matching increment status in [`API_TESTS_PHASES.md`](./API_TESTS_PHASES.md).
+5. Recalculate coverage percentages:
 
 ```
 overall coverage % = covered_endpoints / total_endpoints * 100

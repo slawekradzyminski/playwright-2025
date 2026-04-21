@@ -1,0 +1,240 @@
+# API Tests Phases
+
+**Last Updated:** 2026-04-21
+
+**Purpose:** Use this file to decide the next API test increment.
+
+This is the execution companion to [`API_TEST_PLAN.md`](./API_TEST_PLAN.md). The plan file is the endpoint inventory and coverage source of truth. This file defines the order of work, dependencies, and which tracks can safely run in parallel.
+
+## How to Pick the Next Task
+
+1. Start at the first phase that is not complete.
+2. Pick the first incomplete increment in that phase.
+3. Only skip forward when the increment is marked as parallel-safe and its dependencies are complete.
+4. After each increment, update:
+   - this file: phase/increment status
+   - [`API_TEST_PLAN.md`](./API_TEST_PLAN.md): endpoint inventory, coverage summary, and test file references
+5. Always run the newly created tests, then `npm run test:api`.
+
+## Dependency Map
+
+```text
+Phase 1: Support and low-risk endpoint coverage
+  |
+  +--> Phase 2A: Cart mutations
+  |       |
+  |       +--> Phase 3: User order lifecycle
+  |               |
+  |               +--> Phase 6: Order edge cases and status transitions
+  |
+  +--> Phase 2B: Admin test foundation
+          |
+          +--> Phase 4A: Product admin CRUD
+          |
+          +--> Phase 4B: User management permissions
+          |
+          +--> Phase 5: Email and password reset flows
+
+Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
+```
+
+## Parallelization Rules
+
+| Work Area | Can Run in Parallel? | Why |
+|-----------|----------------------|-----|
+| Phase 1 low-risk endpoint files | Yes | Mostly independent read/write tests on user-owned fields or helper endpoints |
+| Cart mutation endpoint files | Partially | `POST /cart/items` should be done first because PUT/DELETE need a reliable add-item helper |
+| Cart and admin foundation | Yes | Different endpoint groups; no shared data dependency |
+| Product admin CRUD and user management | Yes | Both depend on admin auth, but can use separate users/products |
+| Order lifecycle and product delete tests | Be careful | Product delete can conflict with products referenced by carts/orders; use created products only |
+| Password reset and email tests | Yes after local outbox client exists | Both use local email outbox but can isolate by clearing outbox in `afterEach` |
+| Rate-limit tests | No, run serially | Shared rate-limit buckets can make parallel tests flaky |
+| Ollama streaming tests | No by default | External model availability and stream timing make these better as isolated tests |
+
+## Phase 1 - Support and Low-Risk Coverage
+
+**Goal:** Remove easy unknowns and create small helpers needed by later phases.
+
+**Parallel-safe:** Yes. These increments can be split between people as long as they do not edit the same client/helper file at the same time.
+
+**Exit criteria:**
+- All listed endpoints have happy path plus key auth/validation negatives.
+- Any helper clients introduced here follow the existing `httpclients/*Client.ts` pattern.
+- `API_TEST_PLAN.md` coverage summary is recalculated.
+
+| Status | Increment | Endpoints | Notes |
+|--------|-----------|-----------|-------|
+| ⬜ | Refresh token tests | `POST /api/v1/users/refresh` | Use token from signup/signin response; cover valid, missing, invalid/expired where feasible |
+| ⬜ | Logout tests | `POST /api/v1/users/logout` | Verify logout succeeds and the same token is rejected afterward if backend invalidates it |
+| ⬜ | Users list and own data reads | `GET /api/v1/users`, `GET /api/v1/users/me/email-events` | Simple authenticated reads; confirm response contracts |
+| ⬜ | Prompt settings tests | `GET/PUT /api/v1/users/chat-system-prompt`, `GET/PUT /api/v1/users/tool-system-prompt` | User-owned field read/write; restore or isolate test user state |
+| ⬜ | Local email outbox client/tests | `GET /api/v1/local/email/outbox`, `DELETE /api/v1/local/email/outbox` | Required before password reset and email tests |
+| ⬜ | Ollama tool definitions contract | `GET /api/v1/ollama/chat/tools/definitions` | Static authenticated contract; no running Ollama model needed |
+
+## Phase 2A - Cart Mutations
+
+**Goal:** Complete cart state-changing coverage and unlock order creation tests.
+
+**Parallel-safe:** Partially. Do `POST /api/v1/cart/items` first. After the add-item helper is stable, PUT and DELETE item tests can be done in parallel.
+
+**Exit criteria:**
+- Cart add, update, and remove are covered.
+- Tests create and clean up their own cart state.
+- A reusable helper exists for "given a cart with product X".
+
+| Status | Increment | Endpoints | Notes |
+|--------|-----------|-----------|-------|
+| ⬜ | Add item to cart | `POST /api/v1/cart/items` | Best immediate next increment; use seeded product from `ProductsClient` |
+| ⬜ | Update cart item quantity | `PUT /api/v1/cart/items/{productId}` | Depends on add-item helper |
+| ⬜ | Remove cart item | `DELETE /api/v1/cart/items/{productId}` | Depends on add-item helper |
+
+## Phase 2B - Admin Test Foundation
+
+**Goal:** Make admin-only endpoint tests cheap and consistent.
+
+**Parallel-safe:** Yes with Phase 2A. This is a separate track and does not require cart mutation coverage.
+
+**Exit criteria:**
+- There is a documented way to obtain an admin token.
+- Admin and non-admin permission assertions are easy to reuse.
+- At least one smoke test proves the admin fixture works.
+
+| Status | Increment | Endpoints | Notes |
+|--------|-----------|-----------|-------|
+| ⬜ | Admin auth fixture/helper | Shared setup | Use existing constants/patterns; avoid repeating admin login in every file |
+| ⬜ | Permission assertion helper if useful | Shared helper | Keep it small; only extract if repeated across admin endpoint files |
+
+## Phase 3 - User Order Lifecycle
+
+**Goal:** Cover the main ecommerce path for a regular authenticated user.
+
+**Parallel-safe:** Mostly no. The first order creation tests should be done in one sequence because they depend on cart helpers and order IDs created during the tests.
+
+**Dependencies:** Phase 2A complete.
+
+**Exit criteria:**
+- A user can create an order from a populated cart.
+- User order list and order-by-id contracts are covered.
+- Empty cart and unauthorized cases are covered.
+
+| Status | Increment | Endpoints | Notes |
+|--------|-----------|-----------|-------|
+| ⬜ | Create order from cart | `POST /api/v1/orders` | Requires populated cart; include empty cart negative |
+| ⬜ | List current user's orders | `GET /api/v1/orders` | Cover page contract and optional status filter if stable |
+| ⬜ | Fetch order by ID | `GET /api/v1/orders/{id}` | Cover owner access, missing ID, and unauthorized |
+
+## Phase 4A - Product Admin CRUD
+
+**Goal:** Cover admin-only product management and permission boundaries.
+
+**Parallel-safe:** Yes after Phase 2B. Can run in parallel with Phase 3 if tests use products created inside the product CRUD tests and avoid deleting seeded products.
+
+**Dependencies:** Phase 2B complete.
+
+**Exit criteria:**
+- Admin create/update/delete paths are covered.
+- Non-admin receives 403 for each admin-only mutation.
+- Validation and missing-resource negatives are covered.
+
+| Status | Increment | Endpoints | Notes |
+|--------|-----------|-----------|-------|
+| ⬜ | Create product | `POST /api/v1/products` | Cover 201, 400 validation, 401, 403 |
+| ⬜ | Update product | `PUT /api/v1/products/{id}` | Prefer product created by test setup |
+| ⬜ | Delete product | `DELETE /api/v1/products/{id}` | Delete only products created by the test to avoid FK conflicts |
+
+## Phase 4B - User Management Permissions
+
+**Goal:** Cover owner/admin authorization rules for user mutation endpoints.
+
+**Parallel-safe:** Yes after Phase 2B. Can run in parallel with product admin CRUD if each file creates its own users.
+
+**Dependencies:** Phase 2B complete.
+
+**Exit criteria:**
+- Owner and admin permissions are tested.
+- Cross-user 403 cases are tested.
+- Tests avoid deleting shared/static users.
+
+| Status | Increment | Endpoints | Notes |
+|--------|-----------|-----------|-------|
+| ⬜ | Update user | `PUT /api/v1/users/{username}` | Cover owner 200, admin 200, other user 403, validation, missing user |
+| ⬜ | Delete user as admin | `DELETE /api/v1/users/{username}` | Create disposable user inside test setup |
+| ⬜ | Right to be forgotten | `DELETE /api/v1/users/{username}/right-to-be-forgotten` | Cover owner, admin, and other-user denial |
+
+## Phase 5 - Email and Password Reset
+
+**Goal:** Cover email-producing flows using local outbox as the test oracle.
+
+**Parallel-safe:** Yes for non-rate-limit tests after local outbox support exists. Rate-limit scenarios should be serial.
+
+**Dependencies:** Phase 1 local email outbox increment complete.
+
+**Exit criteria:**
+- Outbox is cleared before/after tests.
+- Forgot/reset flow is tested end to end.
+- Rate-limit tests are isolated or marked serial.
+
+| Status | Increment | Endpoints | Notes |
+|--------|-----------|-----------|-------|
+| ⬜ | Send arbitrary email | `POST /api/v1/email` | Verify queued email via local outbox |
+| ⬜ | Forgot password | `POST /api/v1/users/password/forgot` | Valid and unknown identifier should not leak account existence |
+| ⬜ | Reset password | `POST /api/v1/users/password/reset` | Extract reset token from outbox; cover invalid/reused token |
+| ⬜ | Rate-limit cases | Password reset and email endpoints | Run serially to avoid shared bucket flakiness |
+
+## Phase 6 - Order Admin and Business Rules
+
+**Goal:** Cover order permission boundaries and state transitions.
+
+**Parallel-safe:** Partially. Read-only admin listing can run independently after Phase 2B. Status/cancel transition tests should be written after the base order lifecycle is stable.
+
+**Dependencies:** Phase 2B and Phase 3 complete.
+
+**Exit criteria:**
+- Admin can list and inspect relevant orders.
+- Regular users cannot access another user's order.
+- Invalid transitions return the expected 400-level response.
+
+| Status | Increment | Endpoints | Notes |
+|--------|-----------|-----------|-------|
+| ⬜ | Admin order list | `GET /api/v1/orders/admin` | Can start after admin fixture exists, but richer assertions need seeded orders |
+| ⬜ | Cross-user order access | `GET /api/v1/orders/{id}` | Requires orders for two distinct users |
+| ⬜ | Cancel order | `POST /api/v1/orders/{id}/cancel` | Cover cancellable and non-cancellable states |
+| ⬜ | Admin status update | `PUT /api/v1/orders/{id}/status` | Cover admin success, non-admin 403, invalid transition |
+
+## Phase 7 - Environment-Dependent Endpoints
+
+**Goal:** Cover flows that need external systems or special test fixtures.
+
+**Parallel-safe:** No by default. Treat these as dedicated slices because failures may be environmental rather than product regressions.
+
+**Dependencies:** Core suite should already be stable.
+
+**Exit criteria:**
+- Tests clearly skip or fail with actionable messages when dependencies are unavailable.
+- Assertions verify stream/contract shape, not nondeterministic model text.
+
+| Status | Increment | Endpoints | Notes |
+|--------|-----------|-----------|-------|
+| ⬜ | SSO exchange | `POST /api/v1/users/sso/exchange` | Needs configured identity provider or deterministic token fixture |
+| ⬜ | Ollama generate stream | `POST /api/v1/ollama/generate` | Requires running Ollama and loaded model |
+| ⬜ | Ollama chat stream | `POST /api/v1/ollama/chat` | Assert SSE shape and auth/rate-limit behavior |
+| ⬜ | Ollama chat tools stream | `POST /api/v1/ollama/chat/tools` | Most complex AI flow; keep last |
+
+## Recommended Current Next Step
+
+The next best increment is:
+
+```text
+Phase 2A - Add item to cart
+Endpoint: POST /api/v1/cart/items
+New file: tests/api/cart.items.post.api.spec.ts
+Client update: httpclients/cartClient.ts
+```
+
+Why this is next:
+- It is high priority and currently uncovered.
+- It unlocks order creation tests.
+- It reuses already-covered product list and cart read endpoints.
+- It is smaller than starting with orders directly.
+
+After that, finish the rest of Phase 2A, then move to Phase 3 unless admin coverage is a higher immediate priority. Phase 2B can be started in parallel at any time.
