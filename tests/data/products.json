@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Apple Watch Series 7",
+    "price": "$399.99",
+    "category": "Wearables",
+    "description": "Always-On Retina display, health monitoring, and fitness tracking"
+  },
+  {
+    "name": "Clean Code",
+    "price": "$44.99",
+    "category": "Books",
+    "description": "A Handbook of Agile Software Craftsmanship by Robert C. Martin"
+  },
+  {
+    "name": "iPhone 13 Pro",
+    "price": "$999.99",
+    "category": "Electronics",
+    "description": "Latest iPhone model with A15 Bionic chip, Pro camera system, and Super Retina XDR display"
+  },
+  {
+    "name": "MacBook Pro 14",
+    "price": "$1999.99",
+    "category": "Computers",
+    "description": "Apple M1 Pro chip, 16GB RAM, 512GB SSD, Liquid Retina XDR display"
+  },
+  {
+    "name": "Ninja Foodi 9-in-1",
+    "price": "$249.99",
+    "category": "Home & Kitchen",
+    "description": "Deluxe XL pressure cooker and air fryer with multiple cooking functions"
+  },
+  {
+    "name": "PlayStation 5",
+    "price": "$499.99",
+    "category": "Gaming",
+    "description": "Next-gen gaming console with 4K graphics, ray tracing, and ultra-high speed SSD"
+  },
+  {
+    "name": "Samsung Galaxy S21",
+    "price": "$799.99",
+    "category": "Electronics",
+    "description": "5G smartphone with 8K video, all-day battery, and powerful performance"
+  },
+  {
+    "name": "Sony WH-1000XM4",
+    "price": "$349.99",
+    "category": "Audio",
+    "description": "Industry-leading noise canceling wireless headphones with exceptional sound"
+  }
+]
