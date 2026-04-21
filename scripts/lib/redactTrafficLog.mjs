@@ -31,7 +31,7 @@ export function redactTrafficLog(value, options = {}) {
 export function isSensitiveKey(key) {
   const normalizedKey = String(key).toLowerCase();
 
-  return sensitiveKeyPatterns.some(pattern => normalizedKey.includes(pattern));
+  return sensitiveKeyPatterns.some((pattern) => normalizedKey.includes(pattern));
 }
 
 function redactValue(value, key, maxStringLength) {
@@ -40,7 +40,7 @@ function redactValue(value, key, maxStringLength) {
   }
 
   if (Array.isArray(value)) {
-    return value.map(item => redactValue(item, undefined, maxStringLength));
+    return value.map((item) => redactValue(item, undefined, maxStringLength));
   }
 
   if (value !== null && typeof value === 'object') {
@@ -61,7 +61,7 @@ function redactValue(value, key, maxStringLength) {
 
 function truncateLongStrings(value, maxStringLength) {
   if (Array.isArray(value)) {
-    return value.map(item => truncateLongStrings(item, maxStringLength));
+    return value.map((item) => truncateLongStrings(item, maxStringLength));
   }
 
   if (value !== null && typeof value === 'object') {

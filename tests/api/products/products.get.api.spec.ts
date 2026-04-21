@@ -1,7 +1,9 @@
+import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
+import { isValidProduct } from '../../../helpers/productHelpers';
+import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { ProductsClient } from '../../../httpclients/productsClient';
 import type { ProductDto } from '../../../types/product';
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
-import { isValidProduct } from '../../../helpers/productHelpers';
 
 test.describe('GET /api/v1/products API tests', () => {
   let productsClient: ProductsClient;
@@ -17,14 +19,12 @@ test.describe('GET /api/v1/products API tests', () => {
     const response = await productsClient.getProducts(authenticatedUser.token);
 
     // then
-    expect(response.status()).toBe(200);
-
-    const responseBody: ProductDto[] = await response.json();
+    const responseBody = await expectJsonResponse<ProductDto[]>(response, 200);
     expect(Array.isArray(responseBody)).toBe(true);
     expect(responseBody.length).toBeGreaterThan(0);
 
     for (const product of responseBody) {
-      isValidProduct(product)
+      isValidProduct(product);
     }
   });
 
@@ -35,21 +35,16 @@ test.describe('GET /api/v1/products API tests', () => {
     const response = await productsClient.getProducts();
 
     // then
-    expect(response.status()).toBe(401);
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Unauthorized');
+    await expectUnauthorized(response);
   });
 
   test('should return unauthorized when token is invalid - 401', async () => {
     // given
 
     // when
-    const response = await productsClient.getProducts('invalid-token');
+    const response = await productsClient.getProducts(INVALID_TOKEN);
 
     // then
-    expect(response.status()).toBe(401);
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Invalid or expired token');
+    await expectInvalidToken(response);
   });
 });
-

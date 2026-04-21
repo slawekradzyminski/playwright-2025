@@ -1,13 +1,9 @@
 import { expect, test } from '@playwright/test';
-import { TrafficClient } from '../../../httpclients/trafficClient';
 import { asRecord, findTrafficEntryEventually, postJson } from '../../../helpers/trafficHelpers';
-import {
-  invalidSigninPayload,
-  invalidSignupPayload,
-  trafficSessionId
-} from '../../../helpers/trafficTestData';
+import { invalidSigninPayload, invalidSignupPayload, trafficSessionId } from '../../../helpers/trafficTestData';
 import { SIGNIN_ENDPOINT } from '../../../httpclients/loginClient';
 import { SIGNUP_ENDPOINT } from '../../../httpclients/signupClient';
+import { TrafficClient } from '../../../httpclients/trafficClient';
 import type { PageDto, TrafficLogEntryDto } from '../../../types/traffic';
 
 test.describe('GET /api/v1/traffic/logs', () => {

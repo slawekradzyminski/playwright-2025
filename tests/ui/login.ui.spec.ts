@@ -1,9 +1,9 @@
 import { test } from '@playwright/test';
-import type { LoginDto } from '../../types/auth';
 import { ADMIN_PASSWORD } from '../../config/constants';
 import { HomePage } from '../../pages/homePage';
 import { LoginPage } from '../../pages/loginPage';
 import { RegisterPage } from '../../pages/registerPage';
+import type { LoginDto } from '../../types/auth';
 
 test.describe('Login UI tests', () => {
   let loginPage: LoginPage;
@@ -95,5 +95,4 @@ test.describe('Login UI tests', () => {
     await registerPage.assertThatUrlIs(RegisterPage.url);
     await registerPage.assertThatRegisterFormIsVisible();
   });
-
 });

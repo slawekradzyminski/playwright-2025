@@ -11,8 +11,7 @@ const LIMITS = {
   email: { max: 255 }
 } as const;
 
-const hasValidLength = (value: string, min: number, max: number): boolean =>
-  value.length >= min && value.length <= max;
+const hasValidLength = (value: string, min: number, max: number): boolean => value.length >= min && value.length <= max;
 
 const retryUntil = <T>(generator: () => T, predicate: (value: T) => boolean, label: string): T => {
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
@@ -27,17 +26,12 @@ const retryUntil = <T>(generator: () => T, predicate: (value: T) => boolean, lab
 };
 
 const generateName = (generator: () => string, label: 'firstName' | 'lastName'): string =>
-  retryUntil(
-    generator,
-    value => hasValidLength(value, LIMITS[label].min, LIMITS[label].max),
-    label
-  );
+  retryUntil(generator, (value) => hasValidLength(value, LIMITS[label].min, LIMITS[label].max), label);
 
 const generateUsername = (): string =>
   `${faker.string.alpha({ length: 8, casing: 'lower' })}${faker.string.numeric(6)}`;
 
-const generatePassword = (): string =>
-  faker.internet.password({ length: 16 });
+const generatePassword = (): string => faker.internet.password({ length: 16 });
 
 const generateEmail = (firstName: string, lastName: string): string =>
   retryUntil(
@@ -49,7 +43,7 @@ const generateEmail = (firstName: string, lastName: string): string =>
           provider: 'example.com'
         })
         .toLowerCase(),
-    value => value.length > 0 && value.length <= LIMITS.email.max,
+    (value) => value.length > 0 && value.length <= LIMITS.email.max,
     'email'
   );
 

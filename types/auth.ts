@@ -42,4 +42,4 @@ export interface UserResponseDto {
 export interface ErrorResponse {
   message?: string;
   errors?: Record<string, string[]>;
-} 
+}

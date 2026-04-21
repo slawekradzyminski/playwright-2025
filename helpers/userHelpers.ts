@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import type { UserResponseDto, UserRegisterDto } from '../types/auth';
+import type { UserRegisterDto, UserResponseDto } from '../types/auth';
 
 export const expectValidUserResponse = (responseBody: UserResponseDto, expectedUser: UserRegisterDto): void => {
   expect(responseBody.id).toEqual(expect.any(Number));

@@ -1,7 +1,8 @@
-import { test, expect } from '@playwright/test';
-import type { LoginDto, LoginResponseDto } from '../../../types/auth';
+import { expect, test } from '@playwright/test';
 import { ADMIN_PASSWORD } from '../../../config/constants';
+import { expectErrorMessage, expectJsonResponse } from '../../../helpers/apiAssertions';
 import { LoginClient } from '../../../httpclients/loginClient';
+import type { LoginDto, LoginResponseDto } from '../../../types/auth';
 
 test.describe('/api/v1/users/signin API tests', () => {
   let loginClient: LoginClient;
@@ -21,9 +22,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     const response = await loginClient.signin(loginData);
 
     // then
-    expect(response.status()).toBe(200);
-    
-    const responseBody: LoginResponseDto = await response.json();
+    const responseBody = await expectJsonResponse<LoginResponseDto>(response, 200);
     expect(responseBody.token).toBeDefined();
     expect(responseBody.token).toMatch(/^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/);
     expect(responseBody.username).toBe(loginData.username);
@@ -45,8 +44,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     const response = await loginClient.signin(loginData);
 
     // then
-    expect(response.status()).toBe(400);
-    const responseBody = await response.json();
+    const responseBody = await expectJsonResponse<{ username: string }>(response, 400);
     expect(responseBody.username).toBe('Minimum username length: 4 characters');
   });
 
@@ -61,8 +59,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     const response = await loginClient.signin(loginData);
 
     // then
-    expect(response.status()).toBe(400);
-    const responseBody = await response.json();
+    const responseBody = await expectJsonResponse<{ username: string }>(response, 400);
     expect(responseBody.username).toBe('Minimum username length: 4 characters');
   });
 
@@ -77,8 +74,7 @@ test.describe('/api/v1/users/signin API tests', () => {
     const response = await loginClient.signin(loginData);
 
     // then
-    expect(response.status()).toBe(400);
-    const responseBody = await response.json();
+    const responseBody = await expectJsonResponse<{ password: string }>(response, 400);
     expect(responseBody.password).toBe('Minimum password length: 4 characters');
   });
 
@@ -93,8 +89,6 @@ test.describe('/api/v1/users/signin API tests', () => {
     const response = await loginClient.signin(loginData);
 
     // then
-    expect(response.status()).toBe(422);
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Invalid username/password supplied');
+    await expectErrorMessage(response, 422, 'Invalid username/password supplied');
   });
-}); 
+});

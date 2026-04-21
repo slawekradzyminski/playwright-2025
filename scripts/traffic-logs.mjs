@@ -1,11 +1,11 @@
 #!/usr/bin/env node
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { parseArgs } from './lib/parseArgs.mjs';
 import { buildTrafficUrl } from './lib/buildTrafficUrl.mjs';
-import { renderMarkdown } from './lib/renderMarkdown.mjs';
+import { parseArgs } from './lib/parseArgs.mjs';
 import { redactTrafficLog } from './lib/redactTrafficLog.mjs';
+import { renderMarkdown } from './lib/renderMarkdown.mjs';
 import { fail, parseJson } from './lib/utils.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -45,4 +45,4 @@ async function main() {
   console.log(renderMarkdown(safePayload, args));
 }
 
-main().catch(error => fail(error instanceof Error ? error.message : String(error)));
+main().catch((error) => fail(error instanceof Error ? error.message : String(error)));

@@ -5,6 +5,7 @@
 - you can read server-side logs using `CLI_TRAFFIC_LOGS_UTILITY.md`
 - backend code is available in ../test-secure-backend
 - apply DRY rule, always try to extract common code to shared helpers, utilities, etc.
+- run static code analysis with autofix using `npm run check:fix` and fix any remaining issues before finishing work
 
 ## UI test rules
 - follow the patterns from `login.ui.spec.ts`, `loginPage.ts`, `toastComponent.ts`. Use page object model

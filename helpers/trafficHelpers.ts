@@ -1,6 +1,5 @@
-import { expect, type APIRequestContext } from '@playwright/test';
-import { APP_BASE_URL } from '../config/constants';
-import { CLIENT_SESSION_HEADER, TrafficClient } from '../httpclients/trafficClient';
+import { type APIRequestContext, expect } from '@playwright/test';
+import { CLIENT_SESSION_HEADER, type TrafficClient } from '../httpclients/trafficClient';
 import type { PageDto, TrafficLogEntryDto, TrafficLogsQuery } from '../types/traffic';
 
 export async function postJson(
@@ -9,7 +8,7 @@ export async function postJson(
   data: Record<string, string>,
   clientSessionId: string
 ) {
-  return request.post(`${APP_BASE_URL}${endpoint}`, {
+  return request.post(endpoint, {
     data,
     headers: {
       'Content-Type': 'application/json',
@@ -40,7 +39,7 @@ export async function findTrafficEntryEventually(
       return entry;
     }
 
-    await new Promise(resolve => setTimeout(resolve, intervalMs));
+    await new Promise((resolve) => setTimeout(resolve, intervalMs));
   }
 
   throw new Error(`Traffic entry was not captured in time. Last response: ${JSON.stringify(lastResponse ?? null)}`);

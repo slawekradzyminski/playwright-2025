@@ -1,5 +1,7 @@
-import { QrClient } from '../../../httpclients/qrClient';
 import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
+import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
+import { QrClient } from '../../../httpclients/qrClient';
 import type { CreateQrDto } from '../../../types/qr';
 
 const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
@@ -39,8 +41,7 @@ test.describe('POST /api/v1/qr/create API tests', () => {
     const response = await qrClient.createQr(createQrData, authenticatedUser.token);
 
     // then
-    expect(response.status()).toBe(400);
-    const responseBody = await response.json();
+    const responseBody = await expectJsonResponse<{ text: string }>(response, 400);
     expect(responseBody.text).toBe('Text is required');
   });
 
@@ -54,9 +55,7 @@ test.describe('POST /api/v1/qr/create API tests', () => {
     const response = await qrClient.createQr(createQrData);
 
     // then
-    expect(response.status()).toBe(401);
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Unauthorized');
+    await expectUnauthorized(response);
   });
 
   test('should return unauthorized when token is invalid - 401', async () => {
@@ -66,11 +65,9 @@ test.describe('POST /api/v1/qr/create API tests', () => {
     };
 
     // when
-    const response = await qrClient.createQr(createQrData, 'invalid-token');
+    const response = await qrClient.createQr(createQrData, INVALID_TOKEN);
 
     // then
-    expect(response.status()).toBe(401);
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Invalid or expired token');
+    await expectInvalidToken(response);
   });
 });

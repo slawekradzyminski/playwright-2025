@@ -1,9 +1,8 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import { APP_BASE_URL } from '../config/constants';
 import { BasePage } from './basePage';
 
 export class HomePage extends BasePage {
-  static readonly url = `${APP_BASE_URL}/`;
+  static readonly url = '/';
 
   private readonly welcomeTitle: Locator;
   private readonly userEmail: Locator;

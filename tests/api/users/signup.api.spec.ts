@@ -1,7 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { randomUser } from '../../../generators/userGenerator';
-import type { UserRegisterDto } from '../../../types/auth';
+import { expectErrorMessage, expectJsonResponse } from '../../../helpers/apiAssertions';
 import { SignupClient } from '../../../httpclients/signupClient';
+import type { UserRegisterDto } from '../../../types/auth';
 
 test.describe('/api/v1/users/signup API tests', () => {
   let signupClient: SignupClient;
@@ -32,9 +33,7 @@ test.describe('/api/v1/users/signup API tests', () => {
     const response = await signupClient.signup(userData);
 
     // then
-    expect(response.status()).toBe(400);
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Username is already in use');
+    await expectErrorMessage(response, 400, 'Username is already in use');
   });
 
   test('should return validation error for username too short - 400', async () => {
@@ -48,8 +47,7 @@ test.describe('/api/v1/users/signup API tests', () => {
     const response = await signupClient.signup(userData);
 
     // then
-    expect(response.status()).toBe(400);
-    const responseBody = await response.json();
+    const responseBody = await expectJsonResponse<{ username: string }>(response, 400);
     expect(responseBody.username).toBe('Minimum username length: 4 characters');
   });
 
@@ -64,8 +62,7 @@ test.describe('/api/v1/users/signup API tests', () => {
     const response = await signupClient.signup(userData);
 
     // then
-    expect(response.status()).toBe(400);
-    const responseBody = await response.json();
+    const responseBody = await expectJsonResponse<{ password: string }>(response, 400);
     expect(responseBody.password).toBe('Minimum password length: 8 characters');
   });
 
@@ -80,8 +77,7 @@ test.describe('/api/v1/users/signup API tests', () => {
     const response = await signupClient.signup(userData);
 
     // then
-    expect(response.status()).toBe(400);
-    const responseBody = await response.json();
+    const responseBody = await expectJsonResponse<{ email: string }>(response, 400);
     expect(responseBody.email).toBe('Email should be valid');
   });
 });

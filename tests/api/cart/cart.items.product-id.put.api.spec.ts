@@ -1,9 +1,11 @@
-import { CartClient } from '../../../httpclients/cartClient';
-import { ProductsClient } from '../../../httpclients/productsClient';
 import { expect, test } from '../../../fixtures/authenticatedUserFixture';
-import type { CartDto, CartItemDto, UpdateCartItemDto } from '../../../types/cart';
+import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { expectCartContainsItem, givenCartWithProduct, MISSING_PRODUCT_ID } from '../../../helpers/cartHelpers';
 import { getSeededProduct } from '../../../helpers/productHelpers';
+import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
+import { CartClient } from '../../../httpclients/cartClient';
+import { ProductsClient } from '../../../httpclients/productsClient';
+import type { CartDto, CartItemDto, UpdateCartItemDto } from '../../../types/cart';
 
 test.describe('PUT /api/v1/cart/items/{productId} API tests', () => {
   let cartClient: CartClient;
@@ -27,20 +29,20 @@ test.describe('PUT /api/v1/cart/items/{productId} API tests', () => {
       quantity: 3
     };
 
-    // when
-    const response = await cartClient.updateItem(product.id, updateCartItem, authenticatedUser.token);
+    try {
+      // when
+      const response = await cartClient.updateItem(product.id, updateCartItem, authenticatedUser.token);
 
-    // then
-    expect(response.status()).toBe(200);
-
-    const responseBody: CartDto = await response.json();
-    expectCartContainsItem(
-      responseBody,
-      { productId: product.id, quantity: updateCartItem.quantity },
-      authenticatedUser.userData.username
-    );
-
-    await cartClient.clearCart(authenticatedUser.token);
+      // then
+      const responseBody = await expectJsonResponse<CartDto>(response, 200);
+      expectCartContainsItem(
+        responseBody,
+        { productId: product.id, quantity: updateCartItem.quantity },
+        authenticatedUser.userData.username
+      );
+    } finally {
+      await cartClient.clearCart(authenticatedUser.token);
+    }
   });
 
   test('should return validation error when quantity is negative - 400', async ({ authenticatedUser }) => {
@@ -56,15 +58,16 @@ test.describe('PUT /api/v1/cart/items/{productId} API tests', () => {
       quantity: -1
     };
 
-    // when
-    const response = await cartClient.updateItem(product.id, updateCartItem, authenticatedUser.token);
+    try {
+      // when
+      const response = await cartClient.updateItem(product.id, updateCartItem, authenticatedUser.token);
 
-    // then
-    expect(response.status()).toBe(400);
-    const responseBody = await response.json();
-    expect(responseBody.quantity).toBe('Quantity cannot be negative');
-
-    await cartClient.clearCart(authenticatedUser.token);
+      // then
+      const responseBody = await expectJsonResponse<{ quantity: string }>(response, 400);
+      expect(responseBody.quantity).toBe('Quantity cannot be negative');
+    } finally {
+      await cartClient.clearCart(authenticatedUser.token);
+    }
   });
 
   test('should return unauthorized when token is missing - 401', async () => {
@@ -77,9 +80,7 @@ test.describe('PUT /api/v1/cart/items/{productId} API tests', () => {
     const response = await cartClient.updateItem(1, updateCartItem);
 
     // then
-    expect(response.status()).toBe(401);
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Unauthorized');
+    await expectUnauthorized(response);
   });
 
   test('should return unauthorized when token is invalid - 401', async () => {
@@ -89,12 +90,10 @@ test.describe('PUT /api/v1/cart/items/{productId} API tests', () => {
     };
 
     // when
-    const response = await cartClient.updateItem(1, updateCartItem, 'invalid-token');
+    const response = await cartClient.updateItem(1, updateCartItem, INVALID_TOKEN);
 
     // then
-    expect(response.status()).toBe(401);
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Invalid or expired token');
+    await expectInvalidToken(response);
   });
 
   test('should return not found when cart item does not exist - 404', async ({ authenticatedUser }) => {

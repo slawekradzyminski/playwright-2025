@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
-import { TrafficClient } from '../../../httpclients/trafficClient';
 import { findTrafficEntryEventually, postJson } from '../../../helpers/trafficHelpers';
 import { invalidSigninPayload, trafficSessionId } from '../../../helpers/trafficTestData';
 import { SIGNIN_ENDPOINT } from '../../../httpclients/loginClient';
+import { TrafficClient } from '../../../httpclients/trafficClient';
 import type { TrafficLogEntryDto } from '../../../types/traffic';
 
 const MISSING_CORRELATION_ID = '00000000-0000-0000-0000-000000000000';

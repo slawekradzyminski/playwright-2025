@@ -1,5 +1,7 @@
-import { CartClient } from '../../../httpclients/cartClient';
 import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expectInvalidToken, expectUnauthorized } from '../../../helpers/apiAssertions';
+import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
+import { CartClient } from '../../../httpclients/cartClient';
 
 test.describe('DELETE /api/v1/cart API tests', () => {
   let cartClient: CartClient;
@@ -25,20 +27,16 @@ test.describe('DELETE /api/v1/cart API tests', () => {
     const response = await cartClient.clearCart();
 
     // then
-    expect(response.status()).toBe(401);
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Unauthorized');
+    await expectUnauthorized(response);
   });
 
   test('should return unauthorized when token is invalid - 401', async () => {
     // given
 
     // when
-    const response = await cartClient.clearCart('invalid-token');
+    const response = await cartClient.clearCart(INVALID_TOKEN);
 
     // then
-    expect(response.status()).toBe(401);
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Invalid or expired token');
+    await expectInvalidToken(response);
   });
 });

@@ -1,12 +1,11 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import type { LoginDto } from '../types/auth';
-import { APP_BASE_URL } from '../config/constants';
 import { BasePage } from './basePage';
 import { LoggedOutHeaderComponent } from './components/loggedOutHeaderComponent';
 import { ToastComponent } from './components/toastComponent';
 
 export class LoginPage extends BasePage {
-  static readonly url = `${APP_BASE_URL}/login`;
+  static readonly url = '/login';
 
   readonly loggedOutHeader: LoggedOutHeaderComponent;
   readonly toast: ToastComponent;

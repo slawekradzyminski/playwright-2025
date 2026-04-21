@@ -1,5 +1,7 @@
-import { UsersClient } from '../../../httpclients/usersClient';
 import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expectErrorMessage, expectInvalidToken, expectUnauthorized } from '../../../helpers/apiAssertions';
+import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
+import { UsersClient } from '../../../httpclients/usersClient';
 
 test.describe('POST /api/v1/users/logout API tests', () => {
   let usersClient: UsersClient;
@@ -20,10 +22,7 @@ test.describe('POST /api/v1/users/logout API tests', () => {
     const refreshResponse = await usersClient.refresh({
       refreshToken: authenticatedUser.refreshToken
     });
-    expect(refreshResponse.status()).toBe(401);
-
-    const refreshResponseBody = await refreshResponse.json();
-    expect(refreshResponseBody.message).toBe('Invalid refresh token');
+    await expectErrorMessage(refreshResponse, 401, 'Invalid refresh token');
   });
 
   test('should return unauthorized when token is missing - 401', async () => {
@@ -33,22 +32,16 @@ test.describe('POST /api/v1/users/logout API tests', () => {
     const response = await usersClient.logout();
 
     // then
-    expect(response.status()).toBe(401);
-
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Unauthorized');
+    await expectUnauthorized(response);
   });
 
   test('should return unauthorized when token is invalid - 401', async () => {
     // given
 
     // when
-    const response = await usersClient.logout('invalid-token');
+    const response = await usersClient.logout(INVALID_TOKEN);
 
     // then
-    expect(response.status()).toBe(401);
-
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Invalid or expired token');
+    await expectInvalidToken(response);
   });
 });

@@ -1,6 +1,8 @@
+import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
+import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { UsersClient } from '../../../httpclients/usersClient';
 import type { EmailEventDto } from '../../../types/email';
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
 
 const VALID_EMAIL_EVENT_TYPES = ['GENERIC', 'PASSWORD_RESET_REQUESTED', 'PASSWORD_RESET_CONFIRMED'];
 const VALID_EMAIL_EVENT_STATUSES = ['QUEUED', 'SENT_TO_SMTP_SINK', 'FAILED'];
@@ -19,9 +21,7 @@ test.describe('GET /api/v1/users/me/email-events API tests', () => {
     const response = await usersClient.getMyEmailEvents(authenticatedUser.token);
 
     // then
-    expect(response.status()).toBe(200);
-
-    const responseBody: EmailEventDto[] = await response.json();
+    const responseBody = await expectJsonResponse<EmailEventDto[]>(response, 200);
     expect(Array.isArray(responseBody)).toBe(true);
 
     for (const event of responseBody) {
@@ -40,22 +40,16 @@ test.describe('GET /api/v1/users/me/email-events API tests', () => {
     const response = await usersClient.getMyEmailEvents();
 
     // then
-    expect(response.status()).toBe(401);
-
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Unauthorized');
+    await expectUnauthorized(response);
   });
 
   test('should return unauthorized when token is invalid - 401', async () => {
     // given
 
     // when
-    const response = await usersClient.getMyEmailEvents('invalid-token');
+    const response = await usersClient.getMyEmailEvents(INVALID_TOKEN);
 
     // then
-    expect(response.status()).toBe(401);
-
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Invalid or expired token');
+    await expectInvalidToken(response);
   });
 });

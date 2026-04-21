@@ -1,6 +1,8 @@
+import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
+import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { UsersClient } from '../../../httpclients/usersClient';
 import type { ChatSystemPromptDto } from '../../../types/systemPrompt';
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
 
 test.describe('GET /api/v1/users/chat-system-prompt API tests', () => {
   let usersClient: UsersClient;
@@ -16,9 +18,7 @@ test.describe('GET /api/v1/users/chat-system-prompt API tests', () => {
     const response = await usersClient.getChatSystemPrompt(authenticatedUser.token);
 
     // then
-    expect(response.status()).toBe(200);
-
-    const responseBody: ChatSystemPromptDto = await response.json();
+    const responseBody = await expectJsonResponse<ChatSystemPromptDto>(response, 200);
     expect(responseBody.chatSystemPrompt).toEqual(expect.any(String));
     expect(responseBody.chatSystemPrompt.length).toBeGreaterThan(0);
   });
@@ -30,22 +30,16 @@ test.describe('GET /api/v1/users/chat-system-prompt API tests', () => {
     const response = await usersClient.getChatSystemPrompt();
 
     // then
-    expect(response.status()).toBe(401);
-
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Unauthorized');
+    await expectUnauthorized(response);
   });
 
   test('should return unauthorized when token is invalid - 401', async () => {
     // given
 
     // when
-    const response = await usersClient.getChatSystemPrompt('invalid-token');
+    const response = await usersClient.getChatSystemPrompt(INVALID_TOKEN);
 
     // then
-    expect(response.status()).toBe(401);
-
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Invalid or expired token');
+    await expectInvalidToken(response);
   });
 });

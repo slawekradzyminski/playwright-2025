@@ -1,20 +1,11 @@
-import type { APIRequestContext, APIResponse } from '@playwright/test';
-import { APP_BASE_URL } from '../config/constants';
+import type { APIResponse } from '@playwright/test';
 import type { CreateQrDto } from '../types/qr';
-import { buildAuthHeaders } from './httpUtils';
+import { BaseApiClient } from './baseApiClient';
 
 export const QR_CREATE_ENDPOINT = '/api/v1/qr/create';
 
-export class QrClient {
-  constructor(private readonly request: APIRequestContext) {}
-
+export class QrClient extends BaseApiClient {
   async createQr(createQrData: CreateQrDto, token?: string): Promise<APIResponse> {
-    return this.request.post(`${APP_BASE_URL}${QR_CREATE_ENDPOINT}`, {
-      data: createQrData,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(buildAuthHeaders(token) ?? {})
-      }
-    });
+    return this.postJson(QR_CREATE_ENDPOINT, createQrData, token);
   }
 }

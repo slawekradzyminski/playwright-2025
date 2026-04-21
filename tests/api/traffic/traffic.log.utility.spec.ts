@@ -1,10 +1,10 @@
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { expect, test } from '@playwright/test';
-import { execFile } from 'child_process';
-import { promisify } from 'util';
-import { TrafficClient } from '../../../httpclients/trafficClient';
 import { asRecord, findTrafficEntryEventually, postJson } from '../../../helpers/trafficHelpers';
 import { invalidSigninPayload, trafficSessionId } from '../../../helpers/trafficTestData';
 import { SIGNIN_ENDPOINT } from '../../../httpclients/loginClient';
+import { TrafficClient } from '../../../httpclients/trafficClient';
 import type { TrafficLogEntryDto } from '../../../types/traffic';
 
 const execFileAsync = promisify(execFile);
@@ -23,7 +23,11 @@ test.describe('traffic logs utility', () => {
     const response = await postJson(request, SIGNIN_ENDPOINT, invalidSigninPayload(), clientSessionId);
     expect(response.status()).toBe(422);
 
-    await findTrafficEntryEventually(trafficClient, { clientSessionId, pathContains: 'signin', status: 422 }, entry => entry.path === SIGNIN_ENDPOINT);
+    await findTrafficEntryEventually(
+      trafficClient,
+      { clientSessionId, pathContains: 'signin', status: 422 },
+      (entry) => entry.path === SIGNIN_ENDPOINT
+    );
 
     // when
     const { stdout } = await execFileAsync(
@@ -48,7 +52,11 @@ test.describe('traffic logs utility', () => {
     const response = await postJson(request, SIGNIN_ENDPOINT, invalidSigninPayload(), clientSessionId);
     expect(response.status()).toBe(422);
 
-    const entry = await findTrafficEntryEventually(trafficClient, { clientSessionId, pathContains: 'signin', status: 422 }, logEntry => logEntry.path === SIGNIN_ENDPOINT);
+    const entry = await findTrafficEntryEventually(
+      trafficClient,
+      { clientSessionId, pathContains: 'signin', status: 422 },
+      (logEntry) => logEntry.path === SIGNIN_ENDPOINT
+    );
 
     // when
     const { stdout } = await execFileAsync(
@@ -68,4 +76,3 @@ test.describe('traffic logs utility', () => {
     expect(stdout).not.toContain(clientSessionId);
   });
 });
-

@@ -1,6 +1,7 @@
+import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expectErrorMessage, expectJsonResponse } from '../../../helpers/apiAssertions';
 import { UsersClient } from '../../../httpclients/usersClient';
 import type { TokenRefreshResponseDto } from '../../../types/auth';
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
 
 const JWT_REGEX = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/;
 
@@ -20,9 +21,7 @@ test.describe('POST /api/v1/users/refresh API tests', () => {
     });
 
     // then
-    expect(response.status()).toBe(200);
-
-    const responseBody: TokenRefreshResponseDto = await response.json();
+    const responseBody = await expectJsonResponse<TokenRefreshResponseDto>(response, 200);
     expect(responseBody.token).toMatch(JWT_REGEX);
     expect(responseBody.refreshToken).toEqual(expect.any(String));
     expect(responseBody.refreshToken).not.toBe(authenticatedUser.refreshToken);
@@ -35,9 +34,7 @@ test.describe('POST /api/v1/users/refresh API tests', () => {
     const response = await usersClient.refresh({});
 
     // then
-    expect(response.status()).toBe(400);
-
-    const responseBody = await response.json();
+    const responseBody = await expectJsonResponse<{ refreshToken: string }>(response, 400);
     expect(responseBody.refreshToken).toBe('must not be blank');
   });
 
@@ -50,10 +47,7 @@ test.describe('POST /api/v1/users/refresh API tests', () => {
     });
 
     // then
-    expect(response.status()).toBe(401);
-
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Invalid refresh token');
+    await expectErrorMessage(response, 401, 'Invalid refresh token');
   });
 
   test('should return unauthorized when refresh token was already rotated - 401', async ({ authenticatedUser }) => {
@@ -69,9 +63,6 @@ test.describe('POST /api/v1/users/refresh API tests', () => {
     });
 
     // then
-    expect(response.status()).toBe(401);
-
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Invalid refresh token');
+    await expectErrorMessage(response, 401, 'Invalid refresh token');
   });
 });

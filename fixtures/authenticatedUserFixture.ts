@@ -1,5 +1,6 @@
-import { expect, test as base } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import { randomUser } from '../generators/userGenerator';
+import { expectJsonResponse } from '../helpers/apiAssertions';
 import { LoginClient } from '../httpclients/loginClient';
 import { SignupClient } from '../httpclients/signupClient';
 import type { LoginResponseDto, UserRegisterDto } from '../types/auth';
@@ -28,9 +29,7 @@ export const test = base.extend<AuthenticatedUserFixture>({
       username: userData.username,
       password: userData.password
     });
-    expect(loginResponse.status()).toBe(200);
-
-    const loginResponseBody: LoginResponseDto = await loginResponse.json();
+    const loginResponseBody = await expectJsonResponse<LoginResponseDto>(loginResponse, 200);
 
     // this is returned to test using this fixture
     await use({

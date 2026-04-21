@@ -2,9 +2,7 @@ const TRAFFIC_LOGS_ENDPOINT = '/api/v1/traffic/logs';
 
 export function buildTrafficUrl(baseUrl, args) {
   const url = new URL(
-    args.correlationId
-      ? `${TRAFFIC_LOGS_ENDPOINT}/${encodeURIComponent(args.correlationId)}`
-      : TRAFFIC_LOGS_ENDPOINT,
+    args.correlationId ? `${TRAFFIC_LOGS_ENDPOINT}/${encodeURIComponent(args.correlationId)}` : TRAFFIC_LOGS_ENDPOINT,
     baseUrl
   );
 

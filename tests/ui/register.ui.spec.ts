@@ -1,8 +1,8 @@
 import { test } from '@playwright/test';
 import { randomUser } from '../../generators/userGenerator';
-import type { UserRegisterDto } from '../../types/auth';
 import { LoginPage } from '../../pages/loginPage';
 import { RegisterPage } from '../../pages/registerPage';
+import type { UserRegisterDto } from '../../types/auth';
 
 test.describe('Register UI tests', () => {
   let registerPage: RegisterPage;

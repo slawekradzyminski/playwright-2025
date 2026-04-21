@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
+import type { ProductsClient } from '../httpclients/productsClient';
 import type { ProductDto } from '../types/product';
-import { ProductsClient } from '../httpclients/productsClient';
+import { expectJsonResponse } from './apiAssertions';
 
 export const isValidProduct = (product: ProductDto): void => {
   expect(product.id).toEqual(expect.any(Number));
@@ -16,9 +17,7 @@ export const isValidProduct = (product: ProductDto): void => {
 
 export const getSeededProduct = async (productsClient: ProductsClient, token: string): Promise<ProductDto> => {
   const productsResponse = await productsClient.getProducts(token);
-  expect(productsResponse.status()).toBe(200);
-
-  const products: ProductDto[] = await productsResponse.json();
+  const products = await expectJsonResponse<ProductDto[]>(productsResponse, 200);
   expect(products.length).toBeGreaterThan(0);
 
   return products[0];

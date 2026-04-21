@@ -6,6 +6,13 @@
     "test": "playwright test",
     "test:api": "playwright test tests/api/",
     "test:ui": "playwright test tests/ui/",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome lint .",
+    "format": "biome format . --write",
+    "format:check": "biome format .",
+    "check": "biome check .",
+    "check:fix": "biome check . --write --unsafe && tsc --noEmit",
+    "check:ci": "npm run typecheck && npm run check && npm test",
     "traffic:logs": "node scripts/traffic-logs.mjs"
   },
   "keywords": [
@@ -18,6 +25,7 @@
   "license": "ISC",
   "description": "A modern TypeScript-based test suite for validating both API and UI layers of a Dockerized AWS-like application stack",
   "devDependencies": {
+    "@biomejs/biome": "^2.4.12",
     "@faker-js/faker": "^10.4.0",
     "@playwright/test": "^1.59.1",
     "@types/node": "^25.5.2",

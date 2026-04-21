@@ -1,7 +1,9 @@
+import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
+import { expectValidUserResponse } from '../../../helpers/userHelpers';
+import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { UsersClient } from '../../../httpclients/usersClient';
 import type { UserResponseDto } from '../../../types/auth';
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
-import { expectValidUserResponse } from '../../../helpers/userHelpers';
 
 test.describe('GET /api/v1/users API tests', () => {
   let usersClient: UsersClient;
@@ -17,15 +19,16 @@ test.describe('GET /api/v1/users API tests', () => {
     const response = await usersClient.getUsers(authenticatedUser.token);
 
     // then
-    expect(response.status()).toBe(200);
-
-    const responseBody: UserResponseDto[] = await response.json();
+    const responseBody = await expectJsonResponse<UserResponseDto[]>(response, 200);
     expect(Array.isArray(responseBody)).toBe(true);
     expect(responseBody.length).toBeGreaterThan(0);
 
-    const currentUser = responseBody.find(user => user.username === authenticatedUser.userData.username);
-    expect(currentUser).toBeDefined();
-    expectValidUserResponse(currentUser!, authenticatedUser.userData);
+    const currentUser = responseBody.find((user) => user.username === authenticatedUser.userData.username);
+    if (currentUser === undefined) {
+      throw new Error(`Current user ${authenticatedUser.userData.username} was not found in users response`);
+    }
+
+    expectValidUserResponse(currentUser, authenticatedUser.userData);
   });
 
   test('should return unauthorized when token is missing - 401', async () => {
@@ -35,22 +38,16 @@ test.describe('GET /api/v1/users API tests', () => {
     const response = await usersClient.getUsers();
 
     // then
-    expect(response.status()).toBe(401);
-
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Unauthorized');
+    await expectUnauthorized(response);
   });
 
   test('should return unauthorized when token is invalid - 401', async () => {
     // given
 
     // when
-    const response = await usersClient.getUsers('invalid-token');
+    const response = await usersClient.getUsers(INVALID_TOKEN);
 
     // then
-    expect(response.status()).toBe(401);
-
-    const responseBody = await response.json();
-    expect(responseBody.message).toBe('Invalid or expired token');
+    await expectInvalidToken(response);
   });
 });

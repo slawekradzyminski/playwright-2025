@@ -22,7 +22,10 @@ function renderListMarkdown(page, args) {
   }
 
   page.content.forEach((entry, index) => {
-    lines.push('', renderEntryMarkdown(entry, args, `## ${index + 1}. ${entry.method} ${entry.path} -> ${entry.status}`));
+    lines.push(
+      '',
+      renderEntryMarkdown(entry, args, `## ${index + 1}. ${entry.method} ${entry.path} -> ${entry.status}`)
+    );
   });
 
   return lines.join('\n');
