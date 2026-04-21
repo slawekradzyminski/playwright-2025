@@ -11,7 +11,7 @@
 - initialize tested page object in `test.beforeEach`
 - always run newly created tests to make sure they work and then full ui test suite via `npm run test:ui`
 - explore how given page looks like using `playwright-cli` and Playwright CLI Skill available in repository
-- each screen should have tets in a separate file
+- each screen should have tests in a separate file
 - prefer `data-testid` selectors if present
 
 ## API test rules
