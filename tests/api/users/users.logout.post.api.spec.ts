@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectErrorMessage, expectInvalidToken, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { UsersClient } from '../../../httpclients/usersClient';
@@ -10,17 +10,17 @@ test.describe('POST /api/v1/users/logout API tests', () => {
     usersClient = new UsersClient(request);
   });
 
-  test('should logout user and invalidate existing refresh tokens - 200', async ({ authenticatedUser }) => {
+  test('should logout user and invalidate existing refresh tokens - 200', async ({ authenticatedApiUser }) => {
     // given
 
     // when
-    const response = await usersClient.logout(authenticatedUser.token);
+    const response = await usersClient.logout(authenticatedApiUser.token);
 
     // then
     expect(response.status()).toBe(200);
 
     const refreshResponse = await usersClient.refresh({
-      refreshToken: authenticatedUser.refreshToken
+      refreshToken: authenticatedApiUser.refreshToken
     });
     await expectErrorMessage(refreshResponse, 401, 'Invalid refresh token');
   });

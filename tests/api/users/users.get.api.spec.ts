@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { expectValidUserResponse } from '../../../helpers/userHelpers';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
@@ -12,23 +12,23 @@ test.describe('GET /api/v1/users API tests', () => {
     usersClient = new UsersClient(request);
   });
 
-  test('should return all users for authenticated user - 200', async ({ authenticatedUser }) => {
+  test('should return all users for authenticated user - 200', async ({ authenticatedApiUser }) => {
     // given
 
     // when
-    const response = await usersClient.getUsers(authenticatedUser.token);
+    const response = await usersClient.getUsers(authenticatedApiUser.token);
 
     // then
     const responseBody = await expectJsonResponse<UserResponseDto[]>(response, 200);
     expect(Array.isArray(responseBody)).toBe(true);
     expect(responseBody.length).toBeGreaterThan(0);
 
-    const currentUser = responseBody.find((user) => user.username === authenticatedUser.userData.username);
+    const currentUser = responseBody.find((user) => user.username === authenticatedApiUser.userData.username);
     if (currentUser === undefined) {
-      throw new Error(`Current user ${authenticatedUser.userData.username} was not found in users response`);
+      throw new Error(`Current user ${authenticatedApiUser.userData.username} was not found in users response`);
     }
 
-    expectValidUserResponse(currentUser, authenticatedUser.userData);
+    expectValidUserResponse(currentUser, authenticatedApiUser.userData);
   });
 
   test('should return unauthorized when token is missing - 401', async () => {

@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectErrorMessage, expectJsonResponse } from '../../../helpers/apiAssertions';
 import { UsersClient } from '../../../httpclients/usersClient';
 import type { TokenRefreshResponseDto } from '../../../types/auth';
@@ -12,19 +12,19 @@ test.describe('POST /api/v1/users/refresh API tests', () => {
     usersClient = new UsersClient(request);
   });
 
-  test('should refresh access and refresh tokens - 200', async ({ authenticatedUser }) => {
+  test('should refresh access and refresh tokens - 200', async ({ authenticatedApiUser }) => {
     // given
 
     // when
     const response = await usersClient.refresh({
-      refreshToken: authenticatedUser.refreshToken
+      refreshToken: authenticatedApiUser.refreshToken
     });
 
     // then
     const responseBody = await expectJsonResponse<TokenRefreshResponseDto>(response, 200);
     expect(responseBody.token).toMatch(JWT_REGEX);
     expect(responseBody.refreshToken).toEqual(expect.any(String));
-    expect(responseBody.refreshToken).not.toBe(authenticatedUser.refreshToken);
+    expect(responseBody.refreshToken).not.toBe(authenticatedApiUser.refreshToken);
   });
 
   test('should return validation error when refresh token is missing - 400', async () => {
@@ -50,16 +50,16 @@ test.describe('POST /api/v1/users/refresh API tests', () => {
     await expectErrorMessage(response, 401, 'Invalid refresh token');
   });
 
-  test('should return unauthorized when refresh token was already rotated - 401', async ({ authenticatedUser }) => {
+  test('should return unauthorized when refresh token was already rotated - 401', async ({ authenticatedApiUser }) => {
     // given
     const firstResponse = await usersClient.refresh({
-      refreshToken: authenticatedUser.refreshToken
+      refreshToken: authenticatedApiUser.refreshToken
     });
     expect(firstResponse.status()).toBe(200);
 
     // when
     const response = await usersClient.refresh({
-      refreshToken: authenticatedUser.refreshToken
+      refreshToken: authenticatedApiUser.refreshToken
     });
 
     // then

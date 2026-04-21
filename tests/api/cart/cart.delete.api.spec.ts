@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { CartClient } from '../../../httpclients/cartClient';
@@ -10,11 +10,11 @@ test.describe('DELETE /api/v1/cart API tests', () => {
     cartClient = new CartClient(request);
   });
 
-  test('should clear current user cart - 204', async ({ authenticatedUser }) => {
+  test('should clear current user cart - 204', async ({ authenticatedApiUser }) => {
     // given
 
     // when
-    const response = await cartClient.clearCart(authenticatedUser.token);
+    const response = await cartClient.clearCart(authenticatedApiUser.token);
 
     // then
     expect(response.status()).toBe(204);

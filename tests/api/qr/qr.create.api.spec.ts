@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { QrClient } from '../../../httpclients/qrClient';
@@ -13,14 +13,14 @@ test.describe('POST /api/v1/qr/create API tests', () => {
     qrClient = new QrClient(request);
   });
 
-  test('should generate QR code as PNG image - 200', async ({ authenticatedUser }) => {
+  test('should generate QR code as PNG image - 200', async ({ authenticatedApiUser }) => {
     // given
     const createQrData: CreateQrDto = {
       text: 'https://awesome-testing.com'
     };
 
     // when
-    const response = await qrClient.createQr(createQrData, authenticatedUser.token);
+    const response = await qrClient.createQr(createQrData, authenticatedApiUser.token);
 
     // then
     expect(response.status()).toBe(200);
@@ -31,14 +31,14 @@ test.describe('POST /api/v1/qr/create API tests', () => {
     expect(responseBody.subarray(0, PNG_SIGNATURE.length)).toEqual(PNG_SIGNATURE);
   });
 
-  test('should return validation error when text is empty - 400', async ({ authenticatedUser }) => {
+  test('should return validation error when text is empty - 400', async ({ authenticatedApiUser }) => {
     // given
     const createQrData: CreateQrDto = {
       text: ''
     };
 
     // when
-    const response = await qrClient.createQr(createQrData, authenticatedUser.token);
+    const response = await qrClient.createQr(createQrData, authenticatedApiUser.token);
 
     // then
     const responseBody = await expectJsonResponse<{ text: string }>(response, 400);

@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { isValidProduct } from '../../../helpers/productHelpers';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
@@ -12,11 +12,11 @@ test.describe('GET /api/v1/products API tests', () => {
     productsClient = new ProductsClient(request);
   });
 
-  test('should return all products for authenticated user - 200', async ({ authenticatedUser }) => {
+  test('should return all products for authenticated user - 200', async ({ authenticatedApiUser }) => {
     // given
 
     // when
-    const response = await productsClient.getProducts(authenticatedUser.token);
+    const response = await productsClient.getProducts(authenticatedApiUser.token);
 
     // then
     const responseBody = await expectJsonResponse<ProductDto[]>(response, 200);

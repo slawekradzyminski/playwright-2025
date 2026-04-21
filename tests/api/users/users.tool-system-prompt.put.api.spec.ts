@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { UsersClient } from '../../../httpclients/usersClient';
@@ -11,38 +11,38 @@ test.describe('PUT /api/v1/users/tool-system-prompt API tests', () => {
     usersClient = new UsersClient(request);
   });
 
-  test('should update current user tool system prompt - 200', async ({ authenticatedUser }) => {
+  test('should update current user tool system prompt - 200', async ({ authenticatedApiUser }) => {
     // given
     const prompt: ToolSystemPromptDto = {
       toolSystemPrompt: `Updated tool prompt ${Date.now()}`
     };
-    const initialResponse = await usersClient.getToolSystemPrompt(authenticatedUser.token);
+    const initialResponse = await usersClient.getToolSystemPrompt(authenticatedApiUser.token);
     const initialPrompt = await expectJsonResponse<ToolSystemPromptDto>(initialResponse, 200);
 
     try {
       // when
-      const response = await usersClient.updateToolSystemPrompt(prompt, authenticatedUser.token);
+      const response = await usersClient.updateToolSystemPrompt(prompt, authenticatedApiUser.token);
 
       // then
       const responseBody = await expectJsonResponse<ToolSystemPromptDto>(response, 200);
       expect(responseBody.toolSystemPrompt).toBe(prompt.toolSystemPrompt);
 
-      const getResponse = await usersClient.getToolSystemPrompt(authenticatedUser.token);
+      const getResponse = await usersClient.getToolSystemPrompt(authenticatedApiUser.token);
       const getResponseBody = await expectJsonResponse<ToolSystemPromptDto>(getResponse, 200);
       expect(getResponseBody.toolSystemPrompt).toBe(prompt.toolSystemPrompt);
     } finally {
-      await usersClient.updateToolSystemPrompt(initialPrompt, authenticatedUser.token);
+      await usersClient.updateToolSystemPrompt(initialPrompt, authenticatedApiUser.token);
     }
   });
 
-  test('should return validation error when tool system prompt is too long - 400', async ({ authenticatedUser }) => {
+  test('should return validation error when tool system prompt is too long - 400', async ({ authenticatedApiUser }) => {
     // given
     const prompt: ToolSystemPromptDto = {
       toolSystemPrompt: 'a'.repeat(5001)
     };
 
     // when
-    const response = await usersClient.updateToolSystemPrompt(prompt, authenticatedUser.token);
+    const response = await usersClient.updateToolSystemPrompt(prompt, authenticatedApiUser.token);
 
     // then
     const responseBody = await expectJsonResponse<{ toolSystemPrompt: string }>(response, 400);

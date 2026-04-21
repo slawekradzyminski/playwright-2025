@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { CartClient } from '../../../httpclients/cartClient';
@@ -11,15 +11,15 @@ test.describe('GET /api/v1/cart API tests', () => {
     cartClient = new CartClient(request);
   });
 
-  test('should return current user cart - 200', async ({ authenticatedUser }) => {
+  test('should return current user cart - 200', async ({ authenticatedApiUser }) => {
     // given
 
     // when
-    const response = await cartClient.getCart(authenticatedUser.token);
+    const response = await cartClient.getCart(authenticatedApiUser.token);
 
     // then
     const responseBody = await expectJsonResponse<CartDto>(response, 200);
-    expect(responseBody.username).toBe(authenticatedUser.userData.username);
+    expect(responseBody.username).toBe(authenticatedApiUser.userData.username);
     expect(Array.isArray(responseBody.items)).toBe(true);
     expect(responseBody.totalPrice).toEqual(expect.any(Number));
     expect(responseBody.totalItems).toEqual(expect.any(Number));

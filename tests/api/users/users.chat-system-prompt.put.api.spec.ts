@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { UsersClient } from '../../../httpclients/usersClient';
@@ -11,38 +11,38 @@ test.describe('PUT /api/v1/users/chat-system-prompt API tests', () => {
     usersClient = new UsersClient(request);
   });
 
-  test('should update current user chat system prompt - 200', async ({ authenticatedUser }) => {
+  test('should update current user chat system prompt - 200', async ({ authenticatedApiUser }) => {
     // given
     const prompt: ChatSystemPromptDto = {
       chatSystemPrompt: `Updated chat prompt ${Date.now()}`
     };
-    const initialResponse = await usersClient.getChatSystemPrompt(authenticatedUser.token);
+    const initialResponse = await usersClient.getChatSystemPrompt(authenticatedApiUser.token);
     const initialPrompt = await expectJsonResponse<ChatSystemPromptDto>(initialResponse, 200);
 
     try {
       // when
-      const response = await usersClient.updateChatSystemPrompt(prompt, authenticatedUser.token);
+      const response = await usersClient.updateChatSystemPrompt(prompt, authenticatedApiUser.token);
 
       // then
       const responseBody = await expectJsonResponse<ChatSystemPromptDto>(response, 200);
       expect(responseBody.chatSystemPrompt).toBe(prompt.chatSystemPrompt);
 
-      const getResponse = await usersClient.getChatSystemPrompt(authenticatedUser.token);
+      const getResponse = await usersClient.getChatSystemPrompt(authenticatedApiUser.token);
       const getResponseBody = await expectJsonResponse<ChatSystemPromptDto>(getResponse, 200);
       expect(getResponseBody.chatSystemPrompt).toBe(prompt.chatSystemPrompt);
     } finally {
-      await usersClient.updateChatSystemPrompt(initialPrompt, authenticatedUser.token);
+      await usersClient.updateChatSystemPrompt(initialPrompt, authenticatedApiUser.token);
     }
   });
 
-  test('should return validation error when chat system prompt is too long - 400', async ({ authenticatedUser }) => {
+  test('should return validation error when chat system prompt is too long - 400', async ({ authenticatedApiUser }) => {
     // given
     const prompt: ChatSystemPromptDto = {
       chatSystemPrompt: 'a'.repeat(5001)
     };
 
     // when
-    const response = await usersClient.updateChatSystemPrompt(prompt, authenticatedUser.token);
+    const response = await usersClient.updateChatSystemPrompt(prompt, authenticatedApiUser.token);
 
     // then
     const responseBody = await expectJsonResponse<{ chatSystemPrompt: string }>(response, 400);

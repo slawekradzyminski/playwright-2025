@@ -15,9 +15,18 @@ export class HomePage extends BasePage {
     this.productsButton = page.getByTestId('home-products-button');
   }
 
-  async assertThatHomePageIsVisible(): Promise<void> {
-    await expect(this.welcomeTitle).toContainText('Welcome');
-    await expect(this.userEmail).toHaveText('awesome@testing.com');
+  async open(): Promise<void> {
+    await this.page.goto(HomePage.url);
+  }
+
+  async assertThatHomePageIsVisible(
+    expectedUserEmail = 'awesome@testing.com',
+    expectedFirstName?: string
+  ): Promise<void> {
+    const expectedWelcomeText = expectedFirstName ? `Welcome, ${expectedFirstName}!` : 'Welcome';
+
+    await expect(this.welcomeTitle).toContainText(expectedWelcomeText);
+    await expect(this.userEmail).toHaveText(expectedUserEmail);
     await expect(this.productsButton).toBeVisible();
   }
 }

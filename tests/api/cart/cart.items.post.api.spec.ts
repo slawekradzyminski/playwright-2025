@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { expectCartContainsItem, MISSING_PRODUCT_ID } from '../../../helpers/cartHelpers';
 import { getSeededProduct } from '../../../helpers/productHelpers';
@@ -16,10 +16,10 @@ test.describe('POST /api/v1/cart/items API tests', () => {
     productsClient = new ProductsClient(request);
   });
 
-  test('should add existing product to cart - 200', async ({ authenticatedUser }) => {
+  test('should add existing product to cart - 200', async ({ authenticatedApiUser }) => {
     // given
-    const product = await getSeededProduct(productsClient, authenticatedUser.token);
-    await cartClient.clearCart(authenticatedUser.token);
+    const product = await getSeededProduct(productsClient, authenticatedApiUser.token);
+    await cartClient.clearCart(authenticatedApiUser.token);
     const cartItem: CartItemDto = {
       productId: product.id,
       quantity: 2
@@ -27,26 +27,26 @@ test.describe('POST /api/v1/cart/items API tests', () => {
 
     try {
       // when
-      const response = await cartClient.addItem(cartItem, authenticatedUser.token);
+      const response = await cartClient.addItem(cartItem, authenticatedApiUser.token);
 
       // then
       const responseBody = await expectJsonResponse<CartDto>(response, 200);
-      expectCartContainsItem(responseBody, cartItem, authenticatedUser.userData.username);
+      expectCartContainsItem(responseBody, cartItem, authenticatedApiUser.userData.username);
     } finally {
-      await cartClient.clearCart(authenticatedUser.token);
+      await cartClient.clearCart(authenticatedApiUser.token);
     }
   });
 
-  test('should return validation error when quantity is zero - 400', async ({ authenticatedUser }) => {
+  test('should return validation error when quantity is zero - 400', async ({ authenticatedApiUser }) => {
     // given
-    const product = await getSeededProduct(productsClient, authenticatedUser.token);
+    const product = await getSeededProduct(productsClient, authenticatedApiUser.token);
     const cartItem: CartItemDto = {
       productId: product.id,
       quantity: 0
     };
 
     // when
-    const response = await cartClient.addItem(cartItem, authenticatedUser.token);
+    const response = await cartClient.addItem(cartItem, authenticatedApiUser.token);
 
     // then
     expect(response.status()).toBe(400);
@@ -82,7 +82,7 @@ test.describe('POST /api/v1/cart/items API tests', () => {
     await expectInvalidToken(response);
   });
 
-  test('should return not found when product does not exist - 404', async ({ authenticatedUser }) => {
+  test('should return not found when product does not exist - 404', async ({ authenticatedApiUser }) => {
     // given
     const cartItem: CartItemDto = {
       productId: MISSING_PRODUCT_ID,
@@ -90,7 +90,7 @@ test.describe('POST /api/v1/cart/items API tests', () => {
     };
 
     // when
-    const response = await cartClient.addItem(cartItem, authenticatedUser.token);
+    const response = await cartClient.addItem(cartItem, authenticatedApiUser.token);
 
     // then
     expect(response.status()).toBe(404);

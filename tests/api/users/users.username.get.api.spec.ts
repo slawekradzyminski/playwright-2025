@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { expectValidUserResponse } from '../../../helpers/userHelpers';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
@@ -12,15 +12,18 @@ test.describe('GET /api/v1/users/{username} API tests', () => {
     usersClient = new UsersClient(request);
   });
 
-  test('should return user by username - 200', async ({ authenticatedUser }) => {
+  test('should return user by username - 200', async ({ authenticatedApiUser }) => {
     // given
 
     // when
-    const response = await usersClient.getUserByUsername(authenticatedUser.userData.username, authenticatedUser.token);
+    const response = await usersClient.getUserByUsername(
+      authenticatedApiUser.userData.username,
+      authenticatedApiUser.token
+    );
 
     // then
     const responseBody = await expectJsonResponse<UserResponseDto>(response, 200);
-    expectValidUserResponse(responseBody, authenticatedUser.userData);
+    expectValidUserResponse(responseBody, authenticatedApiUser.userData);
   });
 
   test('should return unauthorized when token is missing - 401', async () => {
@@ -43,12 +46,12 @@ test.describe('GET /api/v1/users/{username} API tests', () => {
     await expectInvalidToken(response);
   });
 
-  test('should return not found when user does not exist - 404', async ({ authenticatedUser }) => {
+  test('should return not found when user does not exist - 404', async ({ authenticatedApiUser }) => {
     // given
     const missingUsername = `missing-user-${Date.now()}`;
 
     // when
-    const response = await usersClient.getUserByUsername(missingUsername, authenticatedUser.token);
+    const response = await usersClient.getUserByUsername(missingUsername, authenticatedApiUser.token);
 
     // then
     expect(response.status()).toBe(404);

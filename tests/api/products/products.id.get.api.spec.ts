@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { isValidProduct } from '../../../helpers/productHelpers';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
@@ -12,15 +12,15 @@ test.describe('GET /api/v1/products/{id} API tests', () => {
     productsClient = new ProductsClient(request);
   });
 
-  test('should return product by id for authenticated user - 200', async ({ authenticatedUser }) => {
+  test('should return product by id for authenticated user - 200', async ({ authenticatedApiUser }) => {
     // given
-    const productsResponse = await productsClient.getProducts(authenticatedUser.token);
+    const productsResponse = await productsClient.getProducts(authenticatedApiUser.token);
     const products = await expectJsonResponse<ProductDto[]>(productsResponse, 200);
     expect(products.length).toBeGreaterThan(0);
     const existingProduct = products[0];
 
     // when
-    const response = await productsClient.getProductById(existingProduct.id, authenticatedUser.token);
+    const response = await productsClient.getProductById(existingProduct.id, authenticatedApiUser.token);
 
     // then
     const responseBody = await expectJsonResponse<ProductDto>(response, 200);
@@ -48,12 +48,12 @@ test.describe('GET /api/v1/products/{id} API tests', () => {
     await expectInvalidToken(response);
   });
 
-  test('should return not found when product does not exist - 404', async ({ authenticatedUser }) => {
+  test('should return not found when product does not exist - 404', async ({ authenticatedApiUser }) => {
     // given
     const missingProductId = 999999;
 
     // when
-    const response = await productsClient.getProductById(missingProductId, authenticatedUser.token);
+    const response = await productsClient.getProductById(missingProductId, authenticatedApiUser.token);
 
     // then
     expect(response.status()).toBe(404);

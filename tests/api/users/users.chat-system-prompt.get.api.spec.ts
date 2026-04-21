@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { UsersClient } from '../../../httpclients/usersClient';
@@ -11,11 +11,11 @@ test.describe('GET /api/v1/users/chat-system-prompt API tests', () => {
     usersClient = new UsersClient(request);
   });
 
-  test('should return current user chat system prompt - 200', async ({ authenticatedUser }) => {
+  test('should return current user chat system prompt - 200', async ({ authenticatedApiUser }) => {
     // given
 
     // when
-    const response = await usersClient.getChatSystemPrompt(authenticatedUser.token);
+    const response = await usersClient.getChatSystemPrompt(authenticatedApiUser.token);
 
     // then
     const responseBody = await expectJsonResponse<ChatSystemPromptDto>(response, 200);

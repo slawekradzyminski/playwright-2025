@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { UsersClient } from '../../../httpclients/usersClient';
@@ -14,11 +14,11 @@ test.describe('GET /api/v1/users/me/email-events API tests', () => {
     usersClient = new UsersClient(request);
   });
 
-  test('should return current user email events - 200', async ({ authenticatedUser }) => {
+  test('should return current user email events - 200', async ({ authenticatedApiUser }) => {
     // given
 
     // when
-    const response = await usersClient.getMyEmailEvents(authenticatedUser.token);
+    const response = await usersClient.getMyEmailEvents(authenticatedApiUser.token);
 
     // then
     const responseBody = await expectJsonResponse<EmailEventDto[]>(response, 200);

@@ -1,4 +1,4 @@
-import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expect, test } from '../../../fixtures/authenticatedApiUserFixture';
 import { expectInvalidToken, expectJsonResponse, expectUnauthorized } from '../../../helpers/apiAssertions';
 import { INVALID_TOKEN } from '../../../httpclients/baseApiClient';
 import { OllamaClient } from '../../../httpclients/ollamaClient';
@@ -11,11 +11,11 @@ test.describe('GET /api/v1/ollama/chat/tools/definitions API tests', () => {
     ollamaClient = new OllamaClient(request);
   });
 
-  test('should return Ollama tool definitions - 200', async ({ authenticatedUser }) => {
+  test('should return Ollama tool definitions - 200', async ({ authenticatedApiUser }) => {
     // given
 
     // when
-    const response = await ollamaClient.getToolDefinitions(authenticatedUser.token);
+    const response = await ollamaClient.getToolDefinitions(authenticatedApiUser.token);
 
     // then
     const responseBody = await expectJsonResponse<OllamaToolDefinitionDto[]>(response, 200);
