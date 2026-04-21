@@ -4,9 +4,14 @@ import { ADMIN_PASSWORD } from '../../../config/constants';
 import { LoginClient } from '../../../httpclients/loginClient';
 
 test.describe('/api/v1/users/signin API tests', () => {
-  test('should successfully authenticate with valid credentials - 200', async ({ request }) => {
+  let loginClient: LoginClient;
+
+  test.beforeEach(async ({ request }) => {
+    loginClient = new LoginClient(request);
+  });
+
+  test('should successfully authenticate with valid credentials - 200', async () => {
     // given
-    const loginClient = new LoginClient(request);
     const loginData: LoginDto = {
       username: 'admin',
       password: ADMIN_PASSWORD
@@ -29,9 +34,8 @@ test.describe('/api/v1/users/signin API tests', () => {
     expect(Array.isArray(responseBody.roles)).toBe(true);
   });
 
-  test('should return validation error for empty username - 400', async ({ request }) => {
+  test('should return validation error for empty username - 400', async () => {
     // given
-    const loginClient = new LoginClient(request);
     const loginData: LoginDto = {
       username: '',
       password: ADMIN_PASSWORD
@@ -46,9 +50,8 @@ test.describe('/api/v1/users/signin API tests', () => {
     expect(responseBody.username).toBe('Minimum username length: 4 characters');
   });
 
-  test('should return validation error for username too short - 400', async ({ request }) => {
+  test('should return validation error for username too short - 400', async () => {
     // given
-    const loginClient = new LoginClient(request);
     const loginData: LoginDto = {
       username: 'abc',
       password: ADMIN_PASSWORD
@@ -63,9 +66,8 @@ test.describe('/api/v1/users/signin API tests', () => {
     expect(responseBody.username).toBe('Minimum username length: 4 characters');
   });
 
-  test('should return validation error for password too short - 400', async ({ request }) => {
+  test('should return validation error for password too short - 400', async () => {
     // given
-    const loginClient = new LoginClient(request);
     const loginData: LoginDto = {
       username: 'admin',
       password: 'abc'
@@ -80,9 +82,8 @@ test.describe('/api/v1/users/signin API tests', () => {
     expect(responseBody.password).toBe('Minimum password length: 4 characters');
   });
 
-  test('should return authentication error for both invalid credentials - 422', async ({ request }) => {
+  test('should return authentication error for both invalid credentials - 422', async () => {
     // given
-    const loginClient = new LoginClient(request);
     const loginData: LoginDto = {
       username: 'wronguser',
       password: 'wrongpassword'

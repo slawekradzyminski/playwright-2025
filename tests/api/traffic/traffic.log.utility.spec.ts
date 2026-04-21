@@ -10,9 +10,14 @@ import type { TrafficLogEntryDto } from '../../../types/traffic';
 const execFileAsync = promisify(execFile);
 
 test.describe('traffic logs utility', () => {
+  let trafficClient: TrafficClient;
+
+  test.beforeEach(async ({ request }) => {
+    trafficClient = new TrafficClient(request);
+  });
+
   test('should render AI-friendly markdown with redacted sensitive fields', async ({ request }, testInfo) => {
     // given
-    const trafficClient = new TrafficClient(request);
     const clientSessionId = trafficSessionId(testInfo.title);
 
     const response = await postJson(request, SIGNIN_ENDPOINT, invalidSigninPayload(), clientSessionId);
@@ -38,7 +43,6 @@ test.describe('traffic logs utility', () => {
 
   test('should render redacted JSON for a correlation id', async ({ request }, testInfo) => {
     // given
-    const trafficClient = new TrafficClient(request);
     const clientSessionId = trafficSessionId(testInfo.title);
 
     const response = await postJson(request, SIGNIN_ENDPOINT, invalidSigninPayload(), clientSessionId);

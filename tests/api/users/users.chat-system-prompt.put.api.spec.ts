@@ -3,9 +3,14 @@ import type { ChatSystemPromptDto } from '../../../types/systemPrompt';
 import { expect, test } from '../../../fixtures/authenticatedUserFixture';
 
 test.describe('PUT /api/v1/users/chat-system-prompt API tests', () => {
-  test('should update current user chat system prompt - 200', async ({ request, authenticatedUser }) => {
+  let usersClient: UsersClient;
+
+  test.beforeEach(async ({ request }) => {
+    usersClient = new UsersClient(request);
+  });
+
+  test('should update current user chat system prompt - 200', async ({ authenticatedUser }) => {
     // given
-    const usersClient = new UsersClient(request);
     const prompt: ChatSystemPromptDto = {
       chatSystemPrompt: `Updated chat prompt ${Date.now()}`
     };
@@ -24,9 +29,8 @@ test.describe('PUT /api/v1/users/chat-system-prompt API tests', () => {
     expect(getResponseBody.chatSystemPrompt).toBe(prompt.chatSystemPrompt);
   });
 
-  test('should return validation error when chat system prompt is too long - 400', async ({ request, authenticatedUser }) => {
+  test('should return validation error when chat system prompt is too long - 400', async ({ authenticatedUser }) => {
     // given
-    const usersClient = new UsersClient(request);
     const prompt: ChatSystemPromptDto = {
       chatSystemPrompt: 'a'.repeat(5001)
     };
@@ -41,9 +45,8 @@ test.describe('PUT /api/v1/users/chat-system-prompt API tests', () => {
     expect(responseBody.chatSystemPrompt).toBe('Chat system prompt must be at most 5000 characters');
   });
 
-  test('should return unauthorized when token is missing - 401', async ({ request }) => {
+  test('should return unauthorized when token is missing - 401', async () => {
     // given
-    const usersClient = new UsersClient(request);
 
     // when
     const response = await usersClient.updateChatSystemPrompt({
@@ -57,9 +60,8 @@ test.describe('PUT /api/v1/users/chat-system-prompt API tests', () => {
     expect(responseBody.message).toBe('Unauthorized');
   });
 
-  test('should return unauthorized when token is invalid - 401', async ({ request }) => {
+  test('should return unauthorized when token is invalid - 401', async () => {
     // given
-    const usersClient = new UsersClient(request);
 
     // when
     const response = await usersClient.updateChatSystemPrompt(

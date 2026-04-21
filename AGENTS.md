@@ -4,6 +4,7 @@
 
 ## API test rules
 - follow the patterns from `login.api.spec.ts` and `loginClient.ts` - http clients in separate folder
+- initialize HTTP clients in `test.beforeEach` instead of inside individual tests
 - use given (test setup), when (tested action), then (assertions)
 - order tests by status code ascending (200 -> 400 -> 401 -> 403 -> ...)
 - always run newly created tests to make sure they work and then full api test suite via `npm run test:api`

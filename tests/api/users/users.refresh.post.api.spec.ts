@@ -5,9 +5,14 @@ import { expect, test } from '../../../fixtures/authenticatedUserFixture';
 const JWT_REGEX = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$/;
 
 test.describe('POST /api/v1/users/refresh API tests', () => {
-  test('should refresh access and refresh tokens - 200', async ({ request, authenticatedUser }) => {
+  let usersClient: UsersClient;
+
+  test.beforeEach(async ({ request }) => {
+    usersClient = new UsersClient(request);
+  });
+
+  test('should refresh access and refresh tokens - 200', async ({ authenticatedUser }) => {
     // given
-    const usersClient = new UsersClient(request);
 
     // when
     const response = await usersClient.refresh({
@@ -23,9 +28,8 @@ test.describe('POST /api/v1/users/refresh API tests', () => {
     expect(responseBody.refreshToken).not.toBe(authenticatedUser.refreshToken);
   });
 
-  test('should return validation error when refresh token is missing - 400', async ({ request }) => {
+  test('should return validation error when refresh token is missing - 400', async () => {
     // given
-    const usersClient = new UsersClient(request);
 
     // when
     const response = await usersClient.refresh({});
@@ -37,9 +41,8 @@ test.describe('POST /api/v1/users/refresh API tests', () => {
     expect(responseBody.refreshToken).toBe('must not be blank');
   });
 
-  test('should return unauthorized when refresh token is invalid - 401', async ({ request }) => {
+  test('should return unauthorized when refresh token is invalid - 401', async () => {
     // given
-    const usersClient = new UsersClient(request);
 
     // when
     const response = await usersClient.refresh({
@@ -53,9 +56,8 @@ test.describe('POST /api/v1/users/refresh API tests', () => {
     expect(responseBody.message).toBe('Invalid refresh token');
   });
 
-  test('should return unauthorized when refresh token was already rotated - 401', async ({ request, authenticatedUser }) => {
+  test('should return unauthorized when refresh token was already rotated - 401', async ({ authenticatedUser }) => {
     // given
-    const usersClient = new UsersClient(request);
     const firstResponse = await usersClient.refresh({
       refreshToken: authenticatedUser.refreshToken
     });

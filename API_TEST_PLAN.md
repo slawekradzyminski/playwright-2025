@@ -47,12 +47,12 @@
 | Metric | Value |
 |--------|-------|
 | **Total endpoints** | 45 |
-| **Covered** (happy path + key negatives) | 23 |
+| **Covered** (happy path + key negatives) | 26 |
 | **Partial** (some scenarios missing) | 0 |
-| **Not covered** | 22 |
-| **Overall coverage %** | **51.1%** |
+| **Not covered** | 19 |
+| **Overall coverage %** | **57.8%** |
 | **Auth endpoints total** | 34 |
-| **Auth endpoints covered** | 15 (44.1%) |
+| **Auth endpoints covered** | 18 (52.9%) |
 | **Non-auth endpoints total** | 11 |
 | **Non-auth endpoints covered** | 8 (72.7%) |
 | **High-complexity endpoints** | 7 |
@@ -120,9 +120,9 @@
 |--------|--------|------|------|--------------|----------|-------------|-----------|---------|-------|
 | ✅ | GET | `/api/v1/cart` | 🔒 | any | Covered | `cart/cart.get.api.spec.ts` | 🟢 Low | High | 200 + 401 tested; response contract validated |
 | ✅ | DELETE | `/api/v1/cart` | 🔒 | any | Covered | `cart/cart.delete.api.spec.ts` | 🟢 Low | Medium | 204 + 401 tested |
-| ⬜ | POST | `/api/v1/cart/items` | 🔒 | any | None | — | ⚙️ Medium | High | Add item; 404 if product missing; validation |
-| ⬜ | PUT | `/api/v1/cart/items/{productId}` | 🔒 | any | None | — | ⚙️ Medium | Medium | Update quantity; 404 if item not in cart |
-| ⬜ | DELETE | `/api/v1/cart/items/{productId}` | 🔒 | any | None | — | ⚙️ Medium | Medium | Remove item; 404 if not in cart |
+| ✅ | POST | `/api/v1/cart/items` | 🔒 | any | Covered | `cart/cart.items.post.api.spec.ts` | ⚙️ Medium | High | 200 + 400 + 401 + 404 tested |
+| ✅ | PUT | `/api/v1/cart/items/{productId}` | 🔒 | any | Covered | `cart/cart.items.product-id.put.api.spec.ts` | ⚙️ Medium | Medium | 200 + 400 + 401 + 404 tested |
+| ✅ | DELETE | `/api/v1/cart/items/{productId}` | 🔒 | any | Covered | `cart/cart.items.product-id.delete.api.spec.ts` | ⚙️ Medium | Medium | 200 + 401 + 404 tested |
 
 ### QR
 
@@ -164,7 +164,7 @@
 
 ## Auth Split
 
-### 🔒 Endpoints Requiring Authentication (34 total, 15 covered — 44.1%)
+### 🔒 Endpoints Requiring Authentication (34 total, 18 covered — 52.9%)
 
 #### Users
 - `GET /api/v1/users` — any authenticated user ✅
@@ -198,9 +198,9 @@
 #### Cart
 - `GET /api/v1/cart` ✅
 - `DELETE /api/v1/cart` ✅
-- `POST /api/v1/cart/items`
-- `PUT /api/v1/cart/items/{productId}`
-- `DELETE /api/v1/cart/items/{productId}`
+- `POST /api/v1/cart/items` ✅
+- `PUT /api/v1/cart/items/{productId}` ✅
+- `DELETE /api/v1/cart/items/{productId}` ✅
 
 #### QR
 - `POST /api/v1/qr/create` ✅
@@ -274,9 +274,9 @@
 | `POST /api/v1/orders/{id}/cancel` | **None** | No tests; business rule — only certain statuses cancellable |
 | `PUT /api/v1/orders/{id}/status` | **None** | No tests; admin-only; invalid status transition |
 | `GET /api/v1/orders/admin` | **None** | No tests; admin-only; pagination + status filter |
-| `POST /api/v1/cart/items` | **None** | No tests; product must exist; quantity validation |
-| `PUT /api/v1/cart/items/{productId}` | **None** | No tests; 404 if not in cart |
-| `DELETE /api/v1/cart/items/{productId}` | **None** | No tests; 404 if not in cart |
+| `POST /api/v1/cart/items` | **Covered** | Existing product add, quantity validation, missing token, invalid token, and missing product tested |
+| `PUT /api/v1/cart/items/{productId}` | **Covered** | Quantity update, negative quantity validation, missing token, invalid token, and missing cart item tested |
+| `DELETE /api/v1/cart/items/{productId}` | **Covered** | Existing item removal, missing token, invalid token, and missing cart item tested |
 | `POST /api/v1/email` | **None** | No tests; needs local outbox; rate limiting |
 | `POST /api/v1/ollama/generate` | **None** | No tests; SSE streaming; requires Ollama running |
 | `POST /api/v1/ollama/chat` | **None** | No tests; SSE streaming; system prompt injection |
@@ -421,18 +421,20 @@ This plan keeps only the high-level phase index so there is one source of truth 
 
 ### `POST /api/v1/cart/items`
 - ✅ Add existing product → 200 + cart updated
-- ⬜ Product not found → 404
-- ⬜ Invalid quantity (0 or negative) → 400
-- ⬜ No token → 401
+- ✅ Product not found → 404
+- ✅ Invalid quantity (0 or negative) → 400
+- ✅ No token → 401
 
 ### `PUT /api/v1/cart/items/{productId}`
 - ✅ Update quantity → 200
-- ⬜ Item not in cart → 404
-- ⬜ Invalid quantity → 400
+- ✅ Item not in cart → 404
+- ✅ Invalid quantity → 400
+- ✅ No token → 401
 
 ### `DELETE /api/v1/cart/items/{productId}`
 - ✅ Remove existing item → 200
-- ⬜ Item not in cart → 404
+- ✅ Item not in cart → 404
+- ✅ No token → 401
 
 ### `DELETE /api/v1/cart`
 - ✅ Clear cart → 204

@@ -4,9 +4,14 @@ import { expect, test } from '../../../fixtures/authenticatedUserFixture';
 import { expectValidUserResponse } from '../../../helpers/userHelpers';
 
 test.describe('GET /api/v1/users/me API tests', () => {
-  test('should return current user information - 200', async ({ request, authenticatedUser }) => {
+  let usersClient: UsersClient;
+
+  test.beforeEach(async ({ request }) => {
+    usersClient = new UsersClient(request);
+  });
+
+  test('should return current user information - 200', async ({ authenticatedUser }) => {
     // given
-    const usersClient = new UsersClient(request);
 
     // when
     const response = await usersClient.getMe(authenticatedUser.token);
@@ -18,9 +23,8 @@ test.describe('GET /api/v1/users/me API tests', () => {
     expectValidUserResponse(responseBody, authenticatedUser.userData);
   });
 
-  test('should return unauthorized when token is missing - 401', async ({ request }) => {
+  test('should return unauthorized when token is missing - 401', async () => {
     // given
-    const usersClient = new UsersClient(request);
 
     // when
     const response = await usersClient.getMe();
@@ -31,9 +35,8 @@ test.describe('GET /api/v1/users/me API tests', () => {
     expect(responseBody.message).toBe('Unauthorized');
   });
 
-  test('should return unauthorized when token is invalid - 401', async ({ request }) => {
+  test('should return unauthorized when token is invalid - 401', async () => {
     // given
-    const usersClient = new UsersClient(request);
 
     // when
     const response = await usersClient.getMe('invalid-token');

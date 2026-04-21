@@ -5,9 +5,14 @@ import type { CreateQrDto } from '../../../types/qr';
 const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 
 test.describe('POST /api/v1/qr/create API tests', () => {
-  test('should generate QR code as PNG image - 200', async ({ request, authenticatedUser }) => {
+  let qrClient: QrClient;
+
+  test.beforeEach(async ({ request }) => {
+    qrClient = new QrClient(request);
+  });
+
+  test('should generate QR code as PNG image - 200', async ({ authenticatedUser }) => {
     // given
-    const qrClient = new QrClient(request);
     const createQrData: CreateQrDto = {
       text: 'https://awesome-testing.com'
     };
@@ -24,9 +29,8 @@ test.describe('POST /api/v1/qr/create API tests', () => {
     expect(responseBody.subarray(0, PNG_SIGNATURE.length)).toEqual(PNG_SIGNATURE);
   });
 
-  test('should return validation error when text is empty - 400', async ({ request, authenticatedUser }) => {
+  test('should return validation error when text is empty - 400', async ({ authenticatedUser }) => {
     // given
-    const qrClient = new QrClient(request);
     const createQrData: CreateQrDto = {
       text: ''
     };
@@ -40,9 +44,8 @@ test.describe('POST /api/v1/qr/create API tests', () => {
     expect(responseBody.text).toBe('Text is required');
   });
 
-  test('should return unauthorized when token is missing - 401', async ({ request }) => {
+  test('should return unauthorized when token is missing - 401', async () => {
     // given
-    const qrClient = new QrClient(request);
     const createQrData: CreateQrDto = {
       text: 'https://awesome-testing.com'
     };
@@ -56,9 +59,8 @@ test.describe('POST /api/v1/qr/create API tests', () => {
     expect(responseBody.message).toBe('Unauthorized');
   });
 
-  test('should return unauthorized when token is invalid - 401', async ({ request }) => {
+  test('should return unauthorized when token is invalid - 401', async () => {
     // given
-    const qrClient = new QrClient(request);
     const createQrData: CreateQrDto = {
       text: 'https://awesome-testing.com'
     };

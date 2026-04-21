@@ -3,9 +3,14 @@ import { TrafficClient } from '../../../httpclients/trafficClient';
 import type { TrafficInfoDto } from '../../../types/traffic';
 
 test.describe('GET /api/v1/traffic/info', () => {
-  test('should return traffic monitoring info - 200', async ({ request }) => {
+  let trafficClient: TrafficClient;
+
+  test.beforeEach(async ({ request }) => {
+    trafficClient = new TrafficClient(request);
+  });
+
+  test('should return traffic monitoring info - 200', async () => {
     // given
-    const trafficClient = new TrafficClient(request);
 
     // when
     const response = await trafficClient.getInfo();

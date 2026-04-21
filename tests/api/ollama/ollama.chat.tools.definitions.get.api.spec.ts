@@ -3,9 +3,14 @@ import type { OllamaToolDefinitionDto } from '../../../types/ollama';
 import { expect, test } from '../../../fixtures/authenticatedUserFixture';
 
 test.describe('GET /api/v1/ollama/chat/tools/definitions API tests', () => {
-  test('should return Ollama tool definitions - 200', async ({ request, authenticatedUser }) => {
+  let ollamaClient: OllamaClient;
+
+  test.beforeEach(async ({ request }) => {
+    ollamaClient = new OllamaClient(request);
+  });
+
+  test('should return Ollama tool definitions - 200', async ({ authenticatedUser }) => {
     // given
-    const ollamaClient = new OllamaClient(request);
 
     // when
     const response = await ollamaClient.getToolDefinitions(authenticatedUser.token);
@@ -29,9 +34,8 @@ test.describe('GET /api/v1/ollama/chat/tools/definitions API tests', () => {
     }
   });
 
-  test('should return unauthorized when token is missing - 401', async ({ request }) => {
+  test('should return unauthorized when token is missing - 401', async () => {
     // given
-    const ollamaClient = new OllamaClient(request);
 
     // when
     const response = await ollamaClient.getToolDefinitions();
@@ -43,9 +47,8 @@ test.describe('GET /api/v1/ollama/chat/tools/definitions API tests', () => {
     expect(responseBody.message).toBe('Unauthorized');
   });
 
-  test('should return unauthorized when token is invalid - 401', async ({ request }) => {
+  test('should return unauthorized when token is invalid - 401', async () => {
     // given
-    const ollamaClient = new OllamaClient(request);
 
     // when
     const response = await ollamaClient.getToolDefinitions('invalid-token');

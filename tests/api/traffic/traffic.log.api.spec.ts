@@ -11,9 +11,14 @@ import { SIGNUP_ENDPOINT } from '../../../httpclients/signupClient';
 import type { PageDto, TrafficLogEntryDto } from '../../../types/traffic';
 
 test.describe('GET /api/v1/traffic/logs', () => {
-  test('should return paginated traffic logs - 200', async ({ request }) => {
+  let trafficClient: TrafficClient;
+
+  test.beforeEach(async ({ request }) => {
+    trafficClient = new TrafficClient(request);
+  });
+
+  test('should return paginated traffic logs - 200', async () => {
     // given
-    const trafficClient = new TrafficClient(request);
 
     // when
     const response = await trafficClient.getLogs({ page: 0, size: 5 });
@@ -31,7 +36,6 @@ test.describe('GET /api/v1/traffic/logs', () => {
 
   test('should record and filter logs by client session id - 200', async ({ request }, testInfo) => {
     // given
-    const trafficClient = new TrafficClient(request);
     const clientSessionId = trafficSessionId(testInfo.title);
     const payload = invalidSigninPayload();
 
@@ -56,7 +60,6 @@ test.describe('GET /api/v1/traffic/logs', () => {
 
   test('should support method status path and text filters - 200', async ({ request }, testInfo) => {
     // given
-    const trafficClient = new TrafficClient(request);
     const clientSessionId = trafficSessionId(testInfo.title);
     const username = `wronguser-${Date.now()}`;
     const payload = invalidSigninPayload(username);
@@ -83,7 +86,6 @@ test.describe('GET /api/v1/traffic/logs', () => {
 
   test('should paginate filtered traffic logs newest first - 200', async ({ request }, testInfo) => {
     // given
-    const trafficClient = new TrafficClient(request);
     const clientSessionId = trafficSessionId(testInfo.title);
 
     const signupResponse = await postJson(request, SIGNUP_ENDPOINT, invalidSignupPayload(), clientSessionId);
@@ -130,7 +132,6 @@ test.describe('GET /api/v1/traffic/logs', () => {
 
   test('should filter logs by time window - 200', async ({ request }, testInfo) => {
     // given
-    const trafficClient = new TrafficClient(request);
     const clientSessionId = trafficSessionId(testInfo.title);
     const from = new Date(Date.now() - 1_000).toISOString();
 
@@ -152,9 +153,8 @@ test.describe('GET /api/v1/traffic/logs', () => {
     expect(entryTime).toBeLessThanOrEqual(Date.parse(to));
   });
 
-  test('should return validation errors for invalid query params', async ({ request }) => {
+  test('should return validation errors for invalid query params', async () => {
     // given
-    const trafficClient = new TrafficClient(request);
 
     // when
     const invalidPageResponse = await trafficClient.getLogs({ page: -1, size: 5 });

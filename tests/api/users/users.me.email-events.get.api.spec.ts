@@ -6,9 +6,14 @@ const VALID_EMAIL_EVENT_TYPES = ['GENERIC', 'PASSWORD_RESET_REQUESTED', 'PASSWOR
 const VALID_EMAIL_EVENT_STATUSES = ['QUEUED', 'SENT_TO_SMTP_SINK', 'FAILED'];
 
 test.describe('GET /api/v1/users/me/email-events API tests', () => {
-  test('should return current user email events - 200', async ({ request, authenticatedUser }) => {
+  let usersClient: UsersClient;
+
+  test.beforeEach(async ({ request }) => {
+    usersClient = new UsersClient(request);
+  });
+
+  test('should return current user email events - 200', async ({ authenticatedUser }) => {
     // given
-    const usersClient = new UsersClient(request);
 
     // when
     const response = await usersClient.getMyEmailEvents(authenticatedUser.token);
@@ -28,9 +33,8 @@ test.describe('GET /api/v1/users/me/email-events API tests', () => {
     }
   });
 
-  test('should return unauthorized when token is missing - 401', async ({ request }) => {
+  test('should return unauthorized when token is missing - 401', async () => {
     // given
-    const usersClient = new UsersClient(request);
 
     // when
     const response = await usersClient.getMyEmailEvents();
@@ -42,9 +46,8 @@ test.describe('GET /api/v1/users/me/email-events API tests', () => {
     expect(responseBody.message).toBe('Unauthorized');
   });
 
-  test('should return unauthorized when token is invalid - 401', async ({ request }) => {
+  test('should return unauthorized when token is invalid - 401', async () => {
     // given
-    const usersClient = new UsersClient(request);
 
     // when
     const response = await usersClient.getMyEmailEvents('invalid-token');

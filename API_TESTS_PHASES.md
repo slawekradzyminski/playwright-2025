@@ -84,9 +84,9 @@ Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
 
 | Status | Increment | Endpoints | Notes |
 |--------|-----------|-----------|-------|
-| ⬜ | Add item to cart | `POST /api/v1/cart/items` | Best immediate next increment; use seeded product from `ProductsClient` |
-| ⬜ | Update cart item quantity | `PUT /api/v1/cart/items/{productId}` | Depends on add-item helper |
-| ⬜ | Remove cart item | `DELETE /api/v1/cart/items/{productId}` | Depends on add-item helper |
+| ✅ | Add item to cart | `POST /api/v1/cart/items` | Covered add existing product, validation, 401 cases, and missing product |
+| ✅ | Update cart item quantity | `PUT /api/v1/cart/items/{productId}` | Covered update, validation, 401 cases, and missing cart item |
+| ✅ | Remove cart item | `DELETE /api/v1/cart/items/{productId}` | Covered remove, 401 cases, and missing cart item |
 
 ## Phase 2B - Admin Test Foundation
 
@@ -225,16 +225,15 @@ Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
 The next best increment is:
 
 ```text
-Phase 2A - Add item to cart
-Endpoint: POST /api/v1/cart/items
-New file: tests/api/cart/cart.items.post.api.spec.ts
-Client update: httpclients/cartClient.ts
+Phase 3 - Create order from cart
+Endpoint: POST /api/v1/orders
+New file: tests/api/orders/orders.post.api.spec.ts
+Reuse: helpers/cartHelpers.ts
 ```
 
 Why this is next:
-- It is high priority and currently uncovered.
-- It unlocks order creation tests.
-- It reuses already-covered product list and cart read endpoints.
-- It is smaller than starting with orders directly.
+- Phase 2A cart mutation coverage is complete.
+- It is the next dependency-driven ecommerce workflow increment.
+- It reuses the populated-cart helper created for cart mutation tests.
 
-After that, finish the rest of Phase 2A, then move to Phase 3 unless admin coverage is a higher immediate priority. Phase 2B can be started in parallel at any time.
+Phase 2A is complete. The next dependency-driven step is Phase 3 user order lifecycle unless admin coverage is a higher immediate priority. Phase 2B can be started in parallel at any time.

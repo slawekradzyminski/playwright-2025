@@ -3,9 +3,14 @@ import { LocalEmailOutboxClient } from '../../../httpclients/localEmailOutboxCli
 import type { StoredEmail } from '../../../types/email';
 
 test.describe('DELETE /api/v1/local/email/outbox API tests', () => {
-  test('should clear local email outbox - 200', async ({ request }) => {
+  let localEmailOutboxClient: LocalEmailOutboxClient;
+
+  test.beforeEach(async ({ request }) => {
+    localEmailOutboxClient = new LocalEmailOutboxClient(request);
+  });
+
+  test('should clear local email outbox - 200', async () => {
     // given
-    const localEmailOutboxClient = new LocalEmailOutboxClient(request);
 
     // when
     const response = await localEmailOutboxClient.clearOutbox();

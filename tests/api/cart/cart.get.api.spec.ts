@@ -3,9 +3,14 @@ import type { CartDto } from '../../../types/cart';
 import { expect, test } from '../../../fixtures/authenticatedUserFixture';
 
 test.describe('GET /api/v1/cart API tests', () => {
-  test('should return current user cart - 200', async ({ request, authenticatedUser }) => {
+  let cartClient: CartClient;
+
+  test.beforeEach(async ({ request }) => {
+    cartClient = new CartClient(request);
+  });
+
+  test('should return current user cart - 200', async ({ authenticatedUser }) => {
     // given
-    const cartClient = new CartClient(request);
 
     // when
     const response = await cartClient.getCart(authenticatedUser.token);
@@ -20,9 +25,8 @@ test.describe('GET /api/v1/cart API tests', () => {
     expect(responseBody.totalItems).toEqual(expect.any(Number));
   });
 
-  test('should return unauthorized when token is missing - 401', async ({ request }) => {
+  test('should return unauthorized when token is missing - 401', async () => {
     // given
-    const cartClient = new CartClient(request);
 
     // when
     const response = await cartClient.getCart();
@@ -33,9 +37,8 @@ test.describe('GET /api/v1/cart API tests', () => {
     expect(responseBody.message).toBe('Unauthorized');
   });
 
-  test('should return unauthorized when token is invalid - 401', async ({ request }) => {
+  test('should return unauthorized when token is invalid - 401', async () => {
     // given
-    const cartClient = new CartClient(request);
 
     // when
     const response = await cartClient.getCart('invalid-token');
