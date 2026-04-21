@@ -1,7 +1,7 @@
-import { ProductsClient } from '../../httpclients/productsClient';
-import type { ProductDto } from '../../types/product';
-import { expect, test } from '../../fixtures/authenticatedUserFixture';
-import { isValidProduct } from '../../helpers/productHelpers';
+import { ProductsClient } from '../../../httpclients/productsClient';
+import type { ProductDto } from '../../../types/product';
+import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { isValidProduct } from '../../../helpers/productHelpers';
 
 test.describe('GET /api/v1/products/{id} API tests', () => {
   test('should return product by id for authenticated user - 200', async ({ request, authenticatedUser }) => {

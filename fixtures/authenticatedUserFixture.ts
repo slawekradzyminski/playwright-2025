@@ -7,6 +7,7 @@ import type { LoginResponseDto, UserRegisterDto } from '../types/auth';
 export interface AuthenticatedUser {
   userData: UserRegisterDto;
   token: string;
+  refreshToken: string;
 }
 
 interface AuthenticatedUserFixture {
@@ -34,7 +35,8 @@ export const test = base.extend<AuthenticatedUserFixture>({
     // this is returned to test using this fixture
     await use({
       userData,
-      token: loginResponseBody.token
+      token: loginResponseBody.token,
+      refreshToken: loginResponseBody.refreshToken
     });
 
     // this will run after each test using this fixture

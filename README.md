@@ -19,7 +19,11 @@ This repository contains automated API and UI tests for the local training envir
 .
 ├── tests/
 │   ├── api/
-│   │   └── login.api.spec.ts       # API tests for /api/v1/users/signin endpoint
+│   │   ├── users/                  # API tests for /api/v1/users endpoints
+│   │   ├── products/               # API tests for /api/v1/products endpoints
+│   │   ├── cart/                   # API tests for /api/v1/cart endpoints
+│   │   ├── traffic/                # API tests for /api/v1/traffic endpoints
+│   │   └── ...                     # Other endpoint groups
 │   └── ui/
 │       └── login.ui.spec.ts        # UI tests for the login page
 ├── types/
@@ -92,7 +96,7 @@ Set `APP_BASE_URL` to the app gateway URL and `ADMIN_PASSWORD` to the seeded adm
 ```bash
 npm run test:api
 # or
-npx playwright test tests/api/login.api.spec.ts
+npx playwright test tests/api/users/login.api.spec.ts
 ```
 
 **UI Tests**
@@ -124,9 +128,11 @@ The `playwright.config.ts` file is configured to:
 
 ## 🧪 Test Details
 
-### API Tests (`tests/api/login.api.spec.ts`)
+### API Tests (`tests/api/`)
 
-These tests cover various scenarios for the `/api/v1/users/signin` endpoint, ordered by response code:
+API tests are grouped by endpoint area, for example `tests/api/users/`, `tests/api/products/`, `tests/api/cart/`, and `tests/api/traffic/`. Individual files still focus on one endpoint/method and keep scenarios ordered by response code.
+
+The signin tests in `tests/api/users/login.api.spec.ts` cover:
 
 - **Successful Authentication (200)**: Valid credentials return a 200 status with a JWT token and complete user information
 - **Validation Errors (400)**: Tests for empty username, short username, and short password scenarios with appropriate error messages

@@ -64,12 +64,12 @@ Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
 
 | Status | Increment | Endpoints | Notes |
 |--------|-----------|-----------|-------|
-| ⬜ | Refresh token tests | `POST /api/v1/users/refresh` | Use token from signup/signin response; cover valid, missing, invalid/expired where feasible |
-| ⬜ | Logout tests | `POST /api/v1/users/logout` | Verify logout succeeds and the same token is rejected afterward if backend invalidates it |
-| ⬜ | Users list and own data reads | `GET /api/v1/users`, `GET /api/v1/users/me/email-events` | Simple authenticated reads; confirm response contracts |
-| ⬜ | Prompt settings tests | `GET/PUT /api/v1/users/chat-system-prompt`, `GET/PUT /api/v1/users/tool-system-prompt` | User-owned field read/write; restore or isolate test user state |
-| ⬜ | Local email outbox client/tests | `GET /api/v1/local/email/outbox`, `DELETE /api/v1/local/email/outbox` | Required before password reset and email tests |
-| ⬜ | Ollama tool definitions contract | `GET /api/v1/ollama/chat/tools/definitions` | Static authenticated contract; no running Ollama model needed |
+| ✅ | Refresh token tests | `POST /api/v1/users/refresh` | Covered valid rotation, missing token, invalid token, and reused rotated token |
+| ✅ | Logout tests | `POST /api/v1/users/logout` | Covered logout, 401 cases, and refresh-token invalidation after logout |
+| ✅ | Users list and own data reads | `GET /api/v1/users`, `GET /api/v1/users/me/email-events` | Covered authenticated contracts and 401 cases |
+| ✅ | Prompt settings tests | `GET/PUT /api/v1/users/chat-system-prompt`, `GET/PUT /api/v1/users/tool-system-prompt` | Covered read/write, max-length validation, and 401 cases |
+| ✅ | Local email outbox client/tests | `GET /api/v1/local/email/outbox`, `DELETE /api/v1/local/email/outbox` | Covered helper client and clear/read operations |
+| ✅ | Ollama tool definitions contract | `GET /api/v1/ollama/chat/tools/definitions` | Covered static authenticated contract and 401 cases |
 
 ## Phase 2A - Cart Mutations
 
@@ -227,7 +227,7 @@ The next best increment is:
 ```text
 Phase 2A - Add item to cart
 Endpoint: POST /api/v1/cart/items
-New file: tests/api/cart.items.post.api.spec.ts
+New file: tests/api/cart/cart.items.post.api.spec.ts
 Client update: httpclients/cartClient.ts
 ```
 

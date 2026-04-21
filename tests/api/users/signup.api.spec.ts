@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { randomUser } from '../../generators/userGenerator';
-import type { UserRegisterDto } from '../../types/auth';
-import { SignupClient } from '../../httpclients/signupClient';
+import { randomUser } from '../../../generators/userGenerator';
+import type { UserRegisterDto } from '../../../types/auth';
+import { SignupClient } from '../../../httpclients/signupClient';
 
 test.describe('/api/v1/users/signup API tests', () => {
   test('should successfully register new user - 201', async ({ request }) => {

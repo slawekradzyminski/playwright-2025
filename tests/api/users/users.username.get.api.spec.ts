@@ -1,7 +1,7 @@
-import { UsersClient } from '../../httpclients/usersClient';
-import type { UserResponseDto } from '../../types/auth';
-import { expect, test } from '../../fixtures/authenticatedUserFixture';
-import { expectValidUserResponse } from '../../helpers/userHelpers';
+import { UsersClient } from '../../../httpclients/usersClient';
+import type { UserResponseDto } from '../../../types/auth';
+import { expect, test } from '../../../fixtures/authenticatedUserFixture';
+import { expectValidUserResponse } from '../../../helpers/userHelpers';
 
 test.describe('GET /api/v1/users/{username} API tests', () => {
   test('should return user by username - 200', async ({ request, authenticatedUser }) => {

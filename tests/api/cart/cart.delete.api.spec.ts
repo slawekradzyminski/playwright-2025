@@ -1,5 +1,5 @@
-import { CartClient } from '../../httpclients/cartClient';
-import { expect, test } from '../../fixtures/authenticatedUserFixture';
+import { CartClient } from '../../../httpclients/cartClient';
+import { expect, test } from '../../../fixtures/authenticatedUserFixture';
 
 test.describe('DELETE /api/v1/cart API tests', () => {
   test('should clear current user cart - 204', async ({ request, authenticatedUser }) => {

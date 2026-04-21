@@ -47,14 +47,14 @@
 | Metric | Value |
 |--------|-------|
 | **Total endpoints** | 45 |
-| **Covered** (happy path + key negatives) | 12 |
+| **Covered** (happy path + key negatives) | 23 |
 | **Partial** (some scenarios missing) | 0 |
-| **Not covered** | 33 |
-| **Overall coverage %** | **26.7%** |
+| **Not covered** | 22 |
+| **Overall coverage %** | **51.1%** |
 | **Auth endpoints total** | 34 |
-| **Auth endpoints covered** | 7 (20.6%) |
+| **Auth endpoints covered** | 15 (44.1%) |
 | **Non-auth endpoints total** | 11 |
-| **Non-auth endpoints covered** | 5 (45.5%) |
+| **Non-auth endpoints covered** | 8 (72.7%) |
 | **High-complexity endpoints** | 7 |
 | **Admin-only endpoints** | 7 |
 | **Rate-limited endpoints** | 4 |
@@ -69,22 +69,22 @@
 
 | Status | Method | Path | Auth | Role Required | Coverage | Test File(s) | Difficulty | Priority | Notes |
 |--------|--------|------|------|--------------|----------|-------------|-----------|---------|-------|
-| ✅ | POST | `/api/v1/users/signin` | 🌐 | — | Covered | `login.api.spec.ts` | 🟢 Low | High | Validation + 422 tested |
-| ✅ | POST | `/api/v1/users/signup` | 🌐 | — | Covered | `signup.api.spec.ts` | 🟢 Low | High | Validation + duplicate tested |
-| ✅ | GET | `/api/v1/users/me` | 🔒 | any | Covered | `users.me.get.api.spec.ts` | 🟢 Low | High | 200 + 401 tested |
-| ⬜ | POST | `/api/v1/users/refresh` | 🌐 | — | None | — | 🟢 Low | High | Refresh JWT; test expired/invalid tokens |
+| ✅ | POST | `/api/v1/users/signin` | 🌐 | — | Covered | `users/login.api.spec.ts` | 🟢 Low | High | Validation + 422 tested |
+| ✅ | POST | `/api/v1/users/signup` | 🌐 | — | Covered | `users/signup.api.spec.ts` | 🟢 Low | High | Validation + duplicate tested |
+| ✅ | GET | `/api/v1/users/me` | 🔒 | any | Covered | `users/users.me.get.api.spec.ts` | 🟢 Low | High | 200 + 401 tested |
+| ✅ | POST | `/api/v1/users/refresh` | 🌐 | — | Covered | `users/users.refresh.post.api.spec.ts` | 🟢 Low | High | 200 + 400 + 401 tested |
 | ⬜ | POST | `/api/v1/users/sso/exchange` | 🌐 | — | None | — | ⚙️ Medium | Low | OIDC token exchange; depends on configured identity provider |
-| ⬜ | POST | `/api/v1/users/logout` | 🔒 | any | None | — | 🟢 Low | Medium | Token invalidation |
-| ⬜ | GET | `/api/v1/users` | 🔒 | any | None | — | 🟢 Low | Medium | Returns all users; no role restriction in code |
-| ✅ | GET | `/api/v1/users/{username}` | 🔒 | any | Covered | `users.username.get.api.spec.ts` | 🟢 Low | Medium | 200 + 401 + 404 tested |
+| ✅ | POST | `/api/v1/users/logout` | 🔒 | any | Covered | `users/users.logout.post.api.spec.ts` | 🟢 Low | Medium | Logout + refresh-token invalidation + 401 tested |
+| ✅ | GET | `/api/v1/users` | 🔒 | any | Covered | `users/users.get.api.spec.ts` | 🟢 Low | Medium | 200 + 401 tested; no role restriction in code |
+| ✅ | GET | `/api/v1/users/{username}` | 🔒 | any | Covered | `users/users.username.get.api.spec.ts` | 🟢 Low | Medium | 200 + 401 + 404 tested |
 | ⬜ | PUT | `/api/v1/users/{username}` | 🔒 | ADMIN or owner | None | — | ⚙️ Medium | Medium | `@PreAuthorize` checks self or admin; 403 cases |
 | ⬜ | DELETE | `/api/v1/users/{username}` | 🔒 | ADMIN | None | — | ⚙️ Medium | Low | Admin-only; 403 + 404 cases |
 | ⬜ | DELETE | `/api/v1/users/{username}/right-to-be-forgotten` | 🔒 | ADMIN or owner | None | — | ⚙️ Medium | Medium | Cascading data deletion; owner or admin |
-| ⬜ | GET | `/api/v1/users/me/email-events` | 🔒 | any | None | — | 🟢 Low | Medium | User's own email events |
-| ⬜ | GET | `/api/v1/users/chat-system-prompt` | 🔒 | any | None | — | 🟢 Low | Low | Per-user AI prompt |
-| ⬜ | PUT | `/api/v1/users/chat-system-prompt` | 🔒 | any | None | — | 🟢 Low | Low | Update AI prompt; validate body |
-| ⬜ | GET | `/api/v1/users/tool-system-prompt` | 🔒 | any | None | — | 🟢 Low | Low | Per-user tool prompt |
-| ⬜ | PUT | `/api/v1/users/tool-system-prompt` | 🔒 | any | None | — | 🟢 Low | Low | Update tool prompt; validate body |
+| ✅ | GET | `/api/v1/users/me/email-events` | 🔒 | any | Covered | `users/users.me.email-events.get.api.spec.ts` | 🟢 Low | Medium | 200 + 401 tested |
+| ✅ | GET | `/api/v1/users/chat-system-prompt` | 🔒 | any | Covered | `users/users.chat-system-prompt.get.api.spec.ts` | 🟢 Low | Low | 200 + 401 tested |
+| ✅ | PUT | `/api/v1/users/chat-system-prompt` | 🔒 | any | Covered | `users/users.chat-system-prompt.put.api.spec.ts` | 🟢 Low | Low | 200 + 400 + 401 tested |
+| ✅ | GET | `/api/v1/users/tool-system-prompt` | 🔒 | any | Covered | `users/users.tool-system-prompt.get.api.spec.ts` | 🟢 Low | Low | 200 + 401 tested |
+| ✅ | PUT | `/api/v1/users/tool-system-prompt` | 🔒 | any | Covered | `users/users.tool-system-prompt.put.api.spec.ts` | 🟢 Low | Low | 200 + 400 + 401 tested |
 
 ### Password Reset
 
@@ -97,8 +97,8 @@
 
 | Status | Method | Path | Auth | Role Required | Coverage | Test File(s) | Difficulty | Priority | Notes |
 |--------|--------|------|------|--------------|----------|-------------|-----------|---------|-------|
-| ✅ | GET | `/api/v1/products` | 🔒 | any | Covered | `products.get.api.spec.ts` | 🟢 Low | High | 200 + 401 tested; response contract validated |
-| ✅ | GET | `/api/v1/products/{id}` | 🔒 | any | Covered | `products.id.get.api.spec.ts` | 🟢 Low | High | 200 + 401 + 404 tested; response contract validated |
+| ✅ | GET | `/api/v1/products` | 🔒 | any | Covered | `products/products.get.api.spec.ts` | 🟢 Low | High | 200 + 401 tested; response contract validated |
+| ✅ | GET | `/api/v1/products/{id}` | 🔒 | any | Covered | `products/products.id.get.api.spec.ts` | 🟢 Low | High | 200 + 401 + 404 tested; response contract validated |
 | ⬜ | POST | `/api/v1/products` | 🔒 | ADMIN | None | — | ⚙️ Medium | Medium | Admin-only; validation; 400 + 403 cases |
 | ⬜ | PUT | `/api/v1/products/{id}` | 🔒 | ADMIN | None | — | ⚙️ Medium | Medium | Admin-only; 400 + 403 + 404 cases |
 | ⬜ | DELETE | `/api/v1/products/{id}` | 🔒 | ADMIN | None | — | ⚙️ Medium | Low | Admin-only; 404 + 403 cases |
@@ -118,8 +118,8 @@
 
 | Status | Method | Path | Auth | Role Required | Coverage | Test File(s) | Difficulty | Priority | Notes |
 |--------|--------|------|------|--------------|----------|-------------|-----------|---------|-------|
-| ✅ | GET | `/api/v1/cart` | 🔒 | any | Covered | `cart.get.api.spec.ts` | 🟢 Low | High | 200 + 401 tested; response contract validated |
-| ✅ | DELETE | `/api/v1/cart` | 🔒 | any | Covered | `cart.delete.api.spec.ts` | 🟢 Low | Medium | 204 + 401 tested |
+| ✅ | GET | `/api/v1/cart` | 🔒 | any | Covered | `cart/cart.get.api.spec.ts` | 🟢 Low | High | 200 + 401 tested; response contract validated |
+| ✅ | DELETE | `/api/v1/cart` | 🔒 | any | Covered | `cart/cart.delete.api.spec.ts` | 🟢 Low | Medium | 204 + 401 tested |
 | ⬜ | POST | `/api/v1/cart/items` | 🔒 | any | None | — | ⚙️ Medium | High | Add item; 404 if product missing; validation |
 | ⬜ | PUT | `/api/v1/cart/items/{productId}` | 🔒 | any | None | — | ⚙️ Medium | Medium | Update quantity; 404 if item not in cart |
 | ⬜ | DELETE | `/api/v1/cart/items/{productId}` | 🔒 | any | None | — | ⚙️ Medium | Medium | Remove item; 404 if not in cart |
@@ -128,7 +128,7 @@
 
 | Status | Method | Path | Auth | Role Required | Coverage | Test File(s) | Difficulty | Priority | Notes |
 |--------|--------|------|------|--------------|----------|-------------|-----------|---------|-------|
-| ✅ | POST | `/api/v1/qr/create` | 🔒 | any | Covered | `qr.create.api.spec.ts` | 🟢 Low | Medium | PNG binary response + 400 + 401 tested |
+| ✅ | POST | `/api/v1/qr/create` | 🔒 | any | Covered | `qr/qr.create.api.spec.ts` | 🟢 Low | Medium | PNG binary response + 400 + 401 tested |
 
 ### Ollama / AI
 
@@ -137,7 +137,7 @@
 | ⬜ | POST | `/api/v1/ollama/generate` | 🔒 | any | None | — | 🔥 High | Low | SSE streaming; rate-limited; requires running Ollama |
 | ⬜ | POST | `/api/v1/ollama/chat` | 🔒 | any | None | — | 🔥 High | Low | SSE streaming; injects user chat system prompt; rate-limited |
 | ⬜ | POST | `/api/v1/ollama/chat/tools` | 🔒 | any | None | — | 🔥 High | Low | SSE + function calling; complex branching logic |
-| ⬜ | GET | `/api/v1/ollama/chat/tools/definitions` | 🔒 | any | None | — | 🟢 Low | Low | Returns static tool definitions; easy contract test |
+| ✅ | GET | `/api/v1/ollama/chat/tools/definitions` | 🔒 | any | Covered | `ollama/ollama.chat.tools.definitions.get.api.spec.ts` | 🟢 Low | Low | 200 + 401 tested |
 
 ### Email
 
@@ -157,28 +157,28 @@
 
 | Status | Method | Path | Auth | Role Required | Coverage | Test File(s) | Difficulty | Priority | Notes |
 |--------|--------|------|------|--------------|----------|-------------|-----------|---------|-------|
-| ⬜ | GET | `/api/v1/local/email/outbox` | 🌐 | — | None | — | 🟢 Low | Medium | Used in password-reset and email tests; helper endpoint |
-| ⬜ | DELETE | `/api/v1/local/email/outbox` | 🌐 | — | None | — | 🟢 Low | Medium | Teardown helper; should be called in `afterEach` |
+| ✅ | GET | `/api/v1/local/email/outbox` | 🌐 | — | Covered | `local-email-outbox/local.email.outbox.get.api.spec.ts` | 🟢 Low | Medium | Helper endpoint; returns queued emails |
+| ✅ | DELETE | `/api/v1/local/email/outbox` | 🌐 | — | Covered | `local-email-outbox/local.email.outbox.delete.api.spec.ts` | 🟢 Low | Medium | Teardown helper; clears outbox |
 
 ---
 
 ## Auth Split
 
-### 🔒 Endpoints Requiring Authentication (34 total, 7 covered — 20.6%)
+### 🔒 Endpoints Requiring Authentication (34 total, 15 covered — 44.1%)
 
 #### Users
-- `GET /api/v1/users` — any authenticated user
+- `GET /api/v1/users` — any authenticated user ✅
 - `GET /api/v1/users/me` ✅
 - `GET /api/v1/users/{username}` — any authenticated user ✅
 - `PUT /api/v1/users/{username}` — ADMIN or self (`@PreAuthorize`)
 - `DELETE /api/v1/users/{username}` — ADMIN only
 - `DELETE /api/v1/users/{username}/right-to-be-forgotten` — ADMIN or self
-- `GET /api/v1/users/me/email-events`
-- `GET /api/v1/users/chat-system-prompt`
-- `PUT /api/v1/users/chat-system-prompt`
-- `GET /api/v1/users/tool-system-prompt`
-- `PUT /api/v1/users/tool-system-prompt`
-- `POST /api/v1/users/logout`
+- `GET /api/v1/users/me/email-events` ✅
+- `GET /api/v1/users/chat-system-prompt` ✅
+- `PUT /api/v1/users/chat-system-prompt` ✅
+- `GET /api/v1/users/tool-system-prompt` ✅
+- `PUT /api/v1/users/tool-system-prompt` ✅
+- `POST /api/v1/users/logout` ✅
 
 #### Products
 - `GET /api/v1/products` ✅
@@ -209,19 +209,19 @@
 - `POST /api/v1/ollama/generate`
 - `POST /api/v1/ollama/chat`
 - `POST /api/v1/ollama/chat/tools`
-- `GET /api/v1/ollama/chat/tools/definitions`
+- `GET /api/v1/ollama/chat/tools/definitions` ✅
 
 #### Email
 - `POST /api/v1/email`
 
 ---
 
-### 🌐 Endpoints Not Requiring Authentication (11 total, 5 covered — 45.5%)
+### 🌐 Endpoints Not Requiring Authentication (11 total, 8 covered — 72.7%)
 
 #### Users / Auth
 - `POST /api/v1/users/signin` ✅
 - `POST /api/v1/users/signup` ✅
-- `POST /api/v1/users/refresh`
+- `POST /api/v1/users/refresh` ✅
 - `POST /api/v1/users/sso/exchange`
 - `POST /api/v1/users/password/forgot`
 - `POST /api/v1/users/password/reset`
@@ -232,8 +232,8 @@
 - `GET /api/v1/traffic/logs/{correlationId}` ✅
 
 #### Local Email Outbox
-- `GET /api/v1/local/email/outbox`
-- `DELETE /api/v1/local/email/outbox`
+- `GET /api/v1/local/email/outbox` ✅
+- `DELETE /api/v1/local/email/outbox` ✅
 
 ---
 
@@ -253,16 +253,16 @@
 | `GET /api/v1/traffic/info` | **Covered** | Contract fields verified |
 | `GET /api/v1/traffic/logs` | **Covered** | Pagination, client session ID filter, multi-filter, ordering, time window, validation errors |
 | `GET /api/v1/traffic/logs/{correlationId}` | **Covered** | Happy path + 404 for missing ID |
-| `POST /api/v1/users/refresh` | **None** | No tests; should cover valid token, expired token, missing token |
+| `POST /api/v1/users/refresh` | **Covered** | Valid rotation, missing token, invalid token, and reused rotated token tested |
 | `POST /api/v1/users/sso/exchange` | **None** | No tests; depends on configured OIDC provider/token fixture |
-| `POST /api/v1/users/logout` | **None** | No tests; should cover successful logout, subsequent request rejected |
-| `GET /api/v1/users` | **None** | No tests; verify any-auth access, response contract |
+| `POST /api/v1/users/logout` | **Covered** | Successful logout, missing token, invalid token, and refresh-token invalidation tested |
+| `GET /api/v1/users` | **Covered** | Happy path includes current user contract; missing and invalid token tested |
 | `PUT /api/v1/users/{username}` | **None** | No tests; missing owner/admin permission cases, 403 for other user |
 | `DELETE /api/v1/users/{username}` | **None** | No tests; admin-only 403, 404 |
 | `DELETE /api/v1/users/{username}/right-to-be-forgotten` | **None** | No tests; cascading delete, permission check |
-| `GET /api/v1/users/me/email-events` | **None** | No tests |
-| `GET/PUT /api/v1/users/chat-system-prompt` | **None** | No tests; simple CRUD on user attribute |
-| `GET/PUT /api/v1/users/tool-system-prompt` | **None** | No tests; same pattern as chat-system-prompt |
+| `GET /api/v1/users/me/email-events` | **Covered** | Happy path array contract, missing token, invalid token tested |
+| `GET/PUT /api/v1/users/chat-system-prompt` | **Covered** | Read, update, persisted value, max-length validation, missing token, invalid token tested |
+| `GET/PUT /api/v1/users/tool-system-prompt` | **Covered** | Read, update, persisted value, max-length validation, missing token, invalid token tested |
 | `POST /api/v1/users/password/forgot` | **None** | No tests; needs local outbox to verify email queued; rate limit (429) |
 | `POST /api/v1/users/password/reset` | **None** | No tests; stateful — requires token from forgot flow |
 | `POST /api/v1/products` | **None** | No tests; admin-only; validation |
@@ -281,9 +281,9 @@
 | `POST /api/v1/ollama/generate` | **None** | No tests; SSE streaming; requires Ollama running |
 | `POST /api/v1/ollama/chat` | **None** | No tests; SSE streaming; system prompt injection |
 | `POST /api/v1/ollama/chat/tools` | **None** | No tests; function calling; most complex Ollama flow |
-| `GET /api/v1/ollama/chat/tools/definitions` | **None** | No tests; static list; easy quick win |
-| `GET /api/v1/local/email/outbox` | **None** | No tests; used as helper in forgot-password flow |
-| `DELETE /api/v1/local/email/outbox` | **None** | No tests; teardown helper |
+| `GET /api/v1/ollama/chat/tools/definitions` | **Covered** | Static tool definition contract, missing token, invalid token tested |
+| `GET /api/v1/local/email/outbox` | **Covered** | Happy path array contract tested after clearing outbox |
+| `DELETE /api/v1/local/email/outbox` | **Covered** | Happy path clear operation and empty outbox verification tested |
 
 ---
 
@@ -361,12 +361,15 @@ This plan keeps only the high-level phase index so there is one source of truth 
 
 ### `POST /api/v1/users/refresh`
 - ✅ Valid refresh token → returns new access token
-- ⬜ Expired refresh token → 4xx
-- ⬜ Missing token body → 400
+- ✅ Missing token body → 400
+- ✅ Invalid refresh token → 401
+- ✅ Reused rotated refresh token → 401
 
 ### `POST /api/v1/users/logout`
 - ✅ Logout with valid token → 200
-- ⬜ Subsequent request with same token → 401
+- ✅ Refresh token issued before logout is rejected afterward → 401
+- ✅ Missing token → 401
+- ✅ Invalid token → 401
 
 ### `GET /api/v1/users/{username}`
 - ✅ Existing user → 200 + contract
@@ -506,7 +509,8 @@ This plan keeps only the high-level phase index so there is one source of truth 
 
 ### `GET /api/v1/ollama/chat/tools/definitions`
 - ✅ Returns list of tool definitions → 200 + contract
-- ⬜ No token → 401
+- ✅ No token → 401
+- ✅ Invalid token → 401
 
 ### `GET/DELETE /api/v1/local/email/outbox`
 - ✅ Returns list of stored emails → 200
@@ -526,7 +530,7 @@ This plan keeps only the high-level phase index so there is one source of truth 
 |-------------|--------|
 | `GET /api/v1/users` auth | Documented with `bearerAuth` security; `WebSecurityConfig` requires authentication for all non-listed paths. Controller has no `@PreAuthorize` role restriction — any authenticated user can list all users. This is a potential security concern worth noting. |
 | `GET /api/v1/ollama/chat/tools/definitions` auth | Documented with `bearerAuth` but `WebSecurityConfig` allows all requests matching the auth filter chain — auth still required at runtime since it's not in `ALLOWED_ENDPOINTS`. |
-| `LocalEmailOutboxController` | Annotated with `@Profile("local")` — only active in the `local` Spring profile. Tests should ensure they run against that profile. No tests currently use this endpoint. |
+| `LocalEmailOutboxController` | Annotated with `@Profile("local")` — only active in the `local` Spring profile. Phase 1 now covers the helper endpoint; password-reset/email tests should reuse `LocalEmailOutboxClient`. |
 | `PUT /api/v1/orders/{id}/status` and `GET /api/v1/orders/admin` | Documented as ADMIN-only via `@PreAuthorize("hasRole('ROLE_ADMIN')")` — this is method-level security, not filter-chain security. Verify 403 is returned (not 401) for non-admin authenticated users. |
 | Password reset endpoints return `429` | `AuthRateLimitGuard` enforces rate limits. These scenarios are documented in the OpenAPI spec but no tests exist. |
 
@@ -543,7 +547,7 @@ This plan keeps only the high-level phase index so there is one source of truth 
 
 ### Updating coverage after adding tests
 1. Change the `Status` emoji from ⬜ to ✅ (or 🟡 if partial).
-2. Fill in `Existing Test File(s)` with the relative path (e.g., `tests/api/products.get.api.spec.ts`).
+2. Fill in `Existing Test File(s)` with the relative path (e.g., `tests/api/products/products.get.api.spec.ts`).
 3. Update `Current Coverage` from `None` → `Partial` or `Covered`.
 4. Update the matching increment status in [`API_TESTS_PHASES.md`](./API_TESTS_PHASES.md).
 5. Recalculate coverage percentages:
