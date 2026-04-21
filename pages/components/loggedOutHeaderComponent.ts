@@ -9,6 +9,10 @@ export class LoggedOutHeaderComponent {
     this.registerLink = page.getByTestId('register-link');
   }
 
+  async clickLoginLink(): Promise<void> {
+    await this.loginLink.click();
+  }
+
   async clickRegisterLink(): Promise<void> {
     await this.registerLink.click();
   }
