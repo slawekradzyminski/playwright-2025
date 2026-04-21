@@ -1,5 +1,6 @@
 ## General
 - use English
+- read `ARCHITECTURE.md` for the lightweight SUT topology, gateway routing, and human/AI testing workflow
 
 ## API test rules
 - follow the patterns from `login.api.spec.ts` and `loginClient.ts` - http clients in separate folder

@@ -6,6 +6,8 @@ A TypeScript-based Playwright suite for validating the current gateway-first app
 
 This repository contains automated API and UI tests for the local training environment used during the Playwright course. The tests target the public gateway URL exposed by awesome-localstack, not raw internal service ports.
 
+For the System Under Test topology, request flows, and human/AI testing workflow, see [ARCHITECTURE.md](ARCHITECTURE.md).
+
 ## 🔧 Features
 
 - **API Testing**: Validates authentication endpoints with various scenarios, including successful logins and error handling.
@@ -162,6 +164,8 @@ The tests assume a gateway-first local setup:
 - frontend routes are served by the gateway
 - backend API is exposed behind the same origin under `/api/v1/...`
 - no test should depend on raw backend port `4001`
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed diagrams of the lightweight Docker Compose stack and the human/AI cooperation loop.
 
 ## Playwright MCP
 
