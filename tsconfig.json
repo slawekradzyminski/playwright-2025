@@ -17,6 +17,7 @@
     "helpers/**/*.ts",
     "httpclients/**/*.ts",
     "generators/**/*.ts",
+    "pages/**/*.ts",
     "tests/**/*.ts",
     "types/**/*.ts"
   ]
