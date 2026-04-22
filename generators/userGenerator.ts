@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import type { UserRegisterDto } from '../types/auth';
+import type { UserEditDto, UserRegisterDto } from '../types/auth';
 
 const MAX_ATTEMPTS = 100;
 
@@ -55,6 +55,16 @@ export const randomUser = (): UserRegisterDto => {
     username: generateUsername(),
     email: generateEmail(firstName, lastName),
     password: generatePassword(),
+    firstName,
+    lastName
+  };
+};
+
+export const randomUserEdit = (): Required<UserEditDto> => {
+  const { email, firstName, lastName } = randomUser();
+
+  return {
+    email,
     firstName,
     lastName
   };

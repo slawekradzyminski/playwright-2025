@@ -101,7 +101,7 @@ Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
 
 | Status | Increment | Endpoints | Notes |
 |--------|-----------|-----------|-------|
-| ✅ | Admin auth fixture/helper | Shared setup | `fixtures/adminApiFixture.ts` provides admin login, client user setup, product client, created-product helper, and cleanup |
+| ✅ | Admin auth fixture/helper | Shared setup | `fixtures/adminApiFixture.ts` provides admin login, client user setup, admin users/products clients, disposable-user helpers, and cleanup |
 | ✅ | UI admin auth fixture | Shared setup | `fixtures/adminUiFixture.ts` injects admin auth into browser local storage via `helpers/browserAuthHelpers.ts` |
 | ✅ | Admin lane configuration | Shared setup | `playwright.config.ts` runs regular client tests first, then `admin-api`, then `admin-ui`; `playwright.admin.config.ts` supports admin-only runs |
 
@@ -158,9 +158,9 @@ Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
 
 | Status | Increment | Endpoints | Notes |
 |--------|-----------|-----------|-------|
-| ⬜ | Update user | `PUT /api/v1/users/{username}` | Cover owner 200, admin 200, other user 403, validation, missing user |
-| ⬜ | Delete user as admin | `DELETE /api/v1/users/{username}` | Create disposable user inside test setup |
-| ⬜ | Right to be forgotten | `DELETE /api/v1/users/{username}/right-to-be-forgotten` | Cover owner, admin, and other-user denial |
+| ✅ | Update user | `PUT /api/v1/users/{username}` | Covered owner 200, admin 200, invalid email 400, other user 403, and missing user 404 |
+| ✅ | Delete user as admin | `DELETE /api/v1/users/{username}` | Covered admin 204, non-admin 403, and missing user 404 with disposable users |
+| ✅ | Right to be forgotten | `DELETE /api/v1/users/{username}/right-to-be-forgotten` | Covered owner 204, admin 204, and other-user 403 with disposable users |
 
 ## Phase 5 - Email and Password Reset
 
@@ -226,15 +226,15 @@ Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
 The next best increment is:
 
 ```text
-Phase 4B - Update user
-Endpoint: PUT /api/v1/users/{username}
-New file: tests/api/users/users.username.put.api.spec.ts
-Reuse: fixtures/adminApiFixture.ts and existing user auth helpers
+Phase 5 - Send arbitrary email
+Endpoint: POST /api/v1/email
+New file: tests/api/email/email.post.api.spec.ts
+Reuse: httpclients/localEmailOutboxClient.ts and local outbox cleanup helpers
 ```
 
 Why this is next:
-- Phase 3 user order lifecycle is complete.
-- Phase 4B is the next incomplete dependency-ready phase.
-- It builds on the admin foundation that is already in place and unlocks the remaining user permission work.
+- Phase 4B user management permissions is now complete.
+- Phase 5 is the next incomplete dependency-ready phase and the local outbox helper work is already done.
+- `POST /api/v1/email` is the lowest-friction Phase 5 increment and helps establish reusable outbox assertions before password-reset flows.
 
-Phase 2A, Phase 2B, Phase 3, and Phase 4A are complete. The next dependency-driven step is Phase 4B user management permissions.
+Phase 2A, Phase 2B, Phase 3, Phase 4A, and Phase 4B are complete. The next dependency-driven step is Phase 5 email and password reset coverage.

@@ -47,17 +47,17 @@
 | Metric | Value |
 |--------|-------|
 | **Total endpoints** | 45 |
-| **Covered** (happy path + key negatives) | 29 |
+| **Covered** (happy path + key negatives) | 32 |
 | **Partial** (some scenarios missing) | 0 |
-| **Not covered** | 16 |
-| **Overall coverage %** | **64.4%** |
+| **Not covered** | 13 |
+| **Overall coverage %** | **71.1%** |
 | **Auth endpoints total** | 34 |
-| **Auth endpoints covered** | 21 (61.8%) |
+| **Auth endpoints covered** | 24 (70.6%) |
 | **Non-auth endpoints total** | 11 |
 | **Non-auth endpoints covered** | 8 (72.7%) |
-| **High-complexity endpoints** | 7 |
-| **Admin-only endpoints** | 7 |
-| **Rate-limited endpoints** | 4 |
+| **High-complexity endpoints** | 4 |
+| **Admin-only endpoints** | 6 |
+| **Rate-limited endpoints** | 5 |
 
 ---
 
@@ -77,9 +77,9 @@
 | ✅ | POST | `/api/v1/users/logout` | 🔒 | any | Covered | `users/users.logout.post.api.spec.ts` | 🟢 Low | Medium | Logout + refresh-token invalidation + 401 tested |
 | ✅ | GET | `/api/v1/users` | 🔒 | any | Covered | `users/users.get.api.spec.ts` | 🟢 Low | Medium | 200 + 401 tested; no role restriction in code |
 | ✅ | GET | `/api/v1/users/{username}` | 🔒 | any | Covered | `users/users.username.get.api.spec.ts` | 🟢 Low | Medium | 200 + 401 + 404 tested |
-| ⬜ | PUT | `/api/v1/users/{username}` | 🔒 | ADMIN or owner | None | — | ⚙️ Medium | Medium | `@PreAuthorize` checks self or admin; 403 cases |
-| ⬜ | DELETE | `/api/v1/users/{username}` | 🔒 | ADMIN | None | — | ⚙️ Medium | Low | Admin-only; 403 + 404 cases |
-| ⬜ | DELETE | `/api/v1/users/{username}/right-to-be-forgotten` | 🔒 | ADMIN or owner | None | — | ⚙️ Medium | Medium | Cascading data deletion; owner or admin |
+| ✅ | PUT | `/api/v1/users/{username}` | 🔒 | ADMIN or owner | Covered | `users/users.username.put.api.spec.ts` | ⚙️ Medium | Medium | Covers owner 200, admin 200, validation 400, cross-user 403, and missing user 404 |
+| ✅ | DELETE | `/api/v1/users/{username}` | 🔒 | ADMIN | Covered | `users/users.username.delete.api.spec.ts` | ⚙️ Medium | Low | Covers admin delete 204, non-admin 403, and missing user 404 |
+| ✅ | DELETE | `/api/v1/users/{username}/right-to-be-forgotten` | 🔒 | ADMIN or owner | Covered | `users/users.username.right-to-be-forgotten.delete.api.spec.ts` | ⚙️ Medium | Medium | Covers owner/admin 204 and cross-user 403 with disposable users only |
 | ✅ | GET | `/api/v1/users/me/email-events` | 🔒 | any | Covered | `users/users.me.email-events.get.api.spec.ts` | 🟢 Low | Medium | 200 + 401 tested |
 | ✅ | GET | `/api/v1/users/chat-system-prompt` | 🔒 | any | Covered | `users/users.chat-system-prompt.get.api.spec.ts` | 🟢 Low | Low | 200 + 401 tested |
 | ✅ | PUT | `/api/v1/users/chat-system-prompt` | 🔒 | any | Covered | `users/users.chat-system-prompt.put.api.spec.ts` | 🟢 Low | Low | 200 + 400 + 401 tested |
@@ -164,15 +164,15 @@
 
 ## Auth Split
 
-### 🔒 Endpoints Requiring Authentication (34 total, 21 covered — 61.8%)
+### 🔒 Endpoints Requiring Authentication (34 total, 24 covered — 70.6%)
 
 #### Users
 - `GET /api/v1/users` — any authenticated user ✅
 - `GET /api/v1/users/me` ✅
 - `GET /api/v1/users/{username}` — any authenticated user ✅
-- `PUT /api/v1/users/{username}` — ADMIN or self (`@PreAuthorize`)
-- `DELETE /api/v1/users/{username}` — ADMIN only
-- `DELETE /api/v1/users/{username}/right-to-be-forgotten` — ADMIN or self
+- `PUT /api/v1/users/{username}` — ADMIN or self (`@PreAuthorize`) ✅
+- `DELETE /api/v1/users/{username}` — ADMIN only ✅
+- `DELETE /api/v1/users/{username}/right-to-be-forgotten` — ADMIN or self ✅
 - `GET /api/v1/users/me/email-events` ✅
 - `GET /api/v1/users/chat-system-prompt` ✅
 - `PUT /api/v1/users/chat-system-prompt` ✅
@@ -188,9 +188,9 @@
 - `DELETE /api/v1/products/{id}` — ADMIN only ✅
 
 #### Orders
-- `GET /api/v1/orders`
-- `POST /api/v1/orders`
-- `GET /api/v1/orders/{id}` — own or admin
+- `GET /api/v1/orders` ✅
+- `POST /api/v1/orders` ✅
+- `GET /api/v1/orders/{id}` — own or admin ✅
 - `POST /api/v1/orders/{id}/cancel`
 - `PUT /api/v1/orders/{id}/status` — ADMIN only
 - `GET /api/v1/orders/admin` — ADMIN only
@@ -257,9 +257,9 @@
 | `POST /api/v1/users/sso/exchange` | **None** | No tests; depends on configured OIDC provider/token fixture |
 | `POST /api/v1/users/logout` | **Covered** | Successful logout, missing token, invalid token, and refresh-token invalidation tested |
 | `GET /api/v1/users` | **Covered** | Happy path includes current user contract; missing and invalid token tested |
-| `PUT /api/v1/users/{username}` | **None** | No tests; missing owner/admin permission cases, 403 for other user |
-| `DELETE /api/v1/users/{username}` | **None** | No tests; admin-only 403, 404 |
-| `DELETE /api/v1/users/{username}/right-to-be-forgotten` | **None** | No tests; cascading delete, permission check |
+| `PUT /api/v1/users/{username}` | **Covered** | Owner update, admin update, invalid email, cross-user 403, and missing user 404 tested |
+| `DELETE /api/v1/users/{username}` | **Covered** | Admin delete, non-admin 403, and missing user 404 tested with disposable users |
+| `DELETE /api/v1/users/{username}/right-to-be-forgotten` | **Covered** | Owner delete, admin delete, and cross-user 403 tested with disposable users |
 | `GET /api/v1/users/me/email-events` | **Covered** | Happy path array contract, missing token, invalid token tested |
 | `GET/PUT /api/v1/users/chat-system-prompt` | **Covered** | Read, update, persisted value, max-length validation, missing token, invalid token tested |
 | `GET/PUT /api/v1/users/tool-system-prompt` | **Covered** | Read, update, persisted value, max-length validation, missing token, invalid token tested |
@@ -268,9 +268,9 @@
 | `POST /api/v1/products` | **Covered** | Admin create, validation, missing token, and client-user 403 tested |
 | `PUT /api/v1/products/{id}` | **Covered** | Admin update, validation, missing token, client-user 403, and missing product tested |
 | `DELETE /api/v1/products/{id}` | **Covered** | Admin delete, missing token, client-user 403, and missing product tested |
-| `GET /api/v1/orders` | **None** | No tests; needs order seeding |
-| `POST /api/v1/orders` | **None** | No tests; requires cart to be populated first |
-| `GET /api/v1/orders/{id}` | **None** | No tests; owner vs admin visibility difference |
+| `GET /api/v1/orders` | **Covered** | Page contract, seeded order presence, stable `status=PENDING` filter, and 401 cases tested |
+| `POST /api/v1/orders` | **Covered** | Populated-cart happy path, cart consumption, empty cart 400, and 401 cases tested |
+| `GET /api/v1/orders/{id}` | **Covered** | Owner read contract, missing order 404, and 401 cases tested |
 | `POST /api/v1/orders/{id}/cancel` | **None** | No tests; business rule — only certain statuses cancellable |
 | `PUT /api/v1/orders/{id}/status` | **None** | No tests; admin-only; invalid status transition |
 | `GET /api/v1/orders/admin` | **None** | No tests; admin-only; pagination + status filter |
@@ -350,7 +350,7 @@ This plan keeps only the high-level phase index so there is one source of truth 
 | Phase 2B | Admin test foundation | Complete; admin lane runs sequentially after regular tests |
 | Phase 3 | User order lifecycle | Sequential after cart mutations |
 | Phase 4A | Product admin CRUD | Complete for API coverage |
-| Phase 4B | User management permissions | Parallel-safe after admin foundation |
+| Phase 4B | User management permissions | Complete for API coverage |
 | Phase 5 | Email and password reset | Parallel-safe except rate-limit scenarios |
 | Phase 6 | Order admin and business rules | Partially parallel; depends on admin and order foundations |
 | Phase 7 | SSO and Ollama streaming | Isolated, environment-dependent work |
@@ -373,25 +373,25 @@ This plan keeps only the high-level phase index so there is one source of truth 
 
 ### `GET /api/v1/users/{username}`
 - ✅ Existing user → 200 + contract
-- ⬜ Non-existent user → 404
-- ⬜ No token → 401
+- ✅ Non-existent user → 404
+- ✅ No token → 401
 
 ### `PUT /api/v1/users/{username}`
 - ✅ Owner edits own profile → 200
-- ⬜ Admin edits any user → 200
-- ⬜ Other user attempts edit → 403
-- ⬜ Validation errors → 400
-- ⬜ Non-existent user → 404
+- ✅ Admin edits any user → 200
+- ✅ Other user attempts edit → 403
+- ✅ Validation errors → 400
+- ✅ Non-existent user → 404
 
 ### `DELETE /api/v1/users/{username}`
 - ✅ Admin deletes existing user → 204
-- ⬜ Non-admin tries to delete → 403
-- ⬜ Delete non-existent user → 404
+- ✅ Non-admin tries to delete → 403
+- ✅ Delete non-existent user → 404
 
 ### `DELETE /api/v1/users/{username}/right-to-be-forgotten`
 - ✅ Owner deletes own data → 204
-- ⬜ Admin deletes any user's data → 204
-- ⬜ Other user attempts → 403
+- ✅ Admin deletes any user's data → 204
+- ✅ Other user attempts → 403
 
 ### `GET /api/v1/products/{id}`
 - ✅ Existing product → 200 + contract
@@ -419,7 +419,7 @@ This plan keeps only the high-level phase index so there is one source of truth 
 
 ### `GET /api/v1/cart`
 - ✅ Authenticated user → 200 + empty cart contract
-- ⬜ No token → 401
+- ✅ No token → 401
 
 ### `POST /api/v1/cart/items`
 - ✅ Add existing product → 200 + cart updated
@@ -440,24 +440,24 @@ This plan keeps only the high-level phase index so there is one source of truth 
 
 ### `DELETE /api/v1/cart`
 - ✅ Clear cart → 204
-- ⬜ No token → 401
+- ✅ No token → 401
 
 ### `POST /api/v1/orders`
 - ✅ Populated cart + valid address → 201 + order contract
-- ⬜ Empty cart → 400
+- ✅ Empty cart → 400
 - ⬜ Invalid address fields → 400
-- ⬜ No token → 401
+- ✅ No token → 401
 
 ### `GET /api/v1/orders`
 - ✅ Paginated list → 200 + page contract
-- ⬜ Filter by status → returns only matching orders
-- ⬜ No token → 401
+- ✅ Filter by status → returns only matching orders
+- ✅ No token → 401
 
 ### `GET /api/v1/orders/{id}`
 - ✅ Owner fetches own order → 200
 - ⬜ Admin fetches any order → 200
 - ⬜ User fetches another user's order → 403 or 404
-- ⬜ Non-existent ID → 404
+- ✅ Non-existent ID → 404
 
 ### `POST /api/v1/orders/{id}/cancel`
 - ✅ Cancel pending order → 200
