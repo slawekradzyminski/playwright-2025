@@ -120,9 +120,9 @@ Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
 
 | Status | Increment | Endpoints | Notes |
 |--------|-----------|-----------|-------|
-| ⬜ | Create order from cart | `POST /api/v1/orders` | Requires populated cart; include empty cart negative |
-| ⬜ | List current user's orders | `GET /api/v1/orders` | Cover page contract and optional status filter if stable |
-| ⬜ | Fetch order by ID | `GET /api/v1/orders/{id}` | Cover owner access, missing ID, and unauthorized |
+| ✅ | Create order from cart | `POST /api/v1/orders` | Covered populated cart happy path, cart consumption, empty cart negative, and 401 cases |
+| ✅ | List current user's orders | `GET /api/v1/orders` | Covered page contract, seeded order presence, stable `status=PENDING` filter, and 401 cases |
+| ✅ | Fetch order by ID | `GET /api/v1/orders/{id}` | Covered owner access, missing ID, and 401 cases |
 
 ## Phase 4A - Product Admin CRUD
 
@@ -226,15 +226,15 @@ Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
 The next best increment is:
 
 ```text
-Phase 3 - Create order from cart
-Endpoint: POST /api/v1/orders
-New file: tests/api/orders/orders.post.api.spec.ts
-Reuse: helpers/cartHelpers.ts
+Phase 4B - Update user
+Endpoint: PUT /api/v1/users/{username}
+New file: tests/api/users/users.username.put.api.spec.ts
+Reuse: fixtures/adminApiFixture.ts and existing user auth helpers
 ```
 
 Why this is next:
-- Phase 2A cart mutation coverage is complete.
-- It is the next dependency-driven ecommerce workflow increment.
-- It reuses the populated-cart helper created for cart mutation tests.
+- Phase 3 user order lifecycle is complete.
+- Phase 4B is the next incomplete dependency-ready phase.
+- It builds on the admin foundation that is already in place and unlocks the remaining user permission work.
 
-Phase 2A, Phase 2B, and Phase 4A are complete. The next dependency-driven step is Phase 3 user order lifecycle.
+Phase 2A, Phase 2B, Phase 3, and Phase 4A are complete. The next dependency-driven step is Phase 4B user management permissions.

@@ -1,3 +1,5 @@
+import type { PageDto } from './page';
+
 export interface AddressDto {
   street: string;
   city: string;
@@ -27,3 +29,11 @@ export interface OrderDto {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface OrdersQuery {
+  page?: number;
+  size?: number;
+  status?: OrderStatus;
+}
+
+export type OrdersPageDto = PageDto<OrderDto>;

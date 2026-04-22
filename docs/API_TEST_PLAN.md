@@ -107,9 +107,9 @@
 
 | Status | Method | Path | Auth | Role Required | Coverage | Test File(s) | Difficulty | Priority | Notes |
 |--------|--------|------|------|--------------|----------|-------------|-----------|---------|-------|
-| ⬜ | POST | `/api/v1/orders` | 🔒 | any | None | — | 🔥 High | High | Creates order from cart; cart must be populated first; empty cart → 400 |
-| ⬜ | GET | `/api/v1/orders` | 🔒 | any | None | — | ⚙️ Medium | High | Paginated; filter by status; user-scoped |
-| ⬜ | GET | `/api/v1/orders/{id}` | 🔒 | any or ADMIN | None | — | ⚙️ Medium | High | Admin sees any order; user sees own only |
+| ✅ | POST | `/api/v1/orders` | 🔒 | any | Covered | `orders/orders.post.api.spec.ts` | 🔥 High | High | 201 create-from-cart, 400 empty cart, and 401 missing/invalid token covered; asserts created order contract and cart is emptied |
+| ✅ | GET | `/api/v1/orders` | 🔒 | any | Covered | `orders/orders.get.api.spec.ts` | ⚙️ Medium | High | Covers paginated current-user contract, seeded order presence, stable `status=PENDING` filter, and 401 missing/invalid token |
+| ✅ | GET | `/api/v1/orders/{id}` | 🔒 | any or ADMIN | Covered | `orders/orders.id.get.api.spec.ts` | ⚙️ Medium | High | Covers owner read contract, 401 missing/invalid token, and 404 missing order |
 | ⬜ | POST | `/api/v1/orders/{id}/cancel` | 🔒 | any or ADMIN | None | — | ⚙️ Medium | Medium | Business rule: only cancellable statuses; 400 on invalid |
 | ⬜ | PUT | `/api/v1/orders/{id}/status` | 🔒 | ADMIN | None | — | ⚙️ Medium | Medium | Admin-only status transition; invalid transition → 400 |
 | ⬜ | GET | `/api/v1/orders/admin` | 🔒 | ADMIN | None | — | ⚙️ Medium | Medium | Admin-only; paginated; filter by status |
