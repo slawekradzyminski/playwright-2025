@@ -48,17 +48,17 @@
 | Metric | Value |
 |--------|-------|
 | **Total counted screens** | 25 |
-| **Covered** | 5 |
-| **Partial** | 2 |
-| **Not covered** | 18 |
-| **Overall screen coverage %** | **20.0%** |
+| **Covered** | 9 |
+| **Partial** | 1 |
+| **Not covered** | 15 |
+| **Overall screen coverage %** | **36.0%** |
 | **Runtime-verified screens** | 25 (100.0%) |
 | **Public screens total** | 5 |
 | **Public screens covered** | 2 (40.0%) |
 | **Role-sensitive screens total** | 5 |
 | **Role-sensitive screens covered** | 2 (40.0%) |
 | **High-priority screens** | 12 |
-| **High-priority screens fully covered** | 5 (41.7%) |
+| **High-priority screens fully covered** | 9 (75.0%) |
 
 ---
 
@@ -145,16 +145,16 @@
 
 | Status | Screen | Route | Access | Reachability | Runtime | Coverage | Test File(s) | Priority | Notes |
 |--------|--------|-------|--------|--------------|---------|----------|-------------|----------|-------|
-| 🟡 | Product Details | `/products/:id` | 🔒 | Direct URL with product id or product card click | Runtime-verified | Partial | `tests/ui/products.ui.spec.ts` | 🔥 High | States: loading, not found, no image, stock/no-stock, in-cart quantity, update/remove cart |
+| ✅ | Product Details | `/products/:id` | 🔒 | Direct URL with product id or product card click | Runtime-verified | Covered | `tests/ui/product-details.ui.spec.ts`, `tests/ui/products.ui.spec.ts` | 🔥 High | States: direct route, not found, no image, out-of-stock, in-cart quantity, update/remove cart |
 | ✅ | Products Catalog | `/products` | 🔒 | Direct URL after auth; home/header nav | Runtime-verified | Covered | `tests/ui/products.ui.spec.ts` | 🔥 High | States: loading, error, filter, search, sort, card-level cart actions |
 
 ### Commerce
 
 | Status | Screen | Route | Access | Reachability | Runtime | Coverage | Test File(s) | Priority | Notes |
 |--------|--------|-------|--------|--------------|---------|----------|-------------|----------|-------|
-| ⬜ | Cart | `/cart` | 🔒 | Direct URL after auth; header cart; product/cart flows | Runtime-verified | None | — | 🔥 High | Empty and populated states were both runtime-verified |
-| ⬜ | Checkout | `/checkout` | 🔒 | Direct URL with cart state; cart CTA | Runtime-verified | None | — | 🔥 High | Empty-cart redirect to `/cart` and ready-to-submit checkout state both verified |
-| ⬜ | Order Details | `/orders/:id` | 🔒 / 🛡️ | Direct URL with order id; post-checkout redirect; admin order list | Runtime-verified | None | — | 🔥 High | Client-created order and admin direct access both verified; admin controls live inside the same screen |
+| ✅ | Cart | `/cart` | 🔒 | Direct URL after auth; header cart; product/cart flows | Runtime-verified | Covered | `tests/ui/cart.ui.spec.ts` | 🔥 High | States: empty, populated, retry/error, update, remove, clear, CTA to checkout |
+| ✅ | Checkout | `/checkout` | 🔒 | Direct URL with cart state; cart CTA | Runtime-verified | Covered | `tests/ui/checkout.ui.spec.ts` | 🔥 High | States: empty-cart redirect, validation, successful order placement |
+| ✅ | Order Details | `/orders/:id` | 🔒 / 🛡️ | Direct URL with order id; post-checkout redirect; admin order list | Runtime-verified | Covered | `tests/ui/order-details.ui.spec.ts` | 🔥 High | Client lane covers not found, pending details, and cancel; admin controls live inside the same screen |
 
 ### Account
 
@@ -211,10 +211,10 @@
 - `Reset Password`
 - `SSO Callback`
 
-### 🔒 Authenticated User Screens (15 total, 1 covered — 6.7%, 2 partial)
+### 🔒 Authenticated User Screens (15 total, 5 covered — 33.3%, 1 partial)
 - `Home` 🟡
 - `Products Catalog` ✅
-- `Product Details` 🟡
+- `Product Details` ✅
 - `Profile`
 - `Users`
 - `Send Email`
@@ -223,9 +223,9 @@
 - `LLM Generate`
 - `LLM Chat`
 - `LLM Chat + Tools`
-- `Cart`
-- `Checkout`
-- `Order Details`
+- `Cart` ✅
+- `Checkout` ✅
+- `Order Details` ✅
 - `Traffic Monitor`
 
 ### 🛡️ Admin / Role-Sensitive Screens (5 total, 2 covered — 40.0%)
@@ -245,10 +245,10 @@
 | `Register` | **Covered** | Happy path, validation, and navigation are automated |
 | `Home` | **Partial** | Smoke coverage exists, but screen-specific CTA behavior and negative states are not tracked yet |
 | `Products Catalog` | **Covered** | Listing, filter, search, sort, and card-level cart interactions are automated |
-| `Product Details` | **Partial** | Happy-path navigation exists, but detail-only states still lack dedicated screen coverage |
-| `Cart` | **None** | Runtime-verified empty and populated states, but no dedicated UI spec exists |
-| `Checkout` | **None** | Runtime-verified redirect and order placement flow, but no dedicated UI spec exists |
-| `Order Details` | **None** | Runtime-verified for client and admin access, but cancel/status transitions are not automated in UI |
+| `Product Details` | **Covered** | Dedicated spec covers direct route, not found, no-image, out-of-stock, and in-cart update/remove states |
+| `Cart` | **Covered** | Dedicated spec covers empty, populated, retry/error, update, remove, clear, and checkout CTA states |
+| `Checkout` | **Covered** | Dedicated spec covers empty-cart redirect, validation, and successful order placement |
+| `Order Details` | **Covered** | Client-lane spec covers not found, pending order details, and cancel; admin status controls remain planned under Phase 4B |
 | `Profile` | **None** | No UI automation currently covers profile forms, prompt editors, or embedded order-list states |
 | `Users` | **None** | No UI automation currently covers the list, permission behavior, or destructive controls |
 | `Edit User` | **None** | Runtime-verified denied/admin states, but no automated form coverage exists |

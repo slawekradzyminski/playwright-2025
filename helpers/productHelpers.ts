@@ -22,3 +22,10 @@ export const getSeededProduct = async (productsClient: ProductsClient, token: st
 
   return products[0];
 };
+
+export const formatMoney = (amount: number): string => `$${amount.toFixed(2)}`;
+
+export const formatProductPrice = (product: Pick<ProductDto, 'price'>): string => formatMoney(product.price);
+
+export const formatProductStock = (product: Pick<ProductDto, 'stockQuantity'>): string =>
+  product.stockQuantity > 0 ? `${product.stockQuantity} in stock` : 'Out of stock';

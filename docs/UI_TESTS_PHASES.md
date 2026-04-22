@@ -81,7 +81,7 @@ Phase 6: AI workspace and SSO happy-path coverage are last and environment-depen
 | Status | Increment | Screens | Notes |
 |--------|-----------|---------|-------|
 | ✅ | Products catalog | `Products Catalog` | Covered listing, filter, search, sort, and card-level cart interactions |
-| ⬜ | Product details | `Product Details` | Runtime shows direct route, no-image, stock, and in-cart states worth dedicated coverage |
+| ✅ | Product details | `Product Details` | Covered direct route, not found, no-image, out-of-stock, and in-cart update/remove states |
 
 ## Phase 2B - Admin Product Foundation
 
@@ -117,9 +117,9 @@ Phase 6: AI workspace and SSO happy-path coverage are last and environment-depen
 
 | Status | Increment | Screens | Notes |
 |--------|-----------|---------|-------|
-| ⬜ | Cart screen | `Cart` | Cover empty, populated, retry/error, update/remove/clear, and CTA to checkout |
-| ⬜ | Checkout screen | `Checkout` | Cover redirect, validation, and successful order placement |
-| ⬜ | Order details screen | `Order Details` | Cover not found and pending cancel in the client lane; admin status controls can stay isolated in the admin lane |
+| ✅ | Cart screen | `Cart` | Covered empty, populated, retry/error, update/remove/clear, and CTA to checkout |
+| ✅ | Checkout screen | `Checkout` | Covered empty-cart redirect, validation, and successful order placement |
+| ✅ | Order details screen | `Order Details` | Covered not found, pending details, and client cancel; admin status controls can stay isolated in the admin lane |
 
 ## Phase 4A - Account and User Management
 
@@ -206,13 +206,13 @@ Phase 6: AI workspace and SSO happy-path coverage are last and environment-depen
 The next best increment is:
 
 ```text
-Phase 2A - Product details
-Screen: Product Details
-New file: tests/ui/product-details.ui.spec.ts
-Reuse: existing product-details page object methods from tests/ui/products.ui.spec.ts flows
+Phase 4A - Profile workspace
+Screen: Profile
+New file: tests/ui/profile.ui.spec.ts
+Reuse: authenticatedUiUserFixture, profile route runtime findings, and order setup helpers from Phase 3
 ```
 
 Why this is next:
-- Phase 1 is stable, and Phase 2A is the first incomplete phase.
-- The current suite reaches product details only indirectly from the catalog spec, which conflicts with the repository rule that each screen should have its own spec file.
-- Runtime verification already proved direct-route product detail states worth covering next: not found, no image, stock/in-cart state, and cart update/remove behavior.
+- Phases 1, 2A, 2B, and 3 are complete.
+- Phase 4A is the first incomplete phase in dependency order.
+- The profile screen is high priority and owns both account forms and embedded order-list states.
