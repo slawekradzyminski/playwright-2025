@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>eUI API and UI Testing Status Report</title>
+    <link rel="icon" href="data:," />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #172033;
+        --muted: #667085;
+        --line: #d9e1ea;
+        --paper: #f6f8fb;
+        --panel: #ffffff;
+        --accent: #1d7f7a;
+        --accent-soft: #d9f1ee;
+        --warn: #d98d1f;
+        --warn-soft: #fff1d6;
+        --remaining: #d6dde7;
+        --shadow: 0 18px 48px rgba(23, 32, 51, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.45;
+      }
+
+      main {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 36px 0 48px;
+      }
+
+      .report {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 28px;
+        padding: 34px 38px 28px;
+        border-bottom: 1px solid var(--line);
+        background:
+          linear-gradient(135deg, rgba(29, 127, 122, 0.1), rgba(255, 255, 255, 0) 42%),
+          #ffffff;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 760px;
+        font-size: clamp(2rem, 4vw, 3.4rem);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-bottom: 14px;
+        font-size: 1.05rem;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        font-size: 0.93rem;
+        letter-spacing: 0;
+      }
+
+      .subtitle {
+        max-width: 680px;
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 1rem;
+      }
+
+      .status-pill {
+        align-self: start;
+        min-width: 170px;
+        padding: 14px 16px;
+        border: 1px solid #efc97f;
+        border-radius: 14px;
+        background: var(--warn-soft);
+      }
+
+      .status-pill span {
+        display: block;
+        color: #7a4b05;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .status-pill strong {
+        display: block;
+        margin-top: 4px;
+        font-size: 1.45rem;
+      }
+
+      section {
+        padding: 28px 38px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      section:last-child {
+        border-bottom: 0;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: 1.25fr 0.75fr;
+        gap: 30px;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 1.2rem;
+      }
+
+      li {
+        margin: 7px 0;
+      }
+
+      .takeaway {
+        padding: 18px;
+        border-left: 4px solid var(--accent);
+        background: var(--accent-soft);
+        color: #0f4f4c;
+      }
+
+      .coverage-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .metric-panel {
+        display: grid;
+        grid-template-columns: 150px minmax(0, 1fr);
+        gap: 20px;
+        align-items: center;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: #fbfcfe;
+      }
+
+      .donut {
+        width: 142px;
+        height: 142px;
+      }
+
+      .donut text {
+        fill: var(--ink);
+        font-size: 1.38rem;
+        font-weight: 800;
+        text-anchor: middle;
+      }
+
+      .donut .track {
+        fill: none;
+        stroke: var(--remaining);
+        stroke-width: 11;
+      }
+
+      .donut .covered {
+        fill: none;
+        stroke: var(--accent);
+        stroke-linecap: round;
+        stroke-width: 11;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+      }
+
+      .donut .partial {
+        fill: none;
+        stroke: var(--warn);
+        stroke-linecap: round;
+        stroke-width: 11;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+      }
+
+      .metric-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .metric-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .metric-row strong {
+        color: var(--ink);
+      }
+
+      .bar-stack {
+        display: grid;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 80px minmax(0, 1fr) 88px;
+        gap: 12px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .bar {
+        overflow: hidden;
+        height: 12px;
+        border-radius: 99px;
+        background: var(--remaining);
+      }
+
+      .bar span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--accent);
+      }
+
+      .bar .api {
+        width: 71.1%;
+      }
+
+      .bar .ui {
+        width: 48%;
+      }
+
+      .columns {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .plain-panel {
+        padding-top: 4px;
+      }
+
+      .plain-panel p {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 0.94rem;
+      }
+
+      .phase-line {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .phase-block {
+        margin-top: 22px;
+      }
+
+      .phase-block:first-of-type {
+        margin-top: 26px;
+      }
+
+      .phase-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        color: var(--muted);
+        font-size: 0.84rem;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .phase-label span {
+        color: var(--ink);
+        font-size: 0.96rem;
+        text-transform: none;
+      }
+
+      .phase {
+        min-height: 70px;
+        padding: 12px 10px;
+        border-radius: 12px;
+        background: #eef7f6;
+        color: #124f4b;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+
+      .phase.open {
+        background: #fff5e5;
+        color: #704607;
+      }
+
+      .phase span {
+        display: block;
+        margin-top: 6px;
+        color: inherit;
+        font-size: 0.72rem;
+        font-weight: 600;
+        opacity: 0.8;
+      }
+
+      .note {
+        margin-top: 16px;
+        padding: 14px 16px;
+        border: 1px solid #efc97f;
+        border-radius: 12px;
+        background: var(--warn-soft);
+        color: #704607;
+        font-size: 0.9rem;
+      }
+
+      .small {
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      @media (max-width: 860px) {
+        header,
+        .summary,
+        .coverage-grid,
+        .columns {
+          grid-template-columns: 1fr;
+        }
+
+        header,
+        section {
+          padding-left: 22px;
+          padding-right: 22px;
+        }
+
+        .metric-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .phase-line {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .phase-label {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+
+      @media print {
+        body {
+          background: #ffffff;
+        }
+
+        main {
+          width: 100%;
+          padding: 0;
+        }
+
+        .report {
+          border: 0;
+          border-radius: 0;
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <article class="report" aria-label="eUI API and UI Testing Status Report">
+        <header>
+          <div>
+            <h1>eUI API and UI Testing Status</h1>
+            <p class="subtitle">
+              Executive update on AI-assisted test planning and automation progress over the latest documented three-day work window.
+            </p>
+          </div>
+          <div class="status-pill">
+            <span>Overall Status</span>
+            <strong>Amber</strong>
+            <p class="small">Core flows are covered; remaining work is concentrated in recovery, admin orders, AI, and SSO.</p>
+          </div>
+        </header>
+
+        <section class="summary">
+          <div>
+            <h2>Executive Summary</h2>
+            <ul>
+              <li>API coverage is now documented at <strong>32 of 45 endpoints</strong>, or <strong>71.1%</strong>, with no partial endpoint coverage reported.</li>
+              <li>UI coverage is now reconciled at <strong>12 of 25 screens</strong>, or <strong>48.0%</strong>, plus one partial screen.</li>
+              <li>Core customer flows are covered across authentication, catalog, cart, checkout, order detail, product APIs, and admin product operations.</li>
+              <li>The API phase plan shows Phases 1-4B complete; the next ready API work is email and password reset coverage.</li>
+              <li>The UI phase plan shows Phases 1-4A complete, with account and user-management screens now included in the coverage baseline.</li>
+            </ul>
+          </div>
+          <div class="takeaway">
+            <h2>Management Takeaway</h2>
+            <p>
+              The highest-value customer and admin product paths are in place. The next investment should close operational gaps and stabilize environment-dependent areas before expanding into AI and SSO scenarios.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <h2>Coverage Overview</h2>
+          <div class="coverage-grid">
+            <div class="metric-panel">
+              <svg class="donut" viewBox="0 0 120 120" role="img" aria-label="API endpoint coverage 71.1 percent">
+                <circle class="track" cx="60" cy="60" r="48" pathLength="100"></circle>
+                <circle class="covered" cx="60" cy="60" r="48" pathLength="100" stroke-dasharray="71.1 100"></circle>
+                <text x="60" y="56">71.1%</text>
+                <text x="60" y="76" style="font-size: 0.62rem; fill: #667085; font-weight: 700;">API</text>
+              </svg>
+              <div class="metric-list">
+                <h3>API Endpoints</h3>
+                <div class="metric-row"><span>Total identified</span><strong>45</strong></div>
+                <div class="metric-row"><span>Covered</span><strong>32</strong></div>
+                <div class="metric-row"><span>Partial</span><strong>0</strong></div>
+                <div class="metric-row"><span>Not covered</span><strong>13</strong></div>
+              </div>
+            </div>
+
+            <div class="metric-panel">
+              <svg class="donut" viewBox="0 0 120 120" role="img" aria-label="UI screen coverage 48 percent with 4 percent partial">
+                <circle class="track" cx="60" cy="60" r="48" pathLength="100"></circle>
+                <circle class="covered" cx="60" cy="60" r="48" pathLength="100" stroke-dasharray="48 100"></circle>
+                <circle class="partial" cx="60" cy="60" r="48" pathLength="100" stroke-dasharray="4 100" stroke-dashoffset="-48"></circle>
+                <text x="60" y="56">48.0%</text>
+                <text x="60" y="76" style="font-size: 0.62rem; fill: #667085; font-weight: 700;">UI</text>
+              </svg>
+              <div class="metric-list">
+                <h3>UI Screens</h3>
+                <div class="metric-row"><span>Total identified</span><strong>25</strong></div>
+                <div class="metric-row"><span>Covered</span><strong>12</strong></div>
+                <div class="metric-row"><span>Partial</span><strong>1</strong></div>
+                <div class="metric-row"><span>Not covered</span><strong>12</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bar-stack" aria-label="Covered versus remaining scope">
+            <div class="bar-row">
+              <strong>API</strong>
+              <div class="bar"><span class="api"></span></div>
+              <span>32 / 45</span>
+            </div>
+            <div class="bar-row">
+              <strong>UI</strong>
+              <div class="bar"><span class="ui"></span></div>
+              <span>12 / 25</span>
+            </div>
+          </div>
+
+        </section>
+
+        <section>
+          <h2>Key Achievements in the Last Three Days</h2>
+          <div class="columns">
+            <div class="plain-panel">
+              <h3>API foundation completed</h3>
+              <p>Support endpoints, cart mutations, admin fixtures, product admin CRUD, user management permissions, and core order lifecycle are marked complete through Phase 4B.</p>
+            </div>
+            <div class="plain-panel">
+              <h3>UI business flows covered</h3>
+              <p>Automated coverage exists for login, register, products, product detail, cart, checkout, order detail, and admin product screens.</p>
+            </div>
+            <div class="plain-panel">
+              <h3>Planning assets produced</h3>
+              <p>The endpoint inventory, screen inventory, phase sequencing, dependencies, and next-step guidance are documented for coordinated human and AI work.</p>
+            </div>
+          </div>
+
+          <div class="phase-block">
+            <div class="phase-label">
+              <span>API test phases</span>
+              6 complete, 3 remaining
+            </div>
+            <div class="phase-line" aria-label="API phase status">
+              <div class="phase">API 1<span>Support complete</span></div>
+              <div class="phase">API 2A<span>Cart complete</span></div>
+              <div class="phase">API 2B<span>Admin foundation complete</span></div>
+              <div class="phase">API 3<span>Orders complete</span></div>
+              <div class="phase">API 4A<span>Product admin complete</span></div>
+              <div class="phase">API 4B<span>User management complete</span></div>
+              <div class="phase open">API 5-7<span>Remaining</span></div>
+            </div>
+          </div>
+
+          <div class="phase-block">
+            <div class="phase-label">
+              <span>UI test phases</span>
+              5 complete, 3 remaining
+            </div>
+            <div class="phase-line" aria-label="UI phase status">
+              <div class="phase">UI 1<span>Auth entry complete</span></div>
+              <div class="phase">UI 2A<span>Catalog complete</span></div>
+              <div class="phase">UI 2B<span>Admin products complete</span></div>
+              <div class="phase">UI 3<span>Commerce journey complete</span></div>
+              <div class="phase">UI 4A<span>Account and users complete</span></div>
+              <div class="phase open">UI 4B<span>Admin orders remaining</span></div>
+              <div class="phase open">UI 5-6<span>Utilities, AI, SSO</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Remaining Work</h2>
+          <div class="columns">
+            <div class="plain-panel">
+              <h3>API gaps</h3>
+              <p>Email, password reset, SSO exchange, admin order operations, order cancellation/status transitions, and Ollama streaming endpoints remain open.</p>
+            </div>
+            <div class="plain-panel">
+              <h3>UI gaps</h3>
+              <p>Remaining uncovered areas include password recovery, utilities, traffic monitor, AI workspace, admin dashboard, and admin orders.</p>
+            </div>
+            <div class="plain-panel">
+              <h3>Coverage confidence</h3>
+              <p>The UI plan and UI phase documents now align on account and user-management completion, giving leadership a single coverage baseline.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Recommended Next Steps</h2>
+          <ol>
+            <li><strong>Start API Phase 5</strong> with `POST /api/v1/email`, then password forgot/reset using the local email outbox.</li>
+            <li><strong>Start UI Phase 4B</strong> with the admin dashboard, then admin order list and order-detail actions.</li>
+            <li><strong>Complete admin order UI/API coverage</strong>, including filters, status transitions, and permission boundaries.</li>
+            <li><strong>Close utility UI screens</strong> for QR, email, traffic monitor, and password recovery before AI/SSO expansion.</li>
+            <li><strong>Plan AI and SSO tests as isolated slices</strong> because they depend on streaming behavior and external identity fixtures.</li>
+          </ol>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>

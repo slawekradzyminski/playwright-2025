@@ -48,17 +48,17 @@
 | Metric | Value |
 |--------|-------|
 | **Total counted screens** | 25 |
-| **Covered** | 9 |
+| **Covered** | 12 |
 | **Partial** | 1 |
-| **Not covered** | 15 |
-| **Overall screen coverage %** | **36.0%** |
+| **Not covered** | 12 |
+| **Overall screen coverage %** | **48.0%** |
 | **Runtime-verified screens** | 25 (100.0%) |
 | **Public screens total** | 5 |
 | **Public screens covered** | 2 (40.0%) |
 | **Role-sensitive screens total** | 5 |
-| **Role-sensitive screens covered** | 2 (40.0%) |
+| **Role-sensitive screens covered** | 3 (60.0%) |
 | **High-priority screens** | 12 |
-| **High-priority screens fully covered** | 9 (75.0%) |
+| **High-priority screens fully covered** | 10 (83.3%) |
 
 ---
 
@@ -160,14 +160,14 @@
 
 | Status | Screen | Route | Access | Reachability | Runtime | Coverage | Test File(s) | Priority | Notes |
 |--------|--------|-------|--------|--------------|---------|----------|-------------|----------|-------|
-| ⬜ | Profile | `/profile` | 🔒 | Direct URL after auth; home/header nav; `/orders` redirect | Runtime-verified | None | — | 🔥 High | Includes personal info, prompt editors, and embedded order-list states |
+| ✅ | Profile | `/profile` | 🔒 | Direct URL after auth; home/header nav; `/orders` redirect | Runtime-verified | Covered | `tests/ui/profile.ui.spec.ts` | 🔥 High | Covers personal info save, prompt editors, empty order history, and populated pending-order state |
 
 ### Users
 
 | Status | Screen | Route | Access | Reachability | Runtime | Coverage | Test File(s) | Priority | Notes |
 |--------|--------|-------|--------|--------------|---------|----------|-------------|----------|-------|
-| ⬜ | Edit User | `/users/:username/edit` | 🛡️ (component-level) | Direct URL with username; users list action | Runtime-verified | None | — | ⚙️ Medium | Non-admin access-denied state and admin edit form were both runtime-verified |
-| ⬜ | Users | `/users` | 🔒 | Direct URL after auth; home entry point | Runtime-verified | None | — | ⚙️ Medium | Admin-labelled screen is reachable by non-admin users because the router does not role-gate it |
+| ✅ | Edit User | `/users/:username/edit` | 🛡️ (component-level) | Direct URL with username; users list action | Runtime-verified | Covered | `tests/ui/edit-user.ui.spec.ts`, `tests/ui/admin/edit-user.admin.ui.spec.ts` | ⚙️ Medium | Covers access denied, validation, not found, preload, and save flow |
+| ✅ | Users | `/users` | 🔒 | Direct URL after auth; home entry point | Runtime-verified | Covered | `tests/ui/users.ui.spec.ts`, `tests/ui/admin/users.admin.ui.spec.ts` | ⚙️ Medium | Covers client reachability and admin row actions |
 
 ### Utilities
 
@@ -211,12 +211,12 @@
 - `Reset Password`
 - `SSO Callback`
 
-### 🔒 Authenticated User Screens (15 total, 5 covered — 33.3%, 1 partial)
+### 🔒 Authenticated User Screens (15 total, 7 covered — 46.7%, 1 partial)
 - `Home` 🟡
 - `Products Catalog` ✅
 - `Product Details` ✅
-- `Profile`
-- `Users`
+- `Profile` ✅
+- `Users` ✅
 - `Send Email`
 - `QR Code Generator`
 - `LLM Overview`
@@ -228,8 +228,8 @@
 - `Order Details` ✅
 - `Traffic Monitor`
 
-### 🛡️ Admin / Role-Sensitive Screens (5 total, 2 covered — 40.0%)
-- `Edit User`
+### 🛡️ Admin / Role-Sensitive Screens (5 total, 3 covered — 60.0%)
+- `Edit User` ✅
 - `Admin Dashboard`
 - `Admin Products List` ✅
 - `Admin Product Form` ✅
@@ -249,9 +249,9 @@
 | `Cart` | **Covered** | Dedicated spec covers empty, populated, retry/error, update, remove, clear, and checkout CTA states |
 | `Checkout` | **Covered** | Dedicated spec covers empty-cart redirect, validation, and successful order placement |
 | `Order Details` | **Covered** | Client-lane spec covers not found, pending order details, and cancel; admin status controls remain planned under Phase 4B |
-| `Profile` | **None** | No UI automation currently covers profile forms, prompt editors, or embedded order-list states |
-| `Users` | **None** | No UI automation currently covers the list, permission behavior, or destructive controls |
-| `Edit User` | **None** | Runtime-verified denied/admin states, but no automated form coverage exists |
+| `Profile` | **Covered** | Dedicated spec covers personal info save, prompt editors, empty order history, and populated pending-order state |
+| `Users` | **Covered** | Client and admin specs cover client reachability and admin row actions |
+| `Edit User` | **Covered** | Client and admin specs cover access denied, validation, not found, preload, and save flow |
 | `Send Email` | **None** | No screen-level automation for validation, success, or backend-error feedback |
 | `QR Code Generator` | **None** | No UI automation for generator interaction or result rendering |
 | `Traffic Monitor` | **None** | Runtime-verified WebSocket connection, but live event assertions are still missing |

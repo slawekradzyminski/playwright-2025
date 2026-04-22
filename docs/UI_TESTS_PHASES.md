@@ -206,13 +206,14 @@ Phase 6: AI workspace and SSO happy-path coverage are last and environment-depen
 The next best increment is:
 
 ```text
-Phase 4A - Profile workspace
-Screen: Profile
-New file: tests/ui/profile.ui.spec.ts
-Reuse: authenticatedUiUserFixture, profile route runtime findings, and order setup helpers from Phase 3
+Phase 4B - Admin dashboard
+Screen: Admin Dashboard
+New file: tests/ui/admin/dashboard.admin.ui.spec.ts
+Reuse: adminUiFixture, admin route runtime findings, and existing admin product/order setup helpers
 ```
 
 Why this is next:
 - Phases 1, 2A, 2B, and 3 are complete.
-- Phase 4A is the first incomplete phase in dependency order.
-- The profile screen is high priority and owns both account forms and embedded order-list states.
+- Phase 4A account and user management coverage is complete.
+- Phase 4B is the first incomplete phase in dependency order.
+- The admin dashboard is the lowest-friction Phase 4B entry point before richer admin order-list and order-detail action coverage.
