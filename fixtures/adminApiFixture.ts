@@ -2,10 +2,12 @@ import { test as base } from '@playwright/test';
 import { ADMIN_PASSWORD } from '../config/constants';
 import { randomAdminProduct } from '../generators/productGenerator';
 import { AdminProductCleanup } from '../helpers/adminProductCleanup';
+import { AdminUserCleanup } from '../helpers/adminUserCleanup';
 import { expectJsonResponse } from '../helpers/apiAssertions';
 import { type AuthenticatedUser, createAuthenticatedUser } from '../helpers/authenticationHelpers';
 import { LoginClient } from '../httpclients/loginClient';
 import { ProductsClient } from '../httpclients/productsClient';
+import { UsersClient } from '../httpclients/usersClient';
 import type { LoginResponseDto } from '../types/auth';
 import type { ProductCreateDto, ProductDto } from '../types/product';
 
@@ -13,11 +15,15 @@ interface AdminApiFixture {
   adminApiUser: LoginResponseDto;
   clientApiUser: AuthenticatedUser;
   adminProductsClient: ProductsClient;
+  adminUsersClient: UsersClient;
   adminProductCleanup: AdminProductCleanup;
+  adminUserCleanup: AdminUserCleanup;
   createAdminProduct: (productData?: ProductCreateDto) => Promise<ProductDto>;
+  createDisposableApiUser: () => Promise<AuthenticatedUser>;
   trackAdminProduct: (product: Pick<ProductDto, 'id' | 'name'>) => void;
   trackAdminProductId: (productId: number) => void;
   trackAdminProductName: (productName: string) => void;
+  trackDisposableUsername: (username: string) => void;
 }
 
 export const test = base.extend<AdminApiFixture>({
@@ -40,8 +46,19 @@ export const test = base.extend<AdminApiFixture>({
     await use(new ProductsClient(request));
   },
 
+  adminUsersClient: async ({ request }, use) => {
+    await use(new UsersClient(request));
+  },
+
   adminProductCleanup: async ({ adminApiUser, adminProductsClient }, use) => {
     const cleanup = new AdminProductCleanup(adminProductsClient, adminApiUser.token);
+
+    await use(cleanup);
+    await cleanup.cleanup();
+  },
+
+  adminUserCleanup: async ({ adminApiUser, adminUsersClient }, use) => {
+    const cleanup = new AdminUserCleanup(adminUsersClient, adminApiUser.token);
 
     await use(cleanup);
     await cleanup.cleanup();
@@ -59,6 +76,15 @@ export const test = base.extend<AdminApiFixture>({
     });
   },
 
+  createDisposableApiUser: async ({ request, adminUserCleanup }, use) => {
+    await use(async () => {
+      const user = await createAuthenticatedUser(request);
+      adminUserCleanup.trackUsername(user.userData.username);
+
+      return user;
+    });
+  },
+
   trackAdminProduct: async ({ adminProductCleanup }, use) => {
     await use((product) => adminProductCleanup.trackProduct(product));
   },
@@ -69,6 +95,10 @@ export const test = base.extend<AdminApiFixture>({
 
   trackAdminProductName: async ({ adminProductCleanup }, use) => {
     await use((productName) => adminProductCleanup.trackProductName(productName));
+  },
+
+  trackDisposableUsername: async ({ adminUserCleanup }, use) => {
+    await use((username) => adminUserCleanup.trackUsername(username));
   }
 });
 
