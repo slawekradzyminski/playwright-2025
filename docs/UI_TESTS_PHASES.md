@@ -136,9 +136,9 @@ Phase 6: AI workspace and SSO happy-path coverage are last and environment-depen
 
 | Status | Increment | Screens | Notes |
 |--------|-----------|---------|-------|
-| ⬜ | Profile workspace | `Profile` | Includes personal info, prompt editors, and embedded order list |
-| ⬜ | Users list | `Users` | Cover current runtime behavior, including non-admin reachability |
-| ⬜ | Edit user | `Edit User` | Cover access denied, validation, not found, and save flow |
+| ✅ | Profile workspace | `Profile` | `tests/ui/profile.ui.spec.ts` covers personal info save, prompt editors, empty order history, and populated pending-order state |
+| ✅ | Users list | `Users` | `tests/ui/users.ui.spec.ts` and `tests/ui/admin/users.admin.ui.spec.ts` cover client reachability and admin row actions |
+| ✅ | Edit user | `Edit User` | `tests/ui/edit-user.ui.spec.ts` and `tests/ui/admin/edit-user.admin.ui.spec.ts` cover access denied, validation, not found, preload, and save flow |
 
 ## Phase 4B - Admin Dashboard and Order Operations
 
