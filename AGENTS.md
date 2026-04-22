@@ -22,3 +22,9 @@
 - always run newly created tests to make sure they work and then full api test suite via `npm run test:api`
 - explore how given endpoint work by reading `api-docs.json` and using curl command
 - each endpoint should be in a separate file (so one file for GET, one for PUT, etc.)
+
+## Admin test rules (API and UI)
+- admin tests mutate shared data; keep them in `tests/api/admin` or `tests/ui/admin` and use generated self-owned data only
+- use admin fixtures for auth and cleanup; created test entities must be tracked or created through fixture helpers
+- admin suites run sequentially after regular tests by default; for admin-only checks use `npm run test:api:admin`, `npm run test:ui:admin`, or `npm run test:admin`
+- see `docs/ADMIN_TESTING.md` for details
