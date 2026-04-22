@@ -28,7 +28,21 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
+      name: 'client-tests',
+      testIgnore: ['**/api/admin/**', '**/ui/admin/**'],
+      use: { ...devices['Desktop Chrome'] }
+    },
+    {
+      name: 'admin-api',
+      testMatch: /api\/admin\/.*\.admin\.api\.spec\.ts/,
+      workers: 1,
+      dependencies: ['client-tests']
+    },
+    {
+      name: 'admin-ui',
+      testMatch: /ui\/admin\/.*\.admin\.ui\.spec\.ts/,
+      workers: 1,
+      dependencies: ['admin-api'],
       use: { ...devices['Desktop Chrome'] }
     }
     // {

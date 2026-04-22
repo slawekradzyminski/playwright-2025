@@ -13,6 +13,7 @@
   },
   "include": [
     "playwright.config.ts",
+    "playwright.admin.config.ts",
     "config/**/*.ts",
     "fixtures/**/*.ts",
     "helpers/**/*.ts",
