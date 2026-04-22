@@ -33,7 +33,7 @@ This repository contains automated API and UI tests for the local training envir
 
 ### Prerequisites
 
-- Node.js LTS, Recommended `v24.11.0`
+- Node.js LTS only, recommended `v24.x.x`
 - Docker
 
 ### Setup
@@ -160,7 +160,7 @@ Read more about Playwright MCP here: https://github.com/microsoft/playwright-mcp
 
 ### Prerequisites
 
-- Node.js 18 or newer
+- Node.js 18 or newer (LTS releases only)
 - Playwright installed
 
 ### Cursor
