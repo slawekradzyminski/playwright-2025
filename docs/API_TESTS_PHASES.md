@@ -1,6 +1,6 @@
 # API Tests Phases
 
-**Last Updated:** 2026-04-21
+**Last Updated:** 2026-04-22
 
 **Purpose:** Use this file to decide the next API test increment.
 
@@ -14,7 +14,7 @@ This is the execution companion to [`API_TEST_PLAN.md`](./API_TEST_PLAN.md). The
 4. After each increment, update:
    - this file: phase/increment status
    - [`API_TEST_PLAN.md`](./API_TEST_PLAN.md): endpoint inventory, coverage summary, and test file references
-5. Always run the newly created tests, then `npm run test:api`.
+5. Always run the newly created tests, then `npm run test:api`. For admin API changes, also run `npm run test:api:admin` or `npm run test:admin`.
 
 ## Dependency Map
 
@@ -45,7 +45,7 @@ Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
 | Phase 1 low-risk endpoint files | Yes | Mostly independent read/write tests on user-owned fields or helper endpoints |
 | Cart mutation endpoint files | Partially | `POST /cart/items` should be done first because PUT/DELETE need a reliable add-item helper |
 | Cart and admin foundation | Yes | Different endpoint groups; no shared data dependency |
-| Product admin CRUD and user management | Yes | Both depend on admin auth, but can use separate users/products |
+| Product admin CRUD and user management | Yes | Both depend on admin auth, but can use separate users/products; admin lanes run sequentially by config |
 | Order lifecycle and product delete tests | Be careful | Product delete can conflict with products referenced by carts/orders; use created products only |
 | Password reset and email tests | Yes after local outbox client exists | Both use local email outbox but can isolate by clearing outbox in `afterEach` |
 | Rate-limit tests | No, run serially | Shared rate-limit buckets can make parallel tests flaky |
@@ -92,7 +92,7 @@ Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
 
 **Goal:** Make admin-only endpoint tests cheap and consistent.
 
-**Parallel-safe:** Yes with Phase 2A. This is a separate track and does not require cart mutation coverage.
+**Parallel-safe:** Yes with Phase 2A. This is a separate track and does not require cart mutation coverage. Admin specs themselves run sequentially in the admin lane.
 
 **Exit criteria:**
 - There is a documented way to obtain an admin token.
@@ -101,8 +101,9 @@ Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
 
 | Status | Increment | Endpoints | Notes |
 |--------|-----------|-----------|-------|
-| ⬜ | Admin auth fixture/helper | Shared setup | Use existing constants/patterns; avoid repeating admin login in every file |
-| ⬜ | Permission assertion helper if useful | Shared helper | Keep it small; only extract if repeated across admin endpoint files |
+| ✅ | Admin auth fixture/helper | Shared setup | `fixtures/adminApiFixture.ts` provides admin login, client user setup, product client, created-product helper, and cleanup |
+| ✅ | UI admin auth fixture | Shared setup | `fixtures/adminUiFixture.ts` injects admin auth into browser local storage via `helpers/browserAuthHelpers.ts` |
+| ✅ | Admin lane configuration | Shared setup | `playwright.config.ts` runs regular client tests first, then `admin-api`, then `admin-ui`; `playwright.admin.config.ts` supports admin-only runs |
 
 ## Phase 3 - User Order Lifecycle
 
@@ -138,9 +139,9 @@ Phase 7: SSO and Ollama streaming endpoints are last and environment-dependent.
 
 | Status | Increment | Endpoints | Notes |
 |--------|-----------|-----------|-------|
-| ⬜ | Create product | `POST /api/v1/products` | Cover 201, 400 validation, 401, 403 |
-| ⬜ | Update product | `PUT /api/v1/products/{id}` | Prefer product created by test setup |
-| ⬜ | Delete product | `DELETE /api/v1/products/{id}` | Delete only products created by the test to avoid FK conflicts |
+| ✅ | Create product | `POST /api/v1/products` | Covered 201, 400 validation, 401, 403; tracks created product names for cleanup |
+| ✅ | Update product | `PUT /api/v1/products/{id}` | Covered 200, 400 validation, 401, 403, 404 with self-created products |
+| ✅ | Delete product | `DELETE /api/v1/products/{id}` | Covered 204, 401, 403, 404; deletes only self-created products |
 
 ## Phase 4B - User Management Permissions
 
@@ -236,4 +237,4 @@ Why this is next:
 - It is the next dependency-driven ecommerce workflow increment.
 - It reuses the populated-cart helper created for cart mutation tests.
 
-Phase 2A is complete. The next dependency-driven step is Phase 3 user order lifecycle unless admin coverage is a higher immediate priority. Phase 2B can be started in parallel at any time.
+Phase 2A, Phase 2B, and Phase 4A are complete. The next dependency-driven step is Phase 3 user order lifecycle.

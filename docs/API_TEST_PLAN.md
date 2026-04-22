@@ -1,6 +1,6 @@
 # API Test Plan — JWT Authentication API
 
-**Last Updated:** 2026-04-21  
+**Last Updated:** 2026-04-22  
 **Project:** `slawekradzyminski/playwright-2025` — JWT Authentication API (Spring Boot backend)  
 **Sources Analysed:**
 - `api-docs.json` — OpenAPI 3.1 spec (primary endpoint inventory)
@@ -47,12 +47,12 @@
 | Metric | Value |
 |--------|-------|
 | **Total endpoints** | 45 |
-| **Covered** (happy path + key negatives) | 26 |
+| **Covered** (happy path + key negatives) | 29 |
 | **Partial** (some scenarios missing) | 0 |
-| **Not covered** | 19 |
-| **Overall coverage %** | **57.8%** |
+| **Not covered** | 16 |
+| **Overall coverage %** | **64.4%** |
 | **Auth endpoints total** | 34 |
-| **Auth endpoints covered** | 18 (52.9%) |
+| **Auth endpoints covered** | 21 (61.8%) |
 | **Non-auth endpoints total** | 11 |
 | **Non-auth endpoints covered** | 8 (72.7%) |
 | **High-complexity endpoints** | 7 |
@@ -99,9 +99,9 @@
 |--------|--------|------|------|--------------|----------|-------------|-----------|---------|-------|
 | ✅ | GET | `/api/v1/products` | 🔒 | any | Covered | `products/products.get.api.spec.ts` | 🟢 Low | High | 200 + 401 tested; response contract validated |
 | ✅ | GET | `/api/v1/products/{id}` | 🔒 | any | Covered | `products/products.id.get.api.spec.ts` | 🟢 Low | High | 200 + 401 + 404 tested; response contract validated |
-| ⬜ | POST | `/api/v1/products` | 🔒 | ADMIN | None | — | ⚙️ Medium | Medium | Admin-only; validation; 400 + 403 cases |
-| ⬜ | PUT | `/api/v1/products/{id}` | 🔒 | ADMIN | None | — | ⚙️ Medium | Medium | Admin-only; 400 + 403 + 404 cases |
-| ⬜ | DELETE | `/api/v1/products/{id}` | 🔒 | ADMIN | None | — | ⚙️ Medium | Low | Admin-only; 404 + 403 cases |
+| ✅ | POST | `/api/v1/products` | 🔒 | ADMIN | Covered | `admin/products/products.post.admin.api.spec.ts` | ⚙️ Medium | Medium | 201 + 400 + 401 + 403 tested; admin cleanup fixture tracks created data |
+| ✅ | PUT | `/api/v1/products/{id}` | 🔒 | ADMIN | Covered | `admin/products/products.id.put.admin.api.spec.ts` | ⚙️ Medium | Medium | 200 + 400 + 401 + 403 + 404 tested; uses self-created products |
+| ✅ | DELETE | `/api/v1/products/{id}` | 🔒 | ADMIN | Covered | `admin/products/products.id.delete.admin.api.spec.ts` | ⚙️ Medium | Low | 204 + 401 + 403 + 404 tested; deletes only self-created products |
 
 ### Orders
 
@@ -164,7 +164,7 @@
 
 ## Auth Split
 
-### 🔒 Endpoints Requiring Authentication (34 total, 18 covered — 52.9%)
+### 🔒 Endpoints Requiring Authentication (34 total, 21 covered — 61.8%)
 
 #### Users
 - `GET /api/v1/users` — any authenticated user ✅
@@ -183,9 +183,9 @@
 #### Products
 - `GET /api/v1/products` ✅
 - `GET /api/v1/products/{id}` ✅
-- `POST /api/v1/products` — ADMIN only
-- `PUT /api/v1/products/{id}` — ADMIN only
-- `DELETE /api/v1/products/{id}` — ADMIN only
+- `POST /api/v1/products` — ADMIN only ✅
+- `PUT /api/v1/products/{id}` — ADMIN only ✅
+- `DELETE /api/v1/products/{id}` — ADMIN only ✅
 
 #### Orders
 - `GET /api/v1/orders`
@@ -265,9 +265,9 @@
 | `GET/PUT /api/v1/users/tool-system-prompt` | **Covered** | Read, update, persisted value, max-length validation, missing token, invalid token tested |
 | `POST /api/v1/users/password/forgot` | **None** | No tests; needs local outbox to verify email queued; rate limit (429) |
 | `POST /api/v1/users/password/reset` | **None** | No tests; stateful — requires token from forgot flow |
-| `POST /api/v1/products` | **None** | No tests; admin-only; validation |
-| `PUT /api/v1/products/{id}` | **None** | No tests; admin-only; 403 + 404 |
-| `DELETE /api/v1/products/{id}` | **None** | No tests; admin-only; 403 + 404 |
+| `POST /api/v1/products` | **Covered** | Admin create, validation, missing token, and client-user 403 tested |
+| `PUT /api/v1/products/{id}` | **Covered** | Admin update, validation, missing token, client-user 403, and missing product tested |
+| `DELETE /api/v1/products/{id}` | **Covered** | Admin delete, missing token, client-user 403, and missing product tested |
 | `GET /api/v1/orders` | **None** | No tests; needs order seeding |
 | `POST /api/v1/orders` | **None** | No tests; requires cart to be populated first |
 | `GET /api/v1/orders/{id}` | **None** | No tests; owner vs admin visibility difference |
@@ -347,9 +347,9 @@ This plan keeps only the high-level phase index so there is one source of truth 
 |-------|-------|-------------------------|
 | Phase 1 | Support and low-risk endpoint coverage | Mostly parallel-safe |
 | Phase 2A | Cart mutations | `POST /cart/items` first, then PUT/DELETE can split |
-| Phase 2B | Admin test foundation | Can run in parallel with cart work |
+| Phase 2B | Admin test foundation | Complete; admin lane runs sequentially after regular tests |
 | Phase 3 | User order lifecycle | Sequential after cart mutations |
-| Phase 4A | Product admin CRUD | Parallel-safe after admin foundation |
+| Phase 4A | Product admin CRUD | Complete for API coverage |
 | Phase 4B | User management permissions | Parallel-safe after admin foundation |
 | Phase 5 | Email and password reset | Parallel-safe except rate-limit scenarios |
 | Phase 6 | Order admin and business rules | Partially parallel; depends on admin and order foundations |
@@ -395,25 +395,27 @@ This plan keeps only the high-level phase index so there is one source of truth 
 
 ### `GET /api/v1/products/{id}`
 - ✅ Existing product → 200 + contract
-- ⬜ Non-existent product → 404
-- ⬜ No token → 401
+- ✅ Non-existent product → 404
+- ✅ No token → 401
 
 ### `POST /api/v1/products`
 - ✅ Admin creates valid product → 201
-- ⬜ Non-admin → 403
-- ⬜ Missing required fields → 400
-- ⬜ Invalid price (negative) → 400
+- ✅ Non-admin → 403
+- ✅ Missing required fields / invalid body → 400
+- ✅ Missing token → 401
 
 ### `PUT /api/v1/products/{id}`
 - ✅ Admin updates product → 200
-- ⬜ Non-admin → 403
-- ⬜ Non-existent product → 404
-- ⬜ Validation errors → 400
+- ✅ Non-admin → 403
+- ✅ Non-existent product → 404
+- ✅ Validation errors → 400
+- ✅ Missing token → 401
 
 ### `DELETE /api/v1/products/{id}`
 - ✅ Admin deletes product → 204
-- ⬜ Non-admin → 403
-- ⬜ Non-existent product → 404
+- ✅ Non-admin → 403
+- ✅ Non-existent product → 404
+- ✅ Missing token → 401
 
 ### `GET /api/v1/cart`
 - ✅ Authenticated user → 200 + empty cart contract
