@@ -45,5 +45,8 @@ test.describe('DELETE /api/v1/users/{username} API tests', () => {
 
     // then
     expect(response.status()).toBe(404);
+
+    const getResponse = await usersClient.getUserByUsername(missingUsername, adminApiUser.token);
+    expect(getResponse.status()).toBe(404);
   });
 });
