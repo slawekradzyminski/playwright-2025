@@ -30,6 +30,12 @@ export interface UserRegisterDto {
   lastName: string;
 }
 
+export interface UserEditDto {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+}
+
 export interface UserResponseDto {
   id: number;
   username: string;
