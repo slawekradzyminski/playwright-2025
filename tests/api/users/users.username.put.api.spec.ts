@@ -69,19 +69,13 @@ test.describe('PUT /api/v1/users/{username} API tests', () => {
     expect(responseBody.email).toBe('Email should be valid');
   });
 
-  test('should return forbidden when other user updates profile - 403', async ({
-    createDisposableApiUser
-  }) => {
+  test('should return forbidden when other user updates profile - 403', async ({ createDisposableApiUser }) => {
     // given
     const targetUser = await createDisposableApiUser();
     const otherUser = await createDisposableApiUser();
 
     // when
-    const response = await usersClient.updateUser(
-      targetUser.userData.username,
-      randomUserEdit(),
-      otherUser.token
-    );
+    const response = await usersClient.updateUser(targetUser.userData.username, randomUserEdit(), otherUser.token);
 
     // then
     expect(response.status()).toBe(403);

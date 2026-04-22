@@ -60,7 +60,7 @@ export const randomUser = (): UserRegisterDto => {
   };
 };
 
-export const randomUserEdit = (): UserEditDto => {
+export const randomUserEdit = (): Required<UserEditDto> => {
   const { email, firstName, lastName } = randomUser();
 
   return {

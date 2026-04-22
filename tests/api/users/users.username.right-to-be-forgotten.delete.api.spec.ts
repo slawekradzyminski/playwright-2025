@@ -47,10 +47,7 @@ test.describe('DELETE /api/v1/users/{username}/right-to-be-forgotten API tests',
     const otherUser = await createDisposableApiUser();
 
     // when
-    const response = await usersClient.deleteUserRightToBeForgotten(
-      targetUser.userData.username,
-      otherUser.token
-    );
+    const response = await usersClient.deleteUserRightToBeForgotten(targetUser.userData.username, otherUser.token);
 
     // then
     expect(response.status()).toBe(403);
