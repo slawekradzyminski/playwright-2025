@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
+import { SIGNIN_ENDPOINT } from '../httpclients/loginClient';
 import type { LoginDto } from '../types/auth';
 import { BasePage } from './basePage';
 import { LoggedOutHeaderComponent } from './components/loggedOutHeaderComponent';
@@ -35,6 +36,15 @@ export class LoginPage extends BasePage {
     await this.usernameInput.fill(credentials.username);
     await this.passwordInput.fill(credentials.password);
     await this.submitButton.click();
+  }
+
+  async loginAndWaitForSignInResponse(credentials: LoginDto): Promise<void> {
+    const responsePromise = this.page.waitForResponse(
+      (response) => response.request().method() === 'POST' && response.url().endsWith(SIGNIN_ENDPOINT)
+    );
+
+    await this.login(credentials);
+    await responsePromise;
   }
 
   async clickRegisterButton(): Promise<void> {

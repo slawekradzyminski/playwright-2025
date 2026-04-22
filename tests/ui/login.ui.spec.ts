@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { test } from '@playwright/test';
 import { ADMIN_PASSWORD } from '../../config/constants';
 import { HomePage } from '../../pages/homePage';
@@ -64,12 +65,12 @@ test.describe('Login UI tests', () => {
   test('should show error toast for invalid credentials', async () => {
     // given
     const credentials: LoginDto = {
-      username: 'wronguser',
+      username: `wronguser-${randomUUID()}`,
       password: 'wrongpassword'
     };
 
     // when
-    await loginPage.login(credentials);
+    await loginPage.loginAndWaitForSignInResponse(credentials);
 
     // then
     await loginPage.assertThatUrlIs(LoginPage.url);
