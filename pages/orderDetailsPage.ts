@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
+import { formatMoney } from '../helpers/productHelpers';
 import type { AddressDto, OrderDto, OrderStatus } from '../types/order';
 import { BasePage } from './basePage';
 import { LoggedInHeaderComponent } from './components/loggedInHeaderComponent';
@@ -44,15 +45,15 @@ export class OrderDetailsPage extends BasePage {
     await expect(this.details).toBeVisible();
     await expect(this.title).toHaveText(`Order #${order.id}`);
     await expect(this.status).toHaveText(order.status);
-    await expect(this.totalAmount).toHaveText(`$${order.totalAmount.toFixed(2)}`);
+    await expect(this.totalAmount).toHaveText(formatMoney(order.totalAmount));
     await this.assertThatShippingAddressIsVisible(order.shippingAddress);
 
     for (const item of order.items) {
       await expect(this.page.getByTestId(`order-item-name-${item.id}`)).toHaveText(item.productName);
       await expect(this.page.getByTestId(`order-item-price-details-${item.id}`)).toHaveText(
-        `$${item.unitPrice} x ${item.quantity}`
+        `${formatMoney(item.unitPrice)} x ${item.quantity}`
       );
-      await expect(this.page.getByTestId(`order-item-total-${item.id}`)).toHaveText(`$${item.totalPrice.toFixed(2)}`);
+      await expect(this.page.getByTestId(`order-item-total-${item.id}`)).toHaveText(formatMoney(item.totalPrice));
     }
   }
 
