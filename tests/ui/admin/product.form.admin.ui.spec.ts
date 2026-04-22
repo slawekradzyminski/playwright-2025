@@ -5,7 +5,7 @@ import { AdminProductFormPage } from '../../../pages/admin/adminProductFormPage'
 import { AdminProductsPage } from '../../../pages/admin/adminProductsPage';
 import type { ProductDto } from '../../../types/product';
 
-test.describe('Admin products UI tests', () => {
+test.describe('Admin product form UI tests', () => {
   let adminProductsPage: AdminProductsPage;
   let adminProductFormPage: AdminProductFormPage;
 
@@ -39,6 +39,32 @@ test.describe('Admin products UI tests', () => {
     expect(createdProduct).toBeDefined();
   });
 
+  test('should show validation messages when required product fields are empty', async () => {
+    // given
+    await adminProductFormPage.openNew();
+    await adminProductFormPage.assertThatCreateFormIsVisible();
+
+    // when
+    await adminProductFormPage.submitProductForm();
+
+    // then
+    await adminProductFormPage.assertThatUrlIs(AdminProductFormPage.newUrl);
+    await adminProductFormPage.assertThatRequiredValidationMessagesAreVisible();
+  });
+
+  test('should load existing values before editing product', async ({ createAdminProduct }) => {
+    // given
+    const createdProduct = await createAdminProduct();
+
+    // when
+    await adminProductFormPage.openEdit(createdProduct.id);
+
+    // then
+    await adminProductFormPage.assertThatUrlIs(AdminProductFormPage.editUrlPattern);
+    await adminProductFormPage.assertThatEditFormIsVisible();
+    await adminProductFormPage.assertThatProductValuesAreFilled(createdProduct);
+  });
+
   test('should update product through admin UI', async ({ createAdminProduct, trackAdminProductName }) => {
     // given
     const createdProduct = await createAdminProduct();
@@ -57,18 +83,5 @@ test.describe('Admin products UI tests', () => {
       ...createdProduct,
       ...productUpdate
     });
-  });
-
-  test('should delete product through admin UI', async ({ createAdminProduct }) => {
-    // given
-    const createdProduct = await createAdminProduct();
-    await adminProductsPage.open();
-    await adminProductsPage.assertThatProductIsVisible(createdProduct);
-
-    // when
-    await adminProductsPage.deleteProduct(createdProduct.id);
-
-    // then
-    await adminProductsPage.assertThatProductIsNotVisible(createdProduct.name);
   });
 });

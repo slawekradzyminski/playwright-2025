@@ -75,6 +75,10 @@ export class AdminProductFormPage extends BasePage {
     await responsePromise;
   }
 
+  async submitProductForm(): Promise<void> {
+    await this.submitButton.click();
+  }
+
   async updateProduct(productId: number, product: ProductUpdateDto): Promise<void> {
     await this.fillProductForm(product);
 
@@ -102,6 +106,13 @@ export class AdminProductFormPage extends BasePage {
     await expect(this.stockInput).toHaveValue(String(product.stockQuantity));
     await expect(this.categoryInput).toHaveValue(product.category);
     await expect(this.imageInput).toHaveValue(product.imageUrl ?? '');
+  }
+
+  async assertThatRequiredValidationMessagesAreVisible(): Promise<void> {
+    await expect(this.page.getByText('Product name is required')).toBeVisible();
+    await expect(this.page.getByText('Price is required')).toBeVisible();
+    await expect(this.page.getByText('Stock quantity is required')).toBeVisible();
+    await expect(this.page.getByText('Category is required')).toBeVisible();
   }
 
   private async assertThatFormIsVisible(title: string, submitText: string): Promise<void> {

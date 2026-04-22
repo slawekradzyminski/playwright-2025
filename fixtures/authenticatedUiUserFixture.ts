@@ -1,6 +1,6 @@
-import { randomUUID } from 'node:crypto';
 import { test as base } from '@playwright/test';
 import { type AuthenticatedUser, createAuthenticatedUser } from '../helpers/authenticationHelpers';
+import { injectBrowserAuth } from '../helpers/browserAuthHelpers';
 
 interface AuthenticatedUiUserFixture {
   authenticatedUiUser: AuthenticatedUser;
@@ -14,18 +14,7 @@ export const test = base.extend<AuthenticatedUiUserFixture>({
   },
 
   page: async ({ page, authenticatedUiUser }, use) => {
-    await page.addInitScript(
-      (authState) => {
-        window.localStorage.setItem('token', authState.token);
-        window.localStorage.setItem('refreshToken', authState.refreshToken);
-        window.localStorage.setItem('clientSessionId', authState.clientSessionId);
-      },
-      {
-        token: authenticatedUiUser.token,
-        refreshToken: authenticatedUiUser.refreshToken,
-        clientSessionId: randomUUID()
-      }
-    );
+    await injectBrowserAuth(page, authenticatedUiUser);
 
     await use(page);
   }

@@ -1,9 +1,9 @@
-import { randomUUID } from 'node:crypto';
 import { test as base } from '@playwright/test';
 import { ADMIN_PASSWORD } from '../config/constants';
 import { randomAdminProduct } from '../generators/productGenerator';
 import { AdminProductCleanup } from '../helpers/adminProductCleanup';
 import { expectJsonResponse } from '../helpers/apiAssertions';
+import { type AuthenticatedUser, createAuthenticatedUser } from '../helpers/authenticationHelpers';
 import { LoginClient } from '../httpclients/loginClient';
 import { ProductsClient } from '../httpclients/productsClient';
 import type { LoginResponseDto } from '../types/auth';
@@ -11,6 +11,7 @@ import type { ProductCreateDto, ProductDto } from '../types/product';
 
 interface AdminApiFixture {
   adminApiUser: LoginResponseDto;
+  clientApiUser: AuthenticatedUser;
   adminProductsClient: ProductsClient;
   adminProductCleanup: AdminProductCleanup;
   createAdminProduct: (productData?: ProductCreateDto) => Promise<ProductDto>;
@@ -29,6 +30,10 @@ export const test = base.extend<AdminApiFixture>({
     const adminApiUser = await expectJsonResponse<LoginResponseDto>(loginResponse, 200);
 
     await use(adminApiUser);
+  },
+
+  clientApiUser: async ({ request }, use) => {
+    await use(await createAuthenticatedUser(request));
   },
 
   adminProductsClient: async ({ request }, use) => {
@@ -64,23 +69,6 @@ export const test = base.extend<AdminApiFixture>({
 
   trackAdminProductName: async ({ adminProductCleanup }, use) => {
     await use((productName) => adminProductCleanup.trackProductName(productName));
-  },
-
-  page: async ({ page, adminApiUser }, use) => {
-    await page.addInitScript(
-      (authState) => {
-        window.localStorage.setItem('token', authState.token);
-        window.localStorage.setItem('refreshToken', authState.refreshToken);
-        window.localStorage.setItem('clientSessionId', authState.clientSessionId);
-      },
-      {
-        token: adminApiUser.token,
-        refreshToken: adminApiUser.refreshToken,
-        clientSessionId: randomUUID()
-      }
-    );
-
-    await use(page);
   }
 });
 

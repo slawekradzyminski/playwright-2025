@@ -47,6 +47,12 @@ export class AdminProductsPage extends BasePage {
     await responsePromise;
   }
 
+  async cancelDeleteProduct(productId: number): Promise<void> {
+    this.page.once('dialog', (dialog) => dialog.dismiss());
+
+    await this.page.getByTestId(`admin-product-delete-${productId}`).click();
+  }
+
   async assertThatProductListIsVisible(): Promise<void> {
     await expect(this.pageContainer).toBeVisible();
     await expect(this.title).toHaveText('Manage Products');
